@@ -1,9 +1,19 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from .models import Post
+
+events = [
+]
 
 # Create your views here.
-def index(request):
-    return HttpResponse("Response")
+def home(request):
+    context = {
+        'events': Post.objects.all()
+    }
+    return render(request, 'event/event.html', context)
+
+def about(request):
+    return render(request, 'event/about.html')
+
 
 
 
