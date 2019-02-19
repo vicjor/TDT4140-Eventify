@@ -2,6 +2,7 @@
 {% block content %}
     {% for event in events %}
         <article class="media content-section">
+            <img class="rounded-circle article-img" src="{{ event.author.profile.image.url }}" alt="">
             <div class="media-body">
                 <div class="article-metadata">
                     <a class="mr-2" href="#">{{ event.author }}</a>
