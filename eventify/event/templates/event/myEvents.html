@@ -1,0 +1,57 @@
+{% extends "event/base.html" %}
+{% block content %}
+     <main role="main" class="inner cover">
+         <h1 class="cover-heading">{{ coverHeading }}</h1>
+         <div class="row">
+              <div class="col-sm-12 col-lg-6 created-events">
+                  <h2>Created Events <a href="{% url 'my-events' %}"><i class="fa fa-plus"></i></a></h2>
+                  {% if created_events %}
+                        <div class="row event-search-results">
+                            {% for event in created_events %}
+                                <div class="event-preview" data-id="{{ event.id }}">
+                                    {% csrf_token %}
+                                    <p>{{ event.name|truncatechars:18 }}</p>
+                                    <p>{{ event.start_date.date }}</p>
+                                     <span>
+                                        <i class="fa fa-users" aria-hidden="true"></i>
+                                    </span>
+                                    <span  class="attendee-count">
+                                        {{ event.attendees.all.count }}
+                                    </span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                  {% else %}
+                        <p class="text center">
+                            No events created.
+                        </p>
+                  {% endif %}
+              </div>
+              <div class="col-sm-12 col-lg-6 joined-events">
+                    <h2>Joined Events</h2>
+                    {% if joined_events %}
+                        <div class="row event-search-results">
+                            {% for event in joined_events %}
+                                <div class="event-preview" data-id="{{ event.id }}">
+                                    {% csrf_token %}
+                                    <p>{{ event.name|truncatechars:18 }}</p>
+                                    <p>{{ event.start_date.date }}</p>
+                                    <span>
+                                        <i class="fa fa-users" aria-hidden="true"></i>
+                                    </span>
+                                    <span  class="attendee-count">
+                                        {{ event.attendees.all.count }}
+                                    </span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-center">
+                            Find an event to <a href="{% url 'all-events' %}">join</a>.
+                        </p>
+                    {% endif %}
+              </div>
+         </div>
+     </main>
+
+{% endblock %}
