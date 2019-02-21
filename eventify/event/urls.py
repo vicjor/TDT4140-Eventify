@@ -4,6 +4,6 @@ from . import views
 
 
 urlpatterns = [
-    path('', views.home, name='eventify-home'),
-    path('about/', views.about, name='eventify-about')
+    path('', views.HtmlRender.home, name='eventify-home'),
+    path('about/', views.HtmlRender.about, name='eventify-about'),
 ]
