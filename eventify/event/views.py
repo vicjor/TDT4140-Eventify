@@ -219,21 +219,28 @@ class EventViews:
     @login_required
     def eventJoin(request):
         # get event
-        event_id = int(request.POST['post-id'])
+        event_id = int(request.POST['event-id'])
         user = request.user
         event = Post.objects.get(pk=event_id)
 
-        # add user to event
-        event.attendees.add(user)
 
         # get updated attendance count
         attendance = event.attendees.all().count()
 
         # create response
-        response = {
-            'status': 'success',
-            'attendance': attendance
-        }
+        if attendance + 1 <= event.attendance_limit:
+            # add user to event
+            event.attendees.add(user)
+            response = {
+                'status': 'success',
+                'attendance': attendance
+            }
+        else:
+            response = {
+                'status': 'fail',
+                'error_msg': 'The event is already full.',
+                'attendance': attendance
+            }
 
         # send reponse JSON
         return JsonResponse(response)
@@ -243,25 +250,35 @@ class EventViews:
         event_search = json.loads(request.body)['event_search']
 
         # filter for matching events and serialize for json
-        event_search_results = list(Post.objects.filter(
+        title_search_results = list(Post.objects.filter(
             name__icontains=event_search
         ).values(
-            'id',
-            'title',
-            'start_date',
-            'attendees',
+            'title'
+        ))
+
+        location_search_results = list(Post.objects.filter(
+            name__icontains=event_search
+        ).values(
             'location',
+            'start_date'
+        ))
+
+        content_search_result = list(Post.objects.filter(
+            name_icontains=event_search
+        ).values(
             'content'
         ))
 
+        event_search_results = title_search_results + location_search_results + content_search_result
+
         # reformat start dates
-        for i in event_search_results[:10]:
+        for i in event_search_results:
             i['start_date'] = i['start_date'].date()
 
         # create response
         response = {
             'status': 'success',
-            'event_search_results': event_search_results[:10]
+            'event_search_results': event_search_results
         }
 
         # send reponse JSON
