@@ -21,16 +21,17 @@ from event import views as event_views
 from django.conf import settings
 from django.conf.urls.static import static
 
-
+# path(URL-pattern (ex. 'admin/' -> localhost:8000/admin/), method to whom you
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('register/', user_views.register, name="register"),
     path('profile/', user_views.profile, name="profile"),
+    path('editProfile/', user_views.editProfile, name="edit-profile"),
     path('createEvent/', event_views.HtmlRender.createEventPage, name='create-event'),
     path('allEvents/', event_views.HtmlRender.allEvents, name='all-events'),
     path('myEvents/', event_views.HtmlRender.myEvents, name='my-events'),
     path('editEvent/', event_views.HtmlRender.editEvent, name='edit-event'),
-    path('event/update/<int:post_id>/', event_views.EventViews.updateEvent, name='update-event'),
+    path('event/update/<int:event_id>/', event_views.EventViews.updateEvent, name='update-event'),
     path('event/remove/', event_views.EventViews.removeEvent, name='remove-event'),
     path('createEvent/event/create/', event_views.EventViews.createEvent, name='createEvent'),
     path('event/search/', event_views.EventViews.searchEvents, name='searchEvents'),

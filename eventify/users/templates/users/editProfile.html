@@ -9,16 +9,16 @@
             <p class="text-secondary">{{ user.email }}</p>
         </div>
     </div>
-    <form method="POST" enctype="multipart/form-data" action="editProfile.html/">
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Profile Info</legend>
+            {{u_form|crispy}}
+            {{p_form|crispy}}
+        </fieldset>
         <div class="form-group">
-            <a class="myButton" href="{% url 'edit-profile' %}">Update Profile</a>
-            <a class="myButton" href="{% url 'create-event' %}">Create Event</a>
+            <button class="myButton" type="submit">Update</button>
         </div>
     </form>
 </div>
 {% endblock content %}
-
-
-<!--Source: https://github.com/CoreyMSchafer/code_snippets/blob/master/Django_Blog/08-Profile-And-Images/django_project/users/templates/users/profile.html-->
