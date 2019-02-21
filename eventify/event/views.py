@@ -25,7 +25,7 @@ class HtmlRender:
         return render(request, 'event/about.html')
 
     @login_required
-    def createEvent(request):
+    def createEventPage(request):
         context = {
             'page': 'createEvent',
             'coverHeading': 'Create Event'
@@ -91,17 +91,16 @@ class EventViews:
 
     @login_required
     def createEvent(request):
-        new_title = str(request.POST['title']).title()
-        new_start_date = str(request.POST['start_date'])
-        new_start_time = str(request.POST['start_time'])
-        new_end_date = str(request.POST['end_date'])
-        new_end_time = str(request.POST['end_time'])
-        new_location = str(request.POST['location'])
-        new_attendance_limit = str(request.POST['attendance_limit'])
-        new_content = str(request.POST['content'])
+        new_title = str(request.POST.get('event-title', False)).title()
+        new_start_date = str(request.POST.get('start_date', False))
+        new_start_time = str(request.POST.get('start_time', False))
+        new_end_date = str(request.POST.get('end_date', False))
+        new_end_time = str(request.POST.get('end_time', False))
+        new_location = str(request.POST.get('event-location', False))
+        new_attendance_limit = int(request.POST.get('attendance-limit', False))
+        new_content = str(request.POST.get('event-description', False))
         creator = request.user
-        time_zone = request.session['django_timezone']
-        local_tz = pytz.timezone(time_zone)
+        local_tz = pytz.timezone('Europe/Oslo')
         new_start_date = Utility.toUTC(new_start_date, new_start_time, local_tz)
         new_end_date = Utility.toUTC(new_end_date, new_end_time, local_tz)
 

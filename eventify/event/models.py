@@ -12,7 +12,7 @@ class Post(models.Model):
     attendees = models.ManyToManyField(User, related_name='attendees')
     start_date = models.DateTimeField(null=True)
     end_date = models.DateTimeField(null=True)
-    attendance_limit = models.IntegerField(null=True)
+    attendance_limit = models.IntegerField(null=True, default=10000)
     location = models.CharField(max_length=100, null=True)
     content = models.TextField()
 

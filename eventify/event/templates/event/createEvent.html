@@ -1,44 +1,41 @@
 {% extends "event/base.html" %}
 {% block content %}
-    {% for event in events %}
-        <main role="main" class="inner-cover">
-            <h1 class="cover-heading">{{ coverHeading }}</h1>
-             <form name="event-create-form" method="POST">
-                 <h2 class="event-label cover-heading">Event Title</h2>
-                    <input class="event-name" name="event-title" placeholder="Event Title" type="text">
-                    <h2 class="event-label cover-heading">Start/End</h2>
-                    <ul class="event-type-list">
-                        <li>
-                            <label for="start_date">Start Date:</label>
-                            <input class="start_date" type="date" name="start_date"/>
-                            <label for="start_time">Start Time:</label>
-                            <input class="start_time" type="time" name="start_time"/>
-                        </li>
-                        <li>
-                            <label for="end_date">End Date:</label>
-                            <input class="end_date" type="date" name="end_date"/>
-                            <label for="end_time">End Time:</label>
-                            <input class="end_time" type="time" name="end_time"/>
-                        </li>
-                    </ul>
-                     <h2 class="event-label cover-heading">Event Location</h2>
-                    <input class="event-location" name="event-location" placeholder="Event Location" type="text" autocomplete="off">
-                    <div class="location-results-wrapper">
-                        <table id="location-results-table"></table>
-                    </div>
-                 <h2 class="event-label cover-heading">Description</h2>
-                 <textarea class="event-description" name="event-description" cols="75" rows="5"></textarea>
-                 {% csrf_token %}
-                 <input type="hidden" name="user-id" value="{{ user.id }}"/>
-                 <br>
-                 <br>
-                 {% if user.is_authenticated %}
-                    <button class="btn btn-outline event-create-btn" type="submit">Create</button>
-                 {% else %}
-                    <p class="signin-error">Sign in required for creating events</p>
-                 {% endif %}
-             </form>
-        </main>
-
-    {% endfor %}
+    <main role="main" class="inner-cover">
+        <h1 class="cover-heading">{{ coverHeading }}</h1>
+         <form name="event-create-form" method="POST" action="event/create/">
+             <h2 class="event-label cover-heading">Event Title</h2>
+                <input class="event-name" name="event-title" placeholder="Event Title" type="text">
+                <h2 class="event-label cover-heading">Start/End</h2>
+                <ul class="event-type-list">
+                    <li>
+                        <label for="start_date">Start Date:</label>
+                        <input id="start_date" type="date" name="start_date"/>
+                        <label for="start_time">Start Time:</label>
+                        <input id="start_time" type="time" name="start_time"/>
+                    </li>
+                    <li>
+                        <label for="end_date">End Date:</label>
+                        <input id="end_date" type="date" name="end_date"/>
+                        <label for="end_time">End Time:</label>
+                        <input id="end_time" type="time" name="end_time"/>
+                    </li>
+                </ul>
+                 <h2 class="event-label cover-heading">Event Location</h2>
+                <input class="event-location" name="event-location" placeholder="Event Location" type="text" autocomplete="off">
+                <div class="location-results-wrapper">
+                    <table id="location-results-table"></table>
+                </div>
+             <h2 class="event-label cover-heading">Description</h2>
+             <textarea class="event-description" name="event-description" cols="75" rows="5"></textarea>
+             {% csrf_token %}
+             <input type="hidden" name="user-id" value="{{ user.id }}"/>
+             <br>
+             <br>
+             {% if user.is_authenticated %}
+                <button class="btn btn-outline event-create-btn" type="submit">Create</button>
+             {% else %}
+                <p class="signin-error">Sign in required for creating events</p>
+             {% endif %}
+         </form>
+    </main>
 {% endblock %}
