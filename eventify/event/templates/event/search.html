@@ -1,52 +1,59 @@
 {% extends "event/base.html" %}
 
-{% block content%}
-
+{% block content %}
 <div class="searchbox">
-
+    {% if request.get_full_path == "/event/search/" %}
+        <form name="event-search-form" method="POST">
+    {% else %}
         <form name="event-search-form" method="POST" action="event/search/">
+    {% endif %}
             {% csrf_token %}
-            <table class="searchtable">
+            <table class="table">
 
                 <tr>
                     <td>Event: </td>
-                    <td><input type="text" placeholder="Search event name..." name="event-search"></td>
+                    <td><input class="form-control" type="text" placeholder="Search event name..." name="event-search"></td>
                     <td>Date:</td>
-                    <td><input type="date" id="start2" name="event-start" value="2019-07-22" min="2018-01-01" max="2022-12-31"></td>
+                    <td><input class="form-control" type="date" id="start" name="event-start" value="2019-07-22" min="2018-01-01" max="2022-12-31"></td>
                 </tr>
 
                 <tr>
                     <td>Location: </td>
-                    <td><input type="text" placeholder="Search location..." name="location-search"> </td>
+                    <td><input class="form-control" type="text" placeholder="Search location..." name="location-search"> </td>
                     <td></td>
-                    <td><button type="submit">Filter</button></td>
+                    <td><button class="btn btn-success" type="submit">Filter</button></td>
                 </tr>
 
             </table>
         </form>
 
-    </div>
-
-
+</div>
 {% if event_search_results %}
     {% for event in event_search_results %}
-
-            <article class="media content-section">
-                <img class="rounded-circle article-img" src="{{ event.author.profile.image.url }}" alt="">
-                <div class="media-body">
-                    <div class="article-metadata">
-                        <a class="mr-2" href="#">{{ event.author }}</a>
-                        <small class="text-muted">{{ event.date_posted }}</small>
-                    </div>
-                    <h2><a class="article-title" href="#">{{ event.title }}</a></h2>
-                    <p class="article-content">{{ event.location }}</p>
+        <article class="media content-section">
+            <img class="rounded-circle article-img" src="{{ event.image.url }}" alt="">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <a class="mr-2" href="#">{{ event.author }}</a>
+                    <small class="text-muted">{{ event.date_posted }}</small>
                 </div>
-            </article>
-
+                <h2><a class="article-title" href="#">{{ event.title }}</a></h2>
+                <p class="article-content">{{ event.location }}</p>
+            </div>
+        </article>
     {% endfor %}
-{% else %}
-
-    <h1> {{ message }} </h1>
-
 {% endif %}
+{% for event in events %}
+<article class="media content-section">
+    <img class="rounded-circle article-img" src="{{ event.image.url }}" alt="">
+    <div class="media-body">
+        <div class="article-metadata">
+            <a class="mr-2" href="#">{{ event.author }}</a>
+            <small class="text-muted">{{ event.date_posted }}</small>
+        </div>
+        <h2><a class="article-title" href="#">{{ event.title }}</a></h2>
+        <p class="article-content">{{ event.location }}</p>
+    </div>
+</article>
+{% endfor %}
 {% endblock content %}
