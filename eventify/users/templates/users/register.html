@@ -1,6 +1,7 @@
 {% extends "event/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
+<!--Bruker crispyforms og forms.py for registreringssiden. forms.py står for backend-logikk-->
     <div class="content-section">
         <form method="POST">
             {% csrf_token %}

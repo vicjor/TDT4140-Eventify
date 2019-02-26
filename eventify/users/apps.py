@@ -1,8 +1,8 @@
 from django.apps import AppConfig
 
 
-class UsersConfig(AppConfig):
+class UsersConfig(AppConfig): #Arver fra AppConfig
     name = 'users'
 
-    def ready(self):
+    def ready(self):        #Klargjør for å motta signal. Django åpner ingen filer automatisk som default.
         import users.signals

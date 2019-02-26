@@ -1,11 +1,12 @@
 {% extends "event/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
+<!--Bruker crispyforms og bootstrap for styling og -->
 <div class="content-section">
     <div class="media">
-        <img class="rounded-circle account-img" src="{{ user.profile.image.url }}">
+        <img class="rounded-circle account-img" src="{{ user.profile.image.url }}"> <!--Rund thumbnail for profilbilde-->
         <div class="media-body">
-            <h2 class="account-heading">{{ user.username }}</h2>
+            <h2 class="account-heading">{{ user.username }}</h2>    <!--Presenterer brukernavnet og epost for bruker øverst på siden når han skal redigere profilen-->
             <p class="text-secondary">{{ user.email }}</p>
         </div>
     </div>
@@ -15,6 +16,7 @@
             <legend class="border-bottom mb-4">Profile Info</legend>
             {{u_form|crispy}}
             {{p_form|crispy}}
+            <!--U for user, p for profile. Bruker klassene fra forms.py.-->
         </fieldset>
         <div class="form-group">
             <button class="myButton" type="submit">Update</button>

@@ -8,6 +8,8 @@ from .models import Post
 from django.utils import timezone
 import pytz
 import json
+from django.contrib.admin.views.decorators import staff_member_required
+
 
 events = [
 ]
@@ -37,7 +39,7 @@ class HtmlRender:
     def about(request):
         return render(request, 'event/about.html')
 
-    @login_required
+    @staff_member_required
     def createEventPage(request):
         context = {
             'page': 'createEvent',

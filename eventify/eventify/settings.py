@@ -33,7 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'users.apps.UsersConfig',    #Legger til users.
     'event.apps.EventConfig',   #Legger til en ny app fra event. Dette inkluderer alle nye HTML filer i templates/event
-    'crispy_forms',
+    'crispy_forms',             #Bruker crispyforms
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -122,10 +122,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media') #Standard directory for å lagre profilbilder
+MEDIA_URL = '/media/'   #Path til media
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+CRISPY_TEMPLATE_PACK = 'bootstrap4' #Bruker bootstrap 4 for styling av HTML tags
 
-LOGIN_REDIRECT_URL = 'eventify-home'
+LOGIN_REDIRECT_URL = 'eventify-home' # Når man logger inn sendes man automatisk til hjemsiden
 LOGIN_URL = 'login'

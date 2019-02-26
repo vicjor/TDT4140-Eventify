@@ -4,11 +4,11 @@ from django.dispatch import receiver
 from .models import Profile
 
 @receiver(post_save, sender=User)
-def create_profile(sender, instance, created, **kwargs):
+def create_profile(sender, instance, created, **kwargs): #Funksjon for å motta signal om at bruker opprettes
     if created:
         Profile.objects.create(user=instance)
 
 
 @receiver(post_save, sender=User)
-def save_profile(sender, instance, **kwargs):
+def save_profile(sender, instance, **kwargs): #Funksjon for å motta signal om at bruker lagres
     instance.profile.save()
