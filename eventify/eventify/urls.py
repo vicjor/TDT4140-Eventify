@@ -26,6 +26,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('register/', user_views.register, name="register"),
     path('profile/', user_views.profile, name="profile"),
+    path('home/', event_views.HtmlRender.homePage, name='home'),
     path('edit-profile/', user_views.editProfile, name="edit-profile"),
     path('createEvent/', event_views.HtmlRender.createEventPage, name='create-event'),
     path('allEvents/', event_views.HtmlRender.allEvents, name='all-events'),
