@@ -21,6 +21,19 @@ class HtmlRender:
         }
         return render(request, 'event/event.html', context)
 
+    def homePage(request):
+        events = Post.objects.all()
+        bigEvent = Post.objects.first()
+
+
+
+        context = {
+            'bigEvent': bigEvent,
+            'events': events
+        }
+
+        return render(request, 'event/home.html', context)
+
     def about(request):
         return render(request, 'event/about.html')
 
@@ -246,43 +259,64 @@ class EventViews:
         return JsonResponse(response)
 
     def searchEvents(request):
-        # dec vars
-        event_search = json.loads(request.body)['event_search']
+
+        event_search = str(request.POST.get('event-search', False))
+        location_search = str(request.POST.get('location-search', False))
+        date_start = str(request.POST.get('event-start', False))
+
 
         # filter for matching events and serialize for json
         title_search_results = list(Post.objects.filter(
-            name__icontains=event_search
-        ).values(
-            'title'
+            title__icontains=event_search
         ))
 
         location_search_results = list(Post.objects.filter(
-            name__icontains=event_search
-        ).values(
-            'location',
-            'start_date'
+            location__icontains=location_search
         ))
 
-        content_search_result = list(Post.objects.filter(
-            name_icontains=event_search
-        ).values(
-            'content'
-        ))
+        # date_search_result = list(Post.objects.filter(
+        #    name_icontains=date_start
+        # ).values(
+        #    'start_date'
+        # ))
 
-        event_search_results = title_search_results + location_search_results + content_search_result
+        best_match = []
+
+        local = False
+        for event in Post.objects.all():
+            if event in title_search_results and event in location_search_results:
+                local = True
+                best_match.append(event)
+
+
+        if local:
+            event_search_results = best_match
+        else:
+            event_search_results = title_search_results + location_search_results  # + date_search_result
+
 
         # reformat start dates
-        for i in event_search_results:
-            i['start_date'] = i['start_date'].date()
+        #for i in event_search_results:
+        #    i['start_date'] = i['start_date'].date()
 
-        # create response
-        response = {
-            'status': 'success',
-            'event_search_results': event_search_results
-        }
+        if len(event_search_results) == 0:
+            context = {
+                'status': 'success',
+                'message': 'No matches for your search.'
+            }
 
-        # send reponse JSON
-        return JsonResponse(response)
+
+        else:
+            # create response
+            context = {
+                'status': 'success',
+                'event_search_results': event_search_results
+            }
+
+        # return JsonResponse(context)
+
+        # send response JSON
+        return render(request, "event/search.html", context)
 
     def eventDetails(request):
         # get event

@@ -1,10 +1,25 @@
 {% extends "event/base.html" %}
 
+<!--<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> --!>
+<link rel="stylesheet" href="main.css">
+
 {% block content %}
 
+<div class="flex-container2">
 
-    {% for event in events %}
-        <article class="media content-section">
+    <h1>HOME</h1>
+
+
+</div>
+
+<div class = "flex-container">
+
+
+ {% for event in events %}
+
+
+        <article class="media content-section-event">
             <img class="rounded-circle article-img" src="{{ event.author.profile.image.url }}" alt="">
             <div class="media-body">
                 <div class="article-metadata">
@@ -14,6 +29,12 @@
                 <h2><a class="article-title" href="#">{{ event.title }}</a></h2>
                 <p class="article-content">{{ event.content }}</p>
             </div>
+
         </article>
+
     {% endfor %}
-{% endblock %}
+
+       </div>
+
+
+{% endblock content %}
