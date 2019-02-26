@@ -32,6 +32,7 @@
                         </div>
              <h2 class="event-label cover-heading">Description</h2>
              <textarea class="event-description" name="event-description" cols="75" rows="5"></textarea>
+
              {% csrf_token %}
              <input type="hidden" name="user-id" value="{{ user.id }}"/>
              <br>

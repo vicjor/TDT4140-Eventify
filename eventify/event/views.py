@@ -119,6 +119,7 @@ class EventViews:
         new_start_date = Utility.toUTC(new_start_date, new_start_time, local_tz)
         new_end_date = Utility.toUTC(new_end_date, new_end_time, local_tz)
 
+
         if new_start_date < datetime.now(pytz.utc):
             response = {
                 'status': 'fail',
