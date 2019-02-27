@@ -30,7 +30,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarToggle">
                 <div class="navbar-nav mr-auto">
-                    <a class="nav-item nav-link" href="{% url 'eventify-home' %}">All events</a>
+                    <a class="nav-item nav-link" href="{% url 'event-home' %}">All events</a>
                     <a class="nav-item nav-link" href="{% url 'eventify-about' %}">About</a>
 
 
@@ -38,7 +38,7 @@
                 <!-- Navbar Right Side -->
                 <div class="navbar-nav">
                     {% if user.is_staff or user.is_admin %}
-                        <a class="nav-item nav-link" href="{% url 'create-event' %}">New Event</a>
+                        <a class="nav-item nav-link" href="{% url 'event-create' %}">New Event</a>
                         <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
                         <a class="nav-item nav-link" href="{% url 'logout' %}">Log Out</a>
                     {% elif user.is_authenticated %}
@@ -66,6 +66,7 @@
             {% endif %}
             {% block content %}{% endblock %}
         </div>
+    </div>
 
 
 

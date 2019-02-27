@@ -9,10 +9,70 @@ from django.utils import timezone
 import pytz
 import json
 from django.contrib.admin.views.decorators import staff_member_required
-
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 events = [
 ]
+
+#Alt mellom START og END er alternativ kode for å vise events på siden. Men dette kan vi trykke på eventsene og komme inn på
+#event/<event.id>, f.eks. http://127.0.0.1:8000/event/1.
+#Foreløpig problem er at vi kommer inn på sidene, men det vises ingen info. http://127.0.0.1:8000/event/<event.id> extender
+#bare base, og viser ingen info om eventet.
+
+#START
+
+# def home(request):
+#     context = {
+#         'events': Post.objects.all()
+#     }
+#    return render(request, 'event/event.html', context)
+
+class EventListView(ListView):  #Denne gjør at events vises på home i rekkefølge fra nyeste til eldste
+    model = Post
+    template_name = 'event/home.html' #<app>/<model>_<viewtype>.html
+    context_object_name = 'events'
+    ordering = ['-date_posted']
+
+class EventDetailView(DetailView):
+    model = Post
+    template_name = 'event/event_detail.html'
+
+class EventCreateView(LoginRequiredMixin, CreateView):
+    model = Post
+    fields = ['title', 'content', 'attendance_limit']
+    template_name = 'event/event_form.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Post
+    fields = ['title', 'content', 'attendance_limit']
+    template_name = 'event/event_form.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        event = self.get_object()
+        if self.request.user == event.author:
+            return True
+        return False
+#END
+
+class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Post
+    template_name = 'event/event_confirm_delete.html'
+    success_url = '/'
+
+    def test_func(self):
+        event = self.get_object()
+        if self.request.user == event.author:
+            return True
+        return False
 
 
 class HtmlRender:
@@ -26,9 +86,6 @@ class HtmlRender:
     def homePage(request):
         events = Post.objects.all()
         bigEvent = Post.objects.first()
-
-
-
         context = {
             'bigEvent': bigEvent,
             'events': events
