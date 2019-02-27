@@ -127,5 +127,5 @@ MEDIA_URL = '/media/'   #Path til media
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4' #Bruker bootstrap 4 for styling av HTML tags
 
-LOGIN_REDIRECT_URL = 'eventify-home' # Når man logger inn sendes man automatisk til hjemsiden
+LOGIN_REDIRECT_URL = 'event-home' # Når man logger inn sendes man automatisk til hjemsiden
 LOGIN_URL = 'login'
