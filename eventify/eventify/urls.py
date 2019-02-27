@@ -38,6 +38,7 @@ urlpatterns = [
     path('events/search/', event_views.EventViews.search_events, name='event-search'),
     path('event/details/', event_views.EventViews.eventDetails, name='event-details'),
     path('event/join/', event_views.EventViews.eventJoin, name='event-join'),
+    path('event/remove/', event_views.EventViews.leaveEvent, name='event-remove'),
     path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name="login"),
     path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name="logout"),
     path('', include('event.urls'))

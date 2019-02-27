@@ -76,7 +76,10 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 class HtmlRender:
 
+
+
     def home(request):
+
         context = {
             'events': Post.objects.all()
         }
@@ -312,7 +315,7 @@ class EventViews:
 
 
         # send reponse JSON
-        return redirect("event-page", event_id=event.id)
+        return redirect('event-detail', pk=event_id)
 
     @login_required
     def leaveEvent(request):
@@ -321,7 +324,7 @@ class EventViews:
         user = request.user
         event = Post.objects.get(pk=event_id)
 
-        if event.attendees.filter(pk=user.id).first() != None:
+        if event.attendees.filter(pk=user.id).first():
             event.attendees.remove(user)
             response = {
                 'status': 'success',
@@ -335,7 +338,7 @@ class EventViews:
                 'attendance': event.attendees.all().count()
             }
         # send reponse JSON
-        return JsonResponse(response)
+        return redirect('event-detail', pk=event_id)
 
     def search_events(request):
 

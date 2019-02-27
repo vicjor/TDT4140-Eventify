@@ -6,6 +6,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE) #Er en 1-1 relasjon mellom bruker og profil
     image = models.ImageField(default="default.jpg", upload_to="profile_pics") #Profilbilde til bruker
 
+
     def __str__(self):
         return f'{self.user.username} Profile'
 

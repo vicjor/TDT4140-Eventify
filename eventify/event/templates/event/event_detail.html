@@ -11,7 +11,28 @@
                             <a class="btn btn-seconday btn-sm mt-1 mb-1" href="{% url 'event-update' object.id %}">Update</a>
                             <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'event-delete' object.id %}">Delete</a>
                         </div>
+                    {% else %}
+                        {% if user.is_authenticated %}
+                            {% if user.id in object.attendees %}
+                                <div>
+                                    <form method="POST" action="{% url 'event-remove' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="event-id" value="{{ object.id }}">
+                                        <input class="myButton" type="submit" value="Sign Off Event"/>
+                                    </form>
+                                </div>
+                            {% else %}
+                                <div>
+                                    <form method="POST" action="{% url 'event-join' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="event-id" value="{{ object.id }}">
+                                        <input class="myButton" type="submit" value="Join Event"/>
+                                    </form>
+                                </div>
+                            {% endif %}
+                        {% endif %}
                     {% endif %}
+
                 </div>
                 <h2 class="article-title" >{{ object.title }}</h2>
                 <p class="article-content">{{ object.content }}</p>
