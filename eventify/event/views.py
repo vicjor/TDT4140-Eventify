@@ -22,11 +22,6 @@ events = [
 
 #START
 
-# def home(request):
-#     context = {
-#         'events': Post.objects.all()
-#     }
-#    return render(request, 'event/event.html', context)
 
 class EventListView(ListView):  #Denne gjør at events vises på home i rekkefølge fra nyeste til eldste
     model = Post
@@ -37,6 +32,8 @@ class EventListView(ListView):  #Denne gjør at events vises på home i rekkefø
 class EventDetailView(DetailView):
     model = Post
     template_name = 'event/event_detail.html'
+    context_object_name = 'events'
+
 
 class EventCreateView(LoginRequiredMixin, CreateView):
     model = Post
@@ -51,6 +48,7 @@ class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
     fields = ['title', 'content', 'attendance_limit']
     template_name = 'event/event_form.html'
+    context_object_name = 'events'
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -318,7 +316,7 @@ class EventViews:
         # send reponse JSON
         return JsonResponse(response)
 
-    def searchEvents(request):
+    def search_events(request):
 
         event_search = str(request.POST.get('event-search', False))
         location_search = str(request.POST.get('location-search', False))

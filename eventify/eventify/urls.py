@@ -35,7 +35,7 @@ urlpatterns = [
     path('event/update/<int:event_id>/', event_views.EventViews.updateEvent, name='update-event'),
     path('event/remove/', event_views.EventViews.removeEvent, name='remove-event'),
     path('create-event/event/create', event_views.EventViews.createEvent, name='submit-event'), #Hvilken av disse lager eventet?
-    path('event/search/', event_views.EventViews.searchEvents, name='search-events'),
+    path('events/search/', event_views.EventViews.search_events, name='event-search'),
     path('event/details/', event_views.EventViews.eventDetails, name='event-details'),
     path('event/join/', event_views.EventViews.eventJoin, name='event-join'),
     path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name="login"),

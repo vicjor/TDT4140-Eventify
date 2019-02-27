@@ -2,10 +2,10 @@
 
 {% block content %}
 <div class="searchbox">
-    {% if request.get_full_path == "/event/search/" %}
+    {% if request.get_full_path == "/events/event/search/" %}
         <form name="event-search-form" method="POST">
     {% else %}
-        <form name="event-search-form" method="POST" action="event/search/">
+        <form name="event-search-form" method="POST" action="{% url 'event-search' %}">
     {% endif %}
             {% csrf_token %}
             <table class="table">
@@ -27,21 +27,7 @@
             </table>
         </form>
     </div>
-{% if event_search_results %}
-    {% for event in event_search_results %}
-        <article class="media content-section">
-            <img class="rounded-circle article-img" src="{{ event.image.url }}" alt="">
-            <div class="media-body">
-                <div class="article-metadata">
-                    <a class="mr-2" href="#">{{ event.author }}</a>
-                    <small class="text-muted">{{ event.date_posted }}</small>
-                </div>
-                <h2><a class="article-title" href="{% url 'event-detail' event.id %}">{{ event.title }}</a></h2>
-                <p class="article-content">{{ event.location }}</p>
-            </div>
-        </article>
-    {% endfor %}
-{% endif %}
+
 {% for event in events %}
 <article class="media content-section">
     <img class="rounded-circle article-img" src="{{ event.image.url }}" alt="">
@@ -50,7 +36,7 @@
             <a class="mr-2" href="#">{{ event.author }}</a>
             <small class="text-muted">{{ event.date_posted }}</small>
         </div>
-        <h2><a class="article-title" href="#">{{ event.title }}</a></h2>
+        <h2><a class="article-title" href="{% url 'event-detail' event.id %}">{{ event.title }}</a></h2>
         <p class="article-content">{{ event.location }}</p>
     </div>
 </article>
