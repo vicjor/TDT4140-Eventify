@@ -5,6 +5,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Post
+from django.contrib import messages
 from django.utils import timezone
 import pytz
 import json
@@ -256,6 +257,7 @@ class EventViews:
             pass
 
 
+
         # Save updated event
         event.save()
 
@@ -290,29 +292,48 @@ class EventViews:
     @login_required
     def eventJoin(request):
         # get event
-        event_id = int(request.POST['event-id'])
+        event_id = int(request.POST.get('event-id', False))
         user = request.user
         event = Post.objects.get(pk=event_id)
-
 
         # get updated attendance count
         attendance = event.attendees.all().count()
 
         # create response
         if attendance + 1 <= event.attendance_limit:
+            messages.error(request, f'The event is already full.')
+            return render(request, )
+        elif len(event.attendees.filter(attendees__id=user.id)) == 1:
+            messages.error(request, f'You are already signed up for this event.')
+        else:
             # add user to event
             event.attendees.add(user)
+            messages.success(request, f'You are now signed up for the event! ')
+
+
+        # send reponse JSON
+        return redirect("event-page", event_id=event.id)
+
+    @login_required
+    def leaveEvent(request):
+        # get event
+        event_id = int(request.POST.get('event-id', False))
+        user = request.user
+        event = Post.objects.get(pk=event_id)
+
+        if event.attendees.filter(pk=user.id).first() != None:
+            event.attendees.remove(user)
             response = {
                 'status': 'success',
-                'attendance': attendance
+                'attendance': event.attendees.all().count()
             }
+
         else:
             response = {
                 'status': 'fail',
-                'error_msg': 'The event is already full.',
-                'attendance': attendance
+                'error_msg': "Can't leave an event you haven't joined.",
+                'attendance': event.attendees.all().count()
             }
-
         # send reponse JSON
         return JsonResponse(response)
 
@@ -368,7 +389,7 @@ class EventViews:
             # create response
             context = {
                 'status': 'success',
-                'event_search_results': event_search_results
+                'events': event_search_results
             }
 
         # return JsonResponse(context)
