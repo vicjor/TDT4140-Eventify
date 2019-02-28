@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
+from PIL import Image
 from users.models import Profile
 
 # Create your models here.
@@ -21,6 +22,15 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):    #Brukes for å lagre etter å ha oppdatert bruker, *args og **kwargs gjør at vi kan sende inn flere argumenter i funksjonen
+        super().save(*args, **kwargs)   #Bruker superklasse
+        img = Image.open(self.image.path)
+
+        if img.height > 800 or img.width > 1200: #Skalerer ned alle bilder til max 300 x 300. Dette for å unngå unødvendig store filer, og at bilde bare brukes osm thumbnail.
+            output_size = (800, 1200)
+            img.thumbnail(output_size)
+            img.save(self.image.path)
 
     def get_absolute_url(self):
         return reverse('event-detail', kwargs={'pk': self.pk}) #Etter man har opprettet et arrangement redigerer denne deg til eventet
