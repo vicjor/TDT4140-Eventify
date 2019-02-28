@@ -133,6 +133,17 @@ ul {
     color: #444444;
 }
 
+
+.row.display-flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.row.display-flex > [class*='col-'] {
+  display: flex;
+  flex-direction: column;
+}
+
 a.article-title:hover {
     color: #428bca;
     text-decoration: none;
