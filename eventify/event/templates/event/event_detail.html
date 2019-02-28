@@ -1,12 +1,12 @@
 {% extends "event/base.html" %}
 {% block content %}
-        <article class="media content-section-event">
+        <article class="media content-section">
             <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}" alt="">
             <div class="media-body">
                 <div class="article-metadata">
                     <a class="mr-2" href="#">{{ object.author }}</a>
                     <small class="text-muted">{{ object.date_posted }}</small>
-                    <p class="text-muted" > {{ object.attendees.all.count }} / {{object.attendance_limit}}
+                    <p class="text-muted" > {{object.attendees.all.count}} / {{object.attendance_limit}}
                     </p>
                     {% if object.author == user %}
                         <div>

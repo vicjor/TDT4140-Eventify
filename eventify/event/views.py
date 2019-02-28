@@ -38,7 +38,7 @@ class EventDetailView(DetailView):
 
 class EventCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'content', 'attendance_limit']
+    fields = ['title', 'content', 'attendance_limit', 'start_date', 'end_date']
     template_name = 'event/event_form.html'
 
     def form_valid(self, form):
@@ -47,7 +47,7 @@ class EventCreateView(LoginRequiredMixin, CreateView):
 
 class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
-    fields = ['title', 'content', 'attendance_limit']
+    fields = ['title', 'content', 'attendance_limit', 'start_date', 'end_date']
     template_name = 'event/event_form.html'
     context_object_name = 'events'
 
@@ -60,6 +60,8 @@ class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         if self.request.user == event.author:
             return True
         return False
+
+
 #END
 
 class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -122,7 +124,7 @@ class HtmlRender:
             'events': events
         }
 
-        return render(request, 'event/allEvents.html', context)
+        return render(request, 'event/all_events.html', context)
 
     @login_required
     def myEvents(request):
@@ -143,7 +145,7 @@ class HtmlRender:
             'joined_events': joined_events
         }
 
-        return render(request, 'event/myEvents.html', context)
+        return render(request, 'event/my_events.html', context)
 
     @login_required
     def editEvent(request, event_id):
