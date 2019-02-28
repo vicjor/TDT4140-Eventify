@@ -13,11 +13,11 @@
         {% csrf_token %}
 
         <div class="form-group">
-            <a class="myButton" href="{% url 'edit-profile' %}">Update Profile</a>
+            <a class="btn btn-info" href="{% url 'edit-profile' %}">Update Profile</a>
 
             <!--Fjerner create event knapp dersom man ikke er admin eller staff-->
             {% if user.is_staff or user.is_admin %}
-                <a class="myButton" href="{% url 'create-event' %}">Create Event</a>
+                <a class="btn btn-primary" href="{% url 'create-event' %}">Create Event</a>
             {% endif %}
         </div>
     </form>
