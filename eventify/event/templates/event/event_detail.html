@@ -1,7 +1,4 @@
 {% extends "event/base.html" %}
-
-
-
 {% block content %}
 
 <div class="container">
@@ -42,16 +39,43 @@
 
         <article class="media content-section-event">
             <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}" alt="">
+        <article class="media content-section">
+            <img class="rounded-circle article-img" src="{{ object.image.url }}" alt="">
             <div class="media-body">
                 <div class="article-metadata">
                     <a class="mr-2" href="#">{{ object.author }}</a>
                     <small class="text-muted">{{ object.date_posted }}</small>
+                    <p class="text-muted" > {{object.attendees.all.count}} / {{object.attendance_limit}}
+                    </p>
                     {% if object.author == user %}
                         <div>
                             <a class="btn btn-seconday btn-sm mt-1 mb-1" href="{% url 'event-update' object.id %}">Update</a>
                             <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'event-delete' object.id %}">Delete</a>
                         </div>
+                    {% else %}
+                        {% if user.is_authenticated %}
+                            {% if user in object.attendees.all %}
+                                <div>
+                                    <form method="POST" action="{% url 'event-leave' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="event-id" value="{{ object.id }}">
+                                        <input class="btn btn-danger" type="submit" value="Sign Off Event"/>
+                                    </form>
+                                </div>
+                            {% else %}
+                                {% if object.attendance_limit > 0 %}
+                                    <div>
+                                        <form method="POST" action="{% url 'event-join' %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="event-id" value="{{ object.id }}">
+                                            <input class="btn btn-success" type="submit" value="Join Event"/>
+                                        </form>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
                     {% endif %}
+
                 </div>
                 <h2 class="article-title" >{{ object.title }}</h2>
                 <p class="article-content">{{ object.content }}</p>

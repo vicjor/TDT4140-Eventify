@@ -38,7 +38,7 @@ class EventDetailView(DetailView):
 
 class EventCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'content', 'attendance_limit']
+    fields = ['title', 'content', 'attendance_limit', 'start_date', 'end_date','image', 'is_private']
     template_name = 'event/event_form.html'
 
     def form_valid(self, form):
@@ -47,7 +47,7 @@ class EventCreateView(LoginRequiredMixin, CreateView):
 
 class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
-    fields = ['title', 'content', 'attendance_limit']
+    fields = ['title', 'content', 'attendance_limit', 'start_date', 'end_date', 'image','is_private']
     template_name = 'event/event_form.html'
     context_object_name = 'events'
 
@@ -60,6 +60,8 @@ class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         if self.request.user == event.author:
             return True
         return False
+
+
 #END
 
 class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -76,14 +78,19 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 class HtmlRender:
 
+
+
     def home(request):
+
         context = {
-            'events': Post.objects.all()
+            #'events': Post.objects.all()
+            'events': Post.objects.filter(is_private=False)
         }
         return render(request, 'event/event.html', context)
 
     def homePage(request):
-        events = Post.objects.all()
+        #events = Post.objects.all()
+        events = Post.objects.filter(is_private=False)
         bigEvent = Post.objects.first()
         context = {
             'bigEvent': bigEvent,
@@ -104,7 +111,8 @@ class HtmlRender:
         return render(request, 'event/createEvent.html', context)
 
     def allEvents(request):
-        events = Post.objects.all()
+        #events = Post.objects.all()
+        events = Post.objects.filter(is_private=False)
 
 
         # Filter out users own events
@@ -119,7 +127,7 @@ class HtmlRender:
             'events': events
         }
 
-        return render(request, 'event/allEvents.html', context)
+        return render(request, 'event/all_events.html', context)
 
     @login_required
     def myEvents(request):
@@ -140,7 +148,7 @@ class HtmlRender:
             'joined_events': joined_events
         }
 
-        return render(request, 'event/myEvents.html', context)
+        return render(request, 'event/my_events.html', context)
 
     @login_required
     def editEvent(request, event_id):
@@ -174,6 +182,7 @@ class EventViews:
         local_tz = pytz.timezone('Europe/Oslo')
         new_start_date = Utility.toUTC(new_start_date, new_start_time, local_tz)
         new_end_date = Utility.toUTC(new_end_date, new_end_time, local_tz)
+        new_is_private = request.POST.get('is_private', False)
 
 
         if new_start_date < datetime.now(pytz.utc):
@@ -195,7 +204,8 @@ class EventViews:
                 end_date=new_end_date,
                 location=new_location,
                 attendance_limit=new_attendance_limit,
-                content=new_content
+                content=new_content,
+                is_private = new_is_private
             )
 
             response = {
@@ -219,10 +229,12 @@ class EventViews:
         local_tz = pytz.timezone(time_zone)
         event = get_object_or_404(Post, pk=event_id)
 
+
         # Update Event
         event.title =  new_title
         event.location = new_location
         event.content = new_content
+
 
         # handle start/end dt's
         try:
@@ -300,10 +312,11 @@ class EventViews:
         attendance = event.attendees.all().count()
 
         # create response
-        if attendance + 1 <= event.attendance_limit:
+        if event.attendance_limit == 0:
+            messages.error(request, f'This even is not open for attendees yet. ')
+        elif attendance + 1 >= event.attendance_limit:
             messages.error(request, f'The event is already full.')
-            return render(request, )
-        elif len(event.attendees.filter(attendees__id=user.id)) == 1:
+        elif user in event.attendees.all():
             messages.error(request, f'You are already signed up for this event.')
         else:
             # add user to event
@@ -312,7 +325,7 @@ class EventViews:
 
 
         # send reponse JSON
-        return redirect("event-page", event_id=event.id)
+        return redirect('event-detail', pk=event_id)
 
     @login_required
     def leaveEvent(request):
@@ -321,21 +334,14 @@ class EventViews:
         user = request.user
         event = Post.objects.get(pk=event_id)
 
-        if event.attendees.filter(pk=user.id).first() != None:
+        if user in event.attendees.all():
             event.attendees.remove(user)
-            response = {
-                'status': 'success',
-                'attendance': event.attendees.all().count()
-            }
+            messages.success(request, f'You are now signed off the event. ')
 
         else:
-            response = {
-                'status': 'fail',
-                'error_msg': "Can't leave an event you haven't joined.",
-                'attendance': event.attendees.all().count()
-            }
-        # send reponse JSON
-        return JsonResponse(response)
+            messages.error(request, f"You can't sign off an event you're not signed up for. ")
+
+        return redirect('event-detail', pk=event_id)
 
     def search_events(request):
 

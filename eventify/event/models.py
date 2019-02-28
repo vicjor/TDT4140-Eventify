@@ -16,7 +16,8 @@ class Post(models.Model):
     attendance_limit = models.IntegerField(null=True, default=10000)
     location = models.CharField(max_length=100, null=True)
     content = models.TextField()
-    image = models.ImageField(default="default.jpg", upload_to="event_images")
+    image = models.ImageField(default="default_event.jpg", upload_to="event_images")
+    is_private = models.BooleanField(default=False)
 
 
     def __str__(self):
@@ -27,5 +28,3 @@ class Post(models.Model):
 
     class Meta:
        ordering = ['-start_date']
-
-
