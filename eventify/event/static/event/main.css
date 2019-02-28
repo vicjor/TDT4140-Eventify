@@ -99,6 +99,15 @@ ul {
     width: 300px;
 }
 
+.content-section-info {
+    background: #ffffff;
+    padding: 10px 20px;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    margin-bottom: 20px;
+    width: 300px;
+}
+
 .flex-container {
     display: flex;
     margin: 10px;
@@ -111,23 +120,6 @@ ul {
 
 }
 
-.flex-container2 {
-    display: flex;
-    background: #F6F6F6;
-    height: 500px;
-    width: 100%;
-    padding: 50px;
-
-}
-
-.searchbox {
-    padding: 20px;
-
-}
-
-.searchtable td {
-    padding: 10px;
-}
 
 .article-title {
     color: #444444;

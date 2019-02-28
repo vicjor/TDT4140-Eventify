@@ -1,7 +1,7 @@
 {% extends "event/base.html" %}
 
 {% block content %}
-<div class="searchbox">
+<div class="table">
     {% if request.get_full_path == "/events/event/search/" %}
         <form name="event-search-form" method="POST">
     {% else %}
