@@ -26,7 +26,20 @@
 
                 </div>
 
-                 {% if object.author == user %}
+                <small class="text-muted">Published: {{ object.date_posted }}</small>
+                <p class="article-content">{{ object.content }}</p>
+            </div>
+        </article>
+
+       </div>
+
+<div class="col-md-4">
+
+    <article class="media content-section-info">
+
+    <div class="article-metadata">
+
+        {% if object.author == user %}
                         <div>
                             <a class="btn btn-seconday btn-sm mt-1 mb-1" href="{% url 'event-update' object.id %}">Update</a>
                             <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'event-delete' object.id %}">Delete</a>
@@ -55,23 +68,11 @@
                         {% endif %}
                     {% endif %}
 
-                <small class="text-muted">Published: {{ object.date_posted }}</small>
-                <p class="article-content">{{ object.content }}</p>
-            </div>
-        </article>
-
-       </div>
-
-<div class="col-md-4">
-
-    <article class="media content-section-info">
-
-    <div class="article-metadata">
-
         <p class="text-muted" > {{object.attendees.all.count}} / {{object.attendance_limit}}</p>
-        <p>{{ object.location }}</p>
-        <i class="icon-search"></i>
-       <p> {{ object.start_date }} - {{ object.end_date}}</p>
+
+        <p> <i class="fas fa-map-marker-alt"> </i> {{ object.location }}</p>
+
+       <p> <i class="fas fa-calendar-alt"> </i> {{ object.start_date }} - {{ object.end_date}}</p>
 
 
     </div>
