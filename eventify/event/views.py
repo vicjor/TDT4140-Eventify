@@ -29,6 +29,8 @@ class EventListView(ListView):  #Denne gjør at events vises på home i rekkefø
     template_name = 'event/home.html' #<app>/<model>_<viewtype>.html
     context_object_name = 'events'
     ordering = ['-date_posted']
+    def get_queryset(self):
+        return Post.objects.filter(is_private=False)
 
 class EventDetailView(DetailView):
     model = Post
