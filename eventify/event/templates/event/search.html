@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="searchbox">
-    {% if request.get_full_path == "/events/search/" %}
+    {% if request.get_full_path == "/events/event/search/" %}
         <form name="event-search-form" method="POST">
     {% else %}
         <form name="event-search-form" method="POST" action="{% url 'event-search' %}">
@@ -27,19 +27,19 @@
             </table>
         </form>
     </div>
-{% for event in events %}
-<article class="media content-section">
-    <img class="rounded-circle article-img" src="{{ event.image.url }}" alt="">
-    <div class="media-body">
-        <div class="article-metadata">
-            <a class="mr-2" href="#">{{ event.author }}</a>
-            <small class="text-muted">{{ event.date_posted }}</small>
-        </div>
-        <h2><a class="article-title" href="{% url 'event-detail' event.id %}">{{ event.title }}</a></h2>
-        <p class="article-content">{{ event.location }}</p>
-    </div>
-</article>
-{% endfor %}
 
+    {% for event in events %}
+    <article class="media content-section">
+        <img class="rounded-circle article-img" src="{{ event.image.url }}" alt="">
+        <div class="media-body">
+            <div class="article-metadata">
+                <a class="mr-2" href="#">{{ event.author }}</a>
+                <small class="text-muted">{{ event.date_posted }}</small>
+            </div>
+            <h2><a class="article-title" href="{% url 'event-detail' event.id %}">{{ event.title }}</a></h2>
+            <p class="article-content">{{ event.location }}</p>
+        </div>
+    </article>
+    {% endfor %}
 {% endblock %}
 
