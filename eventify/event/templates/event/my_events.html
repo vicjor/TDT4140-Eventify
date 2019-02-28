@@ -1,47 +1,48 @@
 {% extends "event/base.html" %}
 {% block content %}
      <main role="main" class="inner cover">
-         <h1 class="cover-heading">{{ coverHeading }}</h1>
-         <div class="row">
-              <div class="col-sm-12 col-lg-6 created-events">
-                  <h2>Created Events <a href="{% url 'my-events' %}"><i class="fa fa-plus"></i></a></h2>
+         <h1 class="display-3">{{ coverHeading }}</h1>
+         <hr>
+              <div class="created-events">
+                  {% if user.is_staff or user.is_superuser %}
+                    <h2 class="display-4">Created Events <a href="{% url 'my-events' %}"><i class="fa fa-plus"></i></a></h2>
+                  {% endif %}
                   {% if created_events %}
-                        <div class="row event-search-results">
+                        <div class="">
                             {% for event in created_events %}
                                 <div class="event-preview" data-id="{{ event.id }}">
                                     {% csrf_token %}
-                                    <p>{{ event.name|truncatechars:18 }}</p>
-                                    <p>{{ event.start_date.date }}</p>
-                                     <span>
-                                        <i class="fa fa-users" aria-hidden="true"></i>
-                                    </span>
-                                    <span  class="attendee-count">
-                                        {{ event.attendees.all.count }}
-                                    </span>
+                                    <h4><a href="{% url 'event-detail' event.id %}">{{ event.title|truncatechars:18 }}</a></h4>
+                                    <p class="">Date: {{ event.start_date.date }}
+                                    <br>
+                                    Atendees: {{ event.attendees.all.count }}
+                                    </p>
                                 </div>
                             {% endfor %}
                         </div>
-                  {% else %}
+                  {% elif user.is_authenticated %}
                         <p class="text center">
-                            No events created.
                         </p>
+                  {% else %}
+                  <p class="text center"> No events created.
+                  </p>
                   {% endif %}
-              </div>
-              <div class="col-sm-12 col-lg-6 joined-events">
-                    <h2>Joined Events</h2>
-                    {% if joined_events %}
-                        <div class="row event-search-results">
-                            {% for event in joined_events %}
-                                <div class="event-preview" data-id="{{ event.id }}">
-                                    {% csrf_token %}
-                                    <p>{{ event.name|truncatechars:18 }}</p>
-                                    <p>{{ event.start_date.date }}</p>
-                                    <span>
-                                        <i class="fa fa-users" aria-hidden="true"></i>
-                                    </span>
-                                    <span  class="attendee-count">
-                                        {{ event.attendees.all.count }}
-                                    </span>
+
+
+
+              <div class="joined-events">
+                  {% if user.is_staff or user.is_superuser %}
+                        <div></div>
+                  {% elif joined_events %}
+                    <h2 class="display-4 text-left" >Joined Events</h2>
+                        {% for event in joined_events %}
+                            <div class="event-preview" data-id="{{ event.id }}">
+                                {% csrf_token %}
+                                    <h4><a href="{% url 'event-detail' event.id %}">{{ event.title|truncatechars:18 }}</a></h4>
+                                        <p class="">Date: {{ event.start_date.date }}
+                                        <br>
+                                        Atendees: {{ event.attendees.all.count }}
+                                        </p>
                                 </div>
                             {% endfor %}
                         </div>
