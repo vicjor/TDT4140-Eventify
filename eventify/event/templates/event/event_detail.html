@@ -20,17 +20,19 @@
                                     <form method="POST" action="{% url 'event-leave' %}">
                                         {% csrf_token %}
                                         <input type="hidden" name="event-id" value="{{ object.id }}">
-                                        <input class="myButton" type="submit" value="Sign Off Event"/>
+                                        <input class="btn btn-danger" type="submit" value="Sign Off Event"/>
                                     </form>
                                 </div>
                             {% else %}
-                                <div>
-                                    <form method="POST" action="{% url 'event-join' %}">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="event-id" value="{{ object.id }}">
-                                        <input class="myButton" type="submit" value="Join Event"/>
-                                    </form>
-                                </div>
+                                {% if object.attendance_limit > 0 %}
+                                    <div>
+                                        <form method="POST" action="{% url 'event-join' %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="event-id" value="{{ object.id }}">
+                                            <input class="btn btn-success" type="submit" value="Join Event"/>
+                                        </form>
+                                    </div>
+                                {% endif %}
                             {% endif %}
                         {% endif %}
                     {% endif %}
