@@ -29,6 +29,8 @@ class EventListView(ListView):  #Denne gjør at events vises på home i rekkefø
     template_name = 'event/home.html' #<app>/<model>_<viewtype>.html
     context_object_name = 'events'
     ordering = ['-date_posted']
+    def get_queryset(self):
+        return Post.objects.filter(is_private=False)
 
 class EventDetailView(DetailView):
     model = Post
@@ -38,7 +40,7 @@ class EventDetailView(DetailView):
 
 class EventCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'content', 'attendance_limit', 'start_date', 'end_date','image', 'is_private']
+    fields = ['title', 'location', 'content', 'attendance_limit', 'start_date', 'end_date','image', 'is_private']
     template_name = 'event/event_form.html'
 
     def form_valid(self, form):
@@ -47,7 +49,7 @@ class EventCreateView(LoginRequiredMixin, CreateView):
 
 class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
-    fields = ['title', 'content', 'attendance_limit', 'start_date', 'end_date', 'image','is_private']
+    fields = ['title', 'location', 'content', 'attendance_limit', 'start_date', 'end_date', 'image', 'is_private']
     template_name = 'event/event_form.html'
     context_object_name = 'events'
 
