@@ -38,7 +38,7 @@ class EventDetailView(DetailView):
 
 class EventCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'location', 'content', 'attendance_limit', 'start_date', 'end_date']
+    fields = ['title', 'content', 'attendance_limit', 'start_date', 'end_date','image', 'is_private']
     template_name = 'event/event_form.html'
 
     def form_valid(self, form):
@@ -47,7 +47,7 @@ class EventCreateView(LoginRequiredMixin, CreateView):
 
 class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
-    fields = ['title', 'location', 'content', 'attendance_limit', 'start_date', 'end_date', 'image']
+    fields = ['title', 'content', 'attendance_limit', 'start_date', 'end_date', 'image','is_private']
     template_name = 'event/event_form.html'
     context_object_name = 'events'
 
@@ -83,12 +83,14 @@ class HtmlRender:
     def home(request):
 
         context = {
-            'events': Post.objects.all()
+            #'events': Post.objects.all()
+            'events': Post.objects.filter(is_private=False)
         }
         return render(request, 'event/event.html', context)
 
     def homePage(request):
-        events = Post.objects.all()
+        #events = Post.objects.all()
+        events = Post.objects.filter(is_private=False)
         bigEvent = Post.objects.first()
         context = {
             'bigEvent': bigEvent,
@@ -109,7 +111,8 @@ class HtmlRender:
         return render(request, 'event/createEvent.html', context)
 
     def allEvents(request):
-        events = Post.objects.all()
+        #events = Post.objects.all()
+        events = Post.objects.filter(is_private=False)
 
 
         # Filter out users own events
@@ -179,6 +182,7 @@ class EventViews:
         local_tz = pytz.timezone('Europe/Oslo')
         new_start_date = Utility.toUTC(new_start_date, new_start_time, local_tz)
         new_end_date = Utility.toUTC(new_end_date, new_end_time, local_tz)
+        new_is_private = request.POST.get('is_private', False)
 
 
         if new_start_date < datetime.now(pytz.utc):
@@ -200,7 +204,8 @@ class EventViews:
                 end_date=new_end_date,
                 location=new_location,
                 attendance_limit=new_attendance_limit,
-                content=new_content
+                content=new_content,
+                is_private = new_is_private
             )
 
             response = {
@@ -224,10 +229,12 @@ class EventViews:
         local_tz = pytz.timezone(time_zone)
         event = get_object_or_404(Post, pk=event_id)
 
+
         # Update Event
         event.title =  new_title
         event.location = new_location
         event.content = new_content
+
 
         # handle start/end dt's
         try:
