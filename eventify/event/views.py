@@ -182,7 +182,7 @@ class EventViews:
         local_tz = pytz.timezone('Europe/Oslo')
         new_start_date = Utility.toUTC(new_start_date, new_start_time, local_tz)
         new_end_date = Utility.toUTC(new_end_date, new_end_time, local_tz)
-        new_is_private = request.POST.get('is_private')
+        new_is_private = request.POST.get('is_private', False)
 
 
         if new_start_date < datetime.now(pytz.utc):
