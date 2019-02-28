@@ -8,7 +8,7 @@ class Profile(models.Model):
 
 
     def __str__(self):
-        return f'{self.user.username} Profile'
+        return self.user.id
 
     def save(self, *args, **kwargs):    #Brukes for å lagre etter å ha oppdatert bruker, *args og **kwargs gjør at vi kan sende inn flere argumenter i funksjonen
         super().save(*args, **kwargs)   #Bruker superklasse

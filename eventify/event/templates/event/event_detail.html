@@ -6,7 +6,7 @@
                 <div class="article-metadata">
                     <a class="mr-2" href="#">{{ object.author }}</a>
                     <small class="text-muted">{{ object.date_posted }}</small>
-                    <p class="text-muted" > {{object.attendees}} / {{object.attendance_limit}}
+                    <p class="text-muted" > {{ object.attendees.all.count }} / {{object.attendance_limit}}
                     </p>
                     {% if object.author == user %}
                         <div>
@@ -15,9 +15,9 @@
                         </div>
                     {% else %}
                         {% if user.is_authenticated %}
-                            {% if user.id in object.attendees %}
+                            {% if user in object.attendees.all %}
                                 <div>
-                                    <form method="POST" action="{% url 'event-remove' %}">
+                                    <form method="POST" action="{% url 'event-leave' %}">
                                         {% csrf_token %}
                                         <input type="hidden" name="event-id" value="{{ object.id }}">
                                         <input class="myButton" type="submit" value="Sign Off Event"/>

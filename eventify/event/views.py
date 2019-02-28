@@ -303,10 +303,9 @@ class EventViews:
         attendance = event.attendees.all().count()
 
         # create response
-        if attendance + 1 <= event.attendance_limit:
+        if attendance + 1 >= event.attendance_limit:
             messages.error(request, f'The event is already full.')
-            return render(request, )
-        elif len(event.attendees.filter(attendees__id=user.id)) == 1:
+        elif user in event.attendees.all():
             messages.error(request, f'You are already signed up for this event.')
         else:
             # add user to event
@@ -324,20 +323,13 @@ class EventViews:
         user = request.user
         event = Post.objects.get(pk=event_id)
 
-        if event.attendees.filter(pk=user.id).first():
+        if user in event.attendees.all():
             event.attendees.remove(user)
-            response = {
-                'status': 'success',
-                'attendance': event.attendees.all().count()
-            }
+            messages.success(request, f'You are now signed off the event. ')
 
         else:
-            response = {
-                'status': 'fail',
-                'error_msg': "Can't leave an event you haven't joined.",
-                'attendance': event.attendees.all().count()
-            }
-        # send reponse JSON
+            messages.error(request, f"You can't sign off an event you're not signed up for. ")
+
         return redirect('event-detail', pk=event_id)
 
     def search_events(request):
