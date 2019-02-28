@@ -38,7 +38,7 @@ class EventDetailView(DetailView):
 
 class EventCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'content', 'attendance_limit', 'start_date', 'end_date']
+    fields = ['title', 'location', 'content', 'attendance_limit', 'start_date', 'end_date']
     template_name = 'event/event_form.html'
 
     def form_valid(self, form):
@@ -47,7 +47,7 @@ class EventCreateView(LoginRequiredMixin, CreateView):
 
 class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
-    fields = ['title', 'content', 'attendance_limit', 'start_date', 'end_date', 'image']
+    fields = ['title', 'location', 'content', 'attendance_limit', 'start_date', 'end_date', 'image']
     template_name = 'event/event_form.html'
     context_object_name = 'events'
 
