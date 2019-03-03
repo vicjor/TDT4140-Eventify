@@ -12,6 +12,9 @@ import json
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from .forms import UploadFileForm
 
 events = [
 ]
@@ -22,6 +25,21 @@ events = [
 #bare base, og viser ingen info om eventet.
 
 #START
+
+def handle_uploaded_file(f):
+    with open('some/file/name.txt', 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+
+def upload_file(request):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            handle_uploaded_file(request.FILES['file'])
+            return HttpResponseRedirect('/success/url/')
+    else:
+        form = UploadFileForm()
+    return render(request, 'upload.html', {'form': form})
 
 
 class EventListView(ListView):  #Denne gjør at events vises på home i rekkefølge fra nyeste til eldste
