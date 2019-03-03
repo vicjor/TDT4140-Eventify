@@ -5,7 +5,7 @@
          <hr>
               <div class="created-events">
                   {% if user.is_staff or user.is_superuser %}
-                    <h2 class="display-4">Created Events <a href="{% url 'my-events' %}"><i class="fa fa-plus"></i></a></h2>
+                    <h2 class="display-4">Created Events <a href="{% url 'event-create' %}"><i class="fa fa-plus"></i></a></h2>
                   {% endif %}
                   {% if created_events %}
                         <div class="">
@@ -41,7 +41,7 @@
                                     <h4><a href="{% url 'event-detail' event.id %}">{{ event.title|truncatechars:18 }}</a></h4>
                                         <p class="">Date: {{ event.start_date.date }}
                                         <br>
-                                        Atendees: {{ event.attendees.all.count }}
+                                        Attendees: {{ event.attendees.all.count }}
                                         </p>
                                 </div>
                             {% endfor %}
