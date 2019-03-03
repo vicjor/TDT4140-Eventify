@@ -45,7 +45,7 @@
                         {% if user.is_authenticated %}
                             {% if user in object.attendees.all %}
                                 <div>
-                                    <form method="POST" action="{% url 'event-leave' %}">
+                                    <form method="POST" action="{% url 'event-leave' %}" >
                                         {% csrf_token %}
                                         <input type="hidden" name="event-id" value="{{ object.id }}">
                                         <input class="btn btn-danger" type="submit" value="Sign Off Event"/>

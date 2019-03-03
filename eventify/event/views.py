@@ -15,6 +15,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .forms import UploadFileForm
+import os
+from django.conf import settings
 
 events = [
 ]
@@ -26,20 +28,21 @@ events = [
 
 #START
 
-def handle_uploaded_file(f):
-    with open('some/file/name.txt', 'wb+') as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
-
-def upload_file(request):
+def handle_upload(request):
     if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            handle_uploaded_file(request.FILES['file'])
-            return HttpResponseRedirect('/success/url/')
+        p_form = UploadFileForm(request.POST, request.FILES, instance=request.user.profile)
+        if p_form.is_valid(): # Både user og profile må være gyldig
+            p_form.save()
+            messages.success(request, f'Your account has been updated!')
+            return redirect('profile') #Redirigerer deg tilbake til profilen
+
     else:
-        form = UploadFileForm()
-    return render(request, 'upload.html', {'form': form})
+        p_form = UploadFileForm(instance=request.user.profile)
+
+    context = {
+        'p_form': p_form
+    }
+    return render(request, 'users/profile.html', context)
 
 
 class EventListView(ListView):  #Denne gjør at events vises på home i rekkefølge fra nyeste til eldste
@@ -58,7 +61,7 @@ class EventDetailView(DetailView):
 
 class EventCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'content', 'attendance_limit', 'start_date', 'end_date','image', 'is_private']
+    fields = ['title', 'content', 'attendance_limit', 'start_date', 'end_date','image', 'is_private', 'location']
     template_name = 'event/event_form.html'
 
     def form_valid(self, form):
@@ -67,7 +70,7 @@ class EventCreateView(LoginRequiredMixin, CreateView):
 
 class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
-    fields = ['title', 'content', 'attendance_limit', 'start_date', 'end_date', 'image','is_private']
+    fields = ['title', 'content', 'attendance_limit', 'start_date', 'end_date', 'image','is_private', 'location']
     template_name = 'event/event_form.html'
     context_object_name = 'events'
 
