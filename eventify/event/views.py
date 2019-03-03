@@ -91,7 +91,6 @@ class HtmlRender:
         return render(request, 'event/event.html', context)
 
     def homePage(request):
-        #events = Post.objects.all()
         events = Post.objects.filter(is_private=False)
         bigEvent = Post.objects.first()
         context = {

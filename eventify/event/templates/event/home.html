@@ -1,31 +1,48 @@
 {% extends "event/base.html" %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!--<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> -->
+<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> -->
 <!--<link rel="stylesheet" href="main.css">-->
+
+
 
 {% block content %}
 
-<div class="flex-container2">
-
-    <h1>HOME</h1>
+ <div class="backgroundimg" >
 
 
-</div>
 
-<div class = "flex-container">
+        <img src="{{ events.first.image.url }}" width=100%>
+
+        <div class="overlay-text">
+
+            <p>Eventify</p>
+
+        </div>
+
+         <button class="button_header" href="">JOIN EVENT</button>
+
+
+
+    </div>
+
+
+    <div class = "flex-container">
 
 
  {% for event in events %}
-        <article class="media content-section-event">
-            <img class="rounded-circle article-img" src="{{ event.image.url }}" alt="">
-            <div class="media-body">
-                <div class="article-metadata">
-                    <a class="mr-2" href="#">{{ event.author }}</a>
-                    <small class="text-muted">{{ event.date_posted }}</small>
-                </div>
-                <h2><a class="article-title" href="{% url 'event-detail' event.id %}">{{ event.title }}</a></h2>
-                <p class="article-content">{{ event.content }}</p>
+        <article class="media content-section-event" >
+            <div class="media-body-home">
+                <a href="{% url 'event-detail' event.id %}"> <img src="{{ event.image.url }}" alt="" width="300px" height="150px" ></a>
+
+                    <div class="overlay-text-event">
+                <h2><a class="article-title" href="{% url 'event-detail' event.id %}" style="color:white;">{{ event.title }}</a></h2>
+                    </div>
+
+                <div class="overlay-text-ticket">
+                <button class="btn btn-success" id="button_opacity"  href="{% url 'event-detail' event.id %}" >JOIN EVENT</button>
+                    </div>
+
             </div>
 
         </article>
