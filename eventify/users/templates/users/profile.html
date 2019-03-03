@@ -17,7 +17,7 @@
 
             <!--Fjerner create event knapp dersom man ikke er admin eller staff-->
             {% if user.is_staff or user.is_admin %}
-                <a class="btn btn-primary" href="{% url 'create-event' %}">Create Event</a>
+                <a class="btn btn-primary" href="{% url 'event-create' %}">Create Event</a>
             {% endif %}
         </div>
     </form>

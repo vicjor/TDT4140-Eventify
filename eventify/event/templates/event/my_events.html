@@ -1,24 +1,37 @@
 {% extends "event/base.html" %}
 {% block content %}
      <main role="main" class="inner cover">
-         <h1 class="display-3">{{ coverHeading }}</h1>
+         <h1 class="display-3" style="color:white;">{{ coverHeading }}</h1>
          <hr>
               <div class="created-events">
                   {% if user.is_staff or user.is_superuser %}
-                    <h2 class="display-4">Created Events <a href="{% url 'my-events' %}"><i class="fa fa-plus"></i></a></h2>
+                    <h2 class="display-4" style="color:white;">Created Events <a href="{% url 'my-events' %}"><i class="fa fa-plus"></i></a></h2>
                   {% endif %}
                   {% if created_events %}
                         <div class="">
+                            <div class="flex-container2">
                             {% for event in created_events %}
-                                <div class="event-preview" data-id="{{ event.id }}">
-                                    {% csrf_token %}
-                                    <h4><a href="{% url 'event-detail' event.id %}">{{ event.title|truncatechars:18 }}</a></h4>
-                                    <p class="">Date: {{ event.start_date.date }}
+
+                                <div class="event-row">
+
+                                 <article class="media content-section-allevents">
+
+                                     <a href="{% url 'event-detail' event.id %}"><img width="390px" height="250px" src="{{ event.image.url }}" alt="" style="padding:20px"></a>
+                                     <br>
+
+                                 </article>
                                     <br>
-                                    Atendees: {{ event.attendees.all.count }}
-                                    </p>
+
+                                    <h2><a class="article-title" href="{% url 'event-detail' event.id %}">{{ event.title }}</a></h2>
+
+                                    <p class="article-content" style="color:black;"> <i class="fas fa-map-marker-alt"> </i> {{ event.location }}</p>
+                                    <p> <i class="fas fa-calendar-alt"> </i> {{ event.start_date }}</p>
+
+
                                 </div>
                             {% endfor %}
+
+                                </div>
                         </div>
                   {% elif user.is_authenticated %}
                         <p class="text center">

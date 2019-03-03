@@ -1,7 +1,7 @@
 {% extends "event/base.html" %}
 
 {% block content %}
-<div class="table">
+<div class="table" >
     {% if request.get_full_path == "/events/event/search/" %}
         <form name="event-search-form" method="POST">
     {% else %}
@@ -28,18 +28,33 @@
         </form>
     </div>
 
+<div class="flex-container2">
+
     {% for event in events %}
-    <article class="media content-section">
-        <img class="rounded-circle article-img" src="{{ event.image.url }}" alt="">
-        <div class="media-body">
-            <div class="article-metadata">
-                <a class="mr-2" href="#">{{ event.author }}</a>
-                <small class="text-muted">{{ event.date_posted }}</small>
-            </div>
-            <h2><a class="article-title" href="{% url 'event-detail' event.id %}">{{ event.title }}</a></h2>
-            <p class="article-content">{{ event.location }}</p>
-        </div>
+
+    <div class="event-row">
+
+    <article class="media content-section-allevents">
+
+        <a href="{% url 'event-detail' event.id %}"><img width="390px" height="250px" src="{{ event.image.url }}" alt="" style="padding:20px"></a>
+
+
+            <br>
+
+
     </article>
+<br>
+
+ <h2><a class="article-title" href="{% url 'event-detail' event.id %}">{{ event.title }}</a></h2>
+            <p class="article-content" style="color:black;"> <i class="fas fa-map-marker-alt"> </i> {{ event.location }}</p>
+
+             <p> <i class="fas fa-calendar-alt"> </i> {{ event.start_date }}</p>
+
+
+
+        </div>
     {% endfor %}
+
+    </div>
 {% endblock %}
 
