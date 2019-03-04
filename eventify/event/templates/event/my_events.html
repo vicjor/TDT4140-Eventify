@@ -1,6 +1,7 @@
 {% extends "event/base.html" %}
 {% block content %}
      <main role="main" class="inner cover">
+
          <h1 class="display-3" style="color:white;">{{ coverHeading }}</h1>
          <hr>
               <div class="created-events">
@@ -8,7 +9,7 @@
                     <h2 class="display-4" style="color:white;">Created Events <a href="{% url 'event-create' %}"><i class="fa fa-plus"></i></a></h2>
                   {% endif %}
                   {% if created_events %}
-                        <div class="">
+
                             <div class="flex-container2">
                             {% for event in created_events %}
 
@@ -29,7 +30,7 @@
                                 </div>
                                 {% endfor %}
                                 </div>
-                        </div>
+
                   {% elif user.is_authenticated %}
 
                   {% else %}
@@ -41,11 +42,12 @@
 
               <div class="joined-events">
                   {% if user.is_staff or user.is_superuser %}
-                        <div></div>
+
                   {% elif joined_events %}
                     <h2 class="display-4 " style="color:white;">Joined Events</h2>
 
                   <div class="flex-container2">
+
                         {% for event in joined_events %}
 
 
@@ -68,8 +70,11 @@
                                      <!--<p style="color:black;">Atendees: {{ event.attendees.all.count }}</p>-->
                                 </div>
                             {% endfor %}
+
                       </div>
-                        </div>
+
+              </div>
+
                     {% else %}
                         <p class="text-center" style="color:white;">
                             Find an event to <a href="{% url 'all-events' %}">join</a>.
