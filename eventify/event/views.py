@@ -101,7 +101,12 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 class HtmlRender:
 
+    def created_events(request):
 
+        context = {
+            'events': Post.objects.filter(author=request.user)
+        }
+        return render(request, 'event/created_events.html', context)
 
     def home(request):
 
