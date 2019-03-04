@@ -45,7 +45,7 @@
                         {% if user.is_authenticated %}
                             {% if user in object.attendees.all %}
                                 <div>
-                                    <form method="POST" action="{% url 'event-leave' %}">
+                                    <form method="POST" action="{% url 'event-leave' %}" >
                                         {% csrf_token %}
                                         <input type="hidden" name="event-id" value="{{ object.id }}">
                                         <input class="btn btn-danger" type="submit" value="Sign Off Event"/>
@@ -78,7 +78,7 @@
 
 
 <article class="media content-section-info">
-    <img class="rounded-circle article-img" src="{{ object.image.url }}" alt="">
+    <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}" alt="">
     <a class="mr-2" href="#">{{ object.author }}</a>
 
 </article>
