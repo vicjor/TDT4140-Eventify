@@ -77,23 +77,23 @@ ul {
     color: white;
     background: black;
     font: 25px comfortaa, sans-serif;
-    opacity: .8;
-    width: 200px;
-    height: 80px;
+    width: 220px;
+    height: 90px;
     border: none;
     text-align: center;
-    padding-top: 20px;
+    padding-top: 30px;
 }
 
 .button_header:hover{
     width: 210px;
     height: 100px;
     background: orangered;
+    font-weight: bold;
 }
 
-#button_opacity {
-    opacity: .9;
+.btn-success {
     transform: translate(30%, -50%);
+    background: green;
 }
 
 .bg-steel {

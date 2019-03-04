@@ -47,25 +47,47 @@
                   {% if user.is_staff or user.is_superuser %}
                         <div></div>
                   {% elif joined_events %}
-                    <h2 class="display-4 text-left" >Joined Events</h2>
+                    <h2 class="display-4 text-left" style="color:white;">Joined Events</h2>
+
+                  <div class="flex-container2">
                         {% for event in joined_events %}
-                            <div class="event-preview" data-id="{{ event.id }}">
-                                {% csrf_token %}
+
+
+                                 <div class="event-row">
+
+                                 <article class="media content-section-allevents">
+
+                                     <a href="{% url 'event-detail' event.id %}"><img width="390px" height="250px" src="{{ event.image.url }}" alt="" style="padding:20px"></a>
+                                     <br>
+
+                                 </article>
+                                    <br>
+
+                                    {% csrf_token %}
                                     <h4><a href="{% url 'event-detail' event.id %}">{{ event.title|truncatechars:18 }}</a></h4>
-                                        <p class="">Date: {{ event.start_date.date }}
-                                        <br>
-                                        Atendees: {{ event.attendees.all.count }}
-                                        </p>
+
+                                    <p class="article-content" style="color:black;"> <i class="fas fa-map-marker-alt"> </i> {{ event.location }}</p>
+                                    <p> <i class="fas fa-calendar-alt"> </i> {{ event.start_date.date }}</p>
+                                     <br>
+                                     <p style="color:black;">Atendees: {{ event.attendees.all.count }}</p>
+
+
                                 </div>
+
+
+
                             {% endfor %}
+
+                      </div>
                         </div>
                     {% else %}
-                        <p class="text-center">
+                        <p class="text-center" style="color:white;">
                             Find an event to <a href="{% url 'all-events' %}">join</a>.
                         </p>
                     {% endif %}
               </div>
          </div>
+
      </main>
 
 {% endblock %}
