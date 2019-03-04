@@ -26,16 +26,12 @@
 
                                     <p class="article-content" style="color:black;"> <i class="fas fa-map-marker-alt"> </i> {{ event.location }}</p>
                                     <p> <i class="fas fa-calendar-alt"> </i> {{ event.start_date }}</p>
-
-
                                 </div>
-                            {% endfor %}
-
+                                {% endfor %}
                                 </div>
                         </div>
                   {% elif user.is_authenticated %}
-                        <p class="text center">
-                        </p>
+
                   {% else %}
                   <p class="text center"> No events created.
                   </p>
@@ -47,7 +43,7 @@
                   {% if user.is_staff or user.is_superuser %}
                         <div></div>
                   {% elif joined_events %}
-                    <h2 class="display-4 text-left" style="color:white;">Joined Events</h2>
+                    <h2 class="display-4 " style="color:white;">Joined Events</h2>
 
                   <div class="flex-container2">
                         {% for event in joined_events %}
@@ -64,20 +60,14 @@
                                     <br>
 
                                     {% csrf_token %}
-                                    <h4><a href="{% url 'event-detail' event.id %}">{{ event.title|truncatechars:18 }}</a></h4>
+                                    <h2><a class="article-title" href="{% url 'event-detail' event.id %}">{{ event.title|truncatechars:18 }}</a></h2>
 
                                     <p class="article-content" style="color:black;"> <i class="fas fa-map-marker-alt"> </i> {{ event.location }}</p>
                                     <p> <i class="fas fa-calendar-alt"> </i> {{ event.start_date.date }}</p>
                                      <br>
-                                     <p style="color:black;">Atendees: {{ event.attendees.all.count }}</p>
-
-
+                                     <!--<p style="color:black;">Atendees: {{ event.attendees.all.count }}</p>-->
                                 </div>
-
-
-
                             {% endfor %}
-
                       </div>
                         </div>
                     {% else %}
