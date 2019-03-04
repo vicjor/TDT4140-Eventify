@@ -74,8 +74,9 @@ ul {
     top: 30%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: white;
+    color: black;
     background: black;
+    font-palette: light;
     font: 25px comfortaa, sans-serif;
     width: 220px;
     height: 90px;
@@ -94,6 +95,7 @@ ul {
 .btn-success {
     transform: translate(30%, -50%);
     background: green;
+    color: black;
 }
 
 .bg-steel {
