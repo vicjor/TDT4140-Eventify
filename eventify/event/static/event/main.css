@@ -74,24 +74,23 @@ ul {
     top: 30%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: white;
     background: black;
     font: 25px comfortaa, sans-serif;
-    opacity: .8;
-    width: 200px;
-    height: 80px;
+    width: 220px;
+    height: 90px;
     border: none;
+    text-align: center;
+    padding-top: 30px;
 }
 
 .button_header:hover{
-    width: 210px;
-    height: 100px;
     background: orangered;
+    font-weight: bold;
 }
 
-#button_opacity {
-    opacity: .9;
+.btn-success {
     transform: translate(30%, -50%);
+    background: green;
 }
 
 .bg-steel {
@@ -216,10 +215,10 @@ ul {
 .footer {
     background-color: black;
     width: 100%;
-    height: 50px;
+    height: 100px;
     position: absolute;
     bottom: 0;
-
+    opacity: .8;
 
 }
 
