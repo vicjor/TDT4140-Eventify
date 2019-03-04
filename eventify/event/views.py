@@ -101,7 +101,12 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 class HtmlRender:
 
+    def created_events(request):
 
+        context = {
+            'events': Post.objects.filter(author=request.user)
+        }
+        return render(request, 'event/created_events.html', context)
 
     def home(request):
 
@@ -372,6 +377,14 @@ class EventViews:
         event_search = str(request.POST.get('event-search', False))
         location_search = str(request.POST.get('location-search', False))
         date_start = str(request.POST.get('event-start', False))
+
+        if len(location_search) != 0 and len(event_search) != 0:
+            if len(location_search) == 0:
+                location_search = "asdfasfgdsgsafasdas"
+
+            if len(event_search) == 0:
+                event_search = "asdfasfgdsgsafasdas"
+
 
 
         # filter for matching events and serialize for json
