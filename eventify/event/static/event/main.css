@@ -74,7 +74,9 @@ ul {
     top: 30%;
     left: 50%;
     transform: translate(-50%, -50%);
+    color: black;
     background: black;
+    font-palette: light;
     font: 25px comfortaa, sans-serif;
     width: 220px;
     height: 90px;
@@ -85,6 +87,8 @@ ul {
 }
 
 .button_header:hover{
+    width: 210px;
+    height: 100px;
     background: orangered;
     font-weight: bold;
 }
@@ -96,6 +100,7 @@ ul {
 .join-see {
     transform: translate(30%, -50%);
     background: green;
+    color: black;
 }
 
 .bg-steel {
@@ -219,10 +224,10 @@ ul {
 .footer {
     background-color: black;
     width: 100%;
-    height: 100px;
+    height: 50px;
     position: absolute;
     bottom: 0;
-    opacity: .8;
+
 
 }
 

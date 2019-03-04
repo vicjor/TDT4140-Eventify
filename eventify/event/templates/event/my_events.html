@@ -5,7 +5,7 @@
          <hr>
               <div class="created-events">
                   {% if user.is_staff or user.is_superuser %}
-                    <h2 class="display-4" style="color:white;">Created Events <a href="{% url 'my-events' %}"><i class="fa fa-plus"></i></a></h2>
+                    <h2 class="display-4" style="color:white;">Created Events <a href="{% url 'event-create' %}"><i class="fa fa-plus"></i></a></h2>
                   {% endif %}
                   {% if created_events %}
                         <div class="">

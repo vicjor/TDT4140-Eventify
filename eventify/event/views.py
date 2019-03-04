@@ -61,7 +61,7 @@ class EventDetailView(DetailView):
 
 class EventCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'content', 'attendance_limit', 'start_date', 'end_date','image', 'is_private', 'location']
+    fields = ['title', 'location', 'content', 'attendance_limit', 'start_date', 'end_date','image', 'is_private']
     template_name = 'event/event_form.html'
 
     def form_valid(self, form):
@@ -70,7 +70,7 @@ class EventCreateView(LoginRequiredMixin, CreateView):
 
 class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
-    fields = ['title', 'content', 'attendance_limit', 'start_date', 'end_date', 'image','is_private', 'location']
+    fields = ['title', 'location', 'content', 'attendance_limit', 'start_date', 'end_date', 'image', 'is_private']
     template_name = 'event/event_form.html'
     context_object_name = 'events'
 
@@ -338,6 +338,8 @@ class EventViews:
             messages.error(request, f'This even is not open for attendees yet. ')
         elif attendance + 1 >= event.attendance_limit:
             messages.error(request, f'The event is already full.')
+        elif event.author == user:
+            messages.error(request, f"Can't sign up for your own event. ")
         elif user in event.attendees.all():
             messages.error(request, f'You are already signed up for this event.')
         else:
