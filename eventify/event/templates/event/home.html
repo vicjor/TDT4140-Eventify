@@ -27,12 +27,14 @@
                     <p>{{ event.title }}</p>
 
                 </div>
-                {% if user.is_authenticated %}
-                     <a class="button_header" href="{% url 'event-detail' event.id %}" type="submit">JOIN EVENT</a>
-                {% else  %}
-                    <a class="button_header" href="{% url 'event-detail' event.id %}" type="submit">SEE EVENT</a>
-                {% endif %}
 
+             <div class="overlay-text-ticket">
+                {% if user.is_authenticated %}
+                     <a href="{% url 'event-detail' event.id %}" type="submit"> <button class="button_header">JOIN EVENT</button></a>
+                {% else  %}
+                    <a href="{% url 'event-detail' event.id %}" type="submit"> <button class="button_header">SEE EVENT</button></a>
+                {% endif %}
+            </div>
 
             </div>
         </a>
@@ -47,9 +49,9 @@
 
                 <div class="overlay-text-ticket">
                         {% if user.is_authenticated %}
-                            <a class="btn join-see"  href="{% url 'event-detail' event.id %}" type="submit">JOIN EVENT</a>
+                            <a   href="{% url 'event-detail' event.id %}" type="submit"> <button class="btn btn-success">JOIN EVENT</button></a>
                         {% else  %}
-                            <a class="btn join-see" href="{% url 'event-detail' events.first.id %}" type="submit">SEE EVENT</a>
+                            <a href="{% url 'event-detail' events.first.id %}" type="submit"><button class="btn join-see">SEE EVENT</button></a>
                         {% endif %}
                 </div>
 
