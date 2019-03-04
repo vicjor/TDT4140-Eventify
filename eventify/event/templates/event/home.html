@@ -51,7 +51,7 @@
                         {% if user.is_authenticated %}
                             <a   href="{% url 'event-detail' event.id %}" type="submit"> <button class="btn btn-success">JOIN EVENT</button></a>
                         {% else  %}
-                            <a href="{% url 'event-detail' events.first.id %}" type="submit"><button class="btn join-see">SEE EVENT</button></a>
+                            <a href="{% url 'event-detail' events.first.id %}" type="submit"><button class="btn btn-success">SEE EVENT</button></a>
                         {% endif %}
                 </div>
 
