@@ -1,6 +1,6 @@
 {% extends "event/base.html" %}
 
-{% block content %}
+{% block search %}
 <div class="table" >
     {% if request.get_full_path == "/events/event/search/" %}
         <form name="event-search-form" method="POST">
@@ -55,6 +55,8 @@
         </div>
     {% endfor %}
 
+
     </div>
 {% endblock %}
+
 

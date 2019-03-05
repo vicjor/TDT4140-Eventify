@@ -129,3 +129,10 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4' #Bruker bootstrap 4 for styling av HTML tags
 
 LOGIN_REDIRECT_URL = 'event-home' # Når man logger inn sendes man automatisk til hjemsiden
 LOGIN_URL = 'login'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'eventify.pu@gmail.com' #Dette er en vanlig gmail-konto, det er denne adressen du vil motta mail om reset fra
+EMAIL_HOST_PASSWORD = 'Bruker123'   #Dette er passordet
