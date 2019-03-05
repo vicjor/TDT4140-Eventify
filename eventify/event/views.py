@@ -12,6 +12,7 @@ import json
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .forms import UploadFileForm
@@ -51,7 +52,26 @@ class EventListView(ListView):  #Denne gjør at events vises på home i rekkefø
     context_object_name = 'events'
     ordering = ['-date_posted']
     def get_queryset(self):
-        return Post.objects.filter(is_private=False)
+        return Post.objects.filter(is_private=False).order_by('-date_posted')
+
+class UserListView(ListView):  #Denne gjør at events vises på home i rekkefølge fra nyeste til eldste
+    model = Post
+    template_name = 'event/user_posts.html' #<app>/<model>_<viewtype>.html
+    context_object_name = 'events'
+    def get_queryset(self):
+        user = get_object_or_404(User, username=self.kwargs.get('username'))
+        return Post.objects.filter(author=user).order_by('-date_posted')
+    paginate_by = 5
+
+
+class EventListAll(ListView):
+    model = Post
+    template_name = 'event/all_events.html'
+    context_object_name = 'events'
+    ordering = ['-date_posted']
+    def get_queryset(self):
+        return Post.objects.filter(is_private=False).order_by('-date_posted')
+    paginate_by = 5
 
 class EventDetailView(DetailView):
     model = Post
