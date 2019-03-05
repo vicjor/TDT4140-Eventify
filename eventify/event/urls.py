@@ -13,4 +13,5 @@ urlpatterns = [
     path('event/<int:pk>/update', EventUpdateView.as_view(), name='event-update'),
     path('event/<int:pk>/delete', EventDeleteView.as_view(), name='event-delete'),
     path('about/', views.HtmlRender.about, name='eventify-about'),
+    path('event/created/', views.HtmlRender.created_events, name='created-by-user')
 ]

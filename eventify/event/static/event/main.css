@@ -4,6 +4,7 @@ body {
     background-color: #333333;
     margin-top: 3.5rem;
     margin-outside: 0px;
+    height: 100vh;
 
 }
 
@@ -73,35 +74,29 @@ ul {
     position: absolute;
     top: 30%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    color: black;
+    transform: translate(190%, -170%);
+    color: white;
     background: black;
-    font-palette: light;
+    font-palette: dark;
     font: 25px comfortaa, sans-serif;
     width: 220px;
     height: 90px;
     border: none;
     text-align: center;
-    padding-top: 30px;
-    border-radius: 5px;
+    padding-top: 8px;
+    border-radius: 3px;
+    opacity: .8;
 }
 
 .button_header:hover{
-    width: 210px;
-    height: 100px;
     background: orangered;
     font-weight: bold;
 }
 
 .btn-success {
-    background: green;
+
 }
 
-.join-see {
-    transform: translate(30%, -50%);
-    background: green;
-    color: black;
-}
 
 .bg-steel {
     background-color: black;
@@ -149,7 +144,7 @@ ul {
     margin-top:10px;
     color: blue;
     width: 750px;
-    height: 200px;
+    height: 70%;
     background: white;
 }
 
@@ -194,7 +189,7 @@ ul {
     justify-content: space-between;
     padding-right: 100px;
     width: 100%;
-    height: 170%;
+    height: 230%;
     margin-bottom: 20%;
 }
 
@@ -224,10 +219,11 @@ ul {
 .footer {
     background-color: black;
     width: 100%;
-    height: 75px;
+    height: 100px;
     position: absolute;
     bottom: 0;
-
+    opacity: .8;
+    position: absolute;
 
 }
 
@@ -273,9 +269,9 @@ ul {
 
 .overlay-text-ticket {
     position: absolute;
-    transform: translate(100%, -100%);
+    transform: translate(140%, -350%);
     font-size: 20px;
-    color: white;
+    color: black;
     font-family: comfortaa, sans-serif;
 }
 

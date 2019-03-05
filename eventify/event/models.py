@@ -33,4 +33,4 @@ class Post(models.Model):
         return reverse('event-detail', kwargs={'pk': self.pk}) #Etter man har opprettet et arrangement redigerer denne deg til eventet
 
     class Meta:
-       ordering = ['-start_date']
+       ordering = ['start_date']
