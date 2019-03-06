@@ -70,7 +70,15 @@ class EventListAll(ListView):
     context_object_name = 'events'
     ordering = ['-date_posted']
     def get_queryset(self):
-        return Post.objects.filter(is_private=False).order_by('-date_posted')
+        events = Post.objects.filter(is_private=False).order_by('-date_posted')
+        for event in events:
+            if event.attendance_limit <= event.attendees.all().count():
+                events.remove(event)
+        try:
+            events.exclude(author=self)
+        except TypeError:
+            pass
+        return events
     paginate_by = 5
 
 class EventDetailView(DetailView):
@@ -161,6 +169,9 @@ class HtmlRender:
         #events = Post.objects.all()
         events = Post.objects.filter(is_private=False)
 
+        for event in events:
+            if event.attendance_limit <= event.attendees.all().count():
+                events.remove(event)
 
         # Filter out users own events
         try:
