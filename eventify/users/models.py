@@ -22,14 +22,14 @@ class Profile(models.Model):
 
 class Notification(models.Model):
     user = models.ForeignKey(Profile, on_delete = models.CASCADE) #Hvem som mottar varselet
-    title = models.CharField(max_length=100) #Text i varselet
+    text = models.CharField(max_length=300) #Text i varselet
     time = models.DateTimeField() #Når man fikk varselet
     read = models.BooleanField(default=False) #har de sett varselet enda?
     link = models.URLField() #Link til side varselet omhandler
     sender = models.CharField(max_length=100) #Hvem/Hva utløste varselet?
 
     def __str__(self):
-        return self.title
+        return self.text
 
 
 
