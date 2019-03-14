@@ -35,35 +35,46 @@
     <article class="media content-section-info">
 
     <div class="article-metadata">
+        {% if object.is_private or object.author == user  or user in object.co_authors.all %}
+            <input type="hidden" name="event-id" value="{{ object.id }}">
+            <a class="btn btn-seconday btn-sm mt-1 mb-1" href="{% url 'attendee-list' object.id %}">See Attendees</a>
+        {% endif %}
 
-        {% if object.author == user %}
+        {% if object.author == user or user in object.co_authors.all %}
                         <div>
-                            <a class="btn btn-seconday btn-sm mt-1 mb-1" href="{% url 'event-update' object.id %}">Update</a>
-                            <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'event-delete' object.id %}">Delete</a>
-                        </div>
-                    {% else %}
-                        {% if user.is_authenticated %}
-                            {% if user in object.attendees.all %}
-                                <div>
-                                    <form method="POST" action="{% url 'event-leave' %}" >
-                                        {% csrf_token %}
-                                        <input type="hidden" name="event-id" value="{{ object.id }}">
-                                        <input class="btn btn-danger" type="submit" value="Sign Off Event"/>
-                                    </form>
-                                </div>
-                            {% else %}
-                                {% if object.attendance_limit > 0 %}
-                                    <div>
-                                        <form method="POST" action="{% url 'event-join' %}">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="event-id" value="{{ object.id }}">
-                                            <input class="btn btn-success" type="submit" value="Join Event"/>
-                                        </form>
-                                    </div>
-                                {% endif %}
+                            {% if object.is_private %}
+                                <input type="hidden" name="event-id" value="{{ object.id }}">
+                                <a class="btn btn-seconday btn-sm mt-1 mb-1" href="{% url 'invite-list' object.id %}">Invite Friends</a>
                             {% endif %}
-                        {% endif %}
+                            <a class="btn btn-seconday btn-sm mt-1 mb-1" href="{% url 'event-update' object.id %}">Update</a>
+                            {% if user == object.author %}
+                                <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'event-delete' object.id %}">Delete</a>
+                            {% endif %}
+                        </div>
+
+        {% else %}
+            {% if user.is_authenticated %}
+                {% if user in object.attendees.all %}
+                    <div>
+                        <form method="POST" action="{% url 'event-leave' %}" >
+                            {% csrf_token %}
+                            <input type="hidden" name="event-id" value="{{ object.id }}">
+                            <input class="btn btn-danger" type="submit" value="Sign Off Event"/>
+                        </form>
+                    </div>
+                {% else %}
+                    {% if object.attendance_limit > 0 %}
+                        <div>
+                            <form method="POST" action="{% url 'event-join' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="event-id" value="{{ object.id }}">
+                                <input class="btn btn-success" type="submit" value="Join Event"/>
+                            </form>
+                        </div>
                     {% endif %}
+                {% endif %}
+            {% endif %}
+        {% endif %}
 
         <p class="text-muted" > {{object.attendees.all.count}} / {{object.attendance_limit}}</p>
 

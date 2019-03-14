@@ -38,6 +38,17 @@ urlpatterns = [
     path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='users/password_reset_done.html'), name="password_reset_done"),
     path('password-reset-confirm/<uidb64>/<token>', auth_views.PasswordResetConfirmView.as_view(template_name='users/password_reset_confirm.html'), name="password_reset_confirm"),
     path('password-reset-complete/', auth_views.PasswordResetCompleteView.as_view(template_name='users/password_reset_complete.html'), name="password_reset_complete"),
+    path('all-users/', user_views.get_users, name="all-users"),
+    path('add-friend/', user_views.add_contact, name="add-contact"),
+    path('accept-friend/', user_views.accept_request, name="accept-request"),
+    path('decline-friend/', user_views.decline_request, name="decline-request"),
+    path('requests/', user_views.see_requests, name="contact-requests"),
+    path('contacts/', user_views.get_friends, name="contacts"),
+    path('remove-contact/', user_views.remove_contact, name="remove-contact"),
+    path('user-search/', user_views.search_user, name='user-search'),
+    path('user-search-event/', user_views.search_user_event, name='user-search-event'),
+    path('invites/', user_views.event_invites, name='event-invites'),
+    path('decline-invite/', event_views.EventViews.event_decline_from_invitation, name='event-decline-from-invitation'),
     path('', include('event.urls'))
 ]
 

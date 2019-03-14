@@ -89,7 +89,7 @@ class EventDetailView(DetailView):
 
 class EventCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'location', 'content', 'attendance_limit', 'start_date', 'end_date','image', 'is_private']
+    fields = ['title', 'location', 'content', 'attendance_limit', 'waiting_list_limit', 'start_date', 'end_date', 'image', 'is_private']
     template_name = 'event/event_form.html'
 
     def form_valid(self, form):
@@ -98,7 +98,7 @@ class EventCreateView(LoginRequiredMixin, CreateView):
 
 class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
-    fields = ['title', 'location', 'content', 'attendance_limit', 'start_date', 'end_date', 'image', 'is_private']
+    fields = ['title', 'location', 'content', 'attendance_limit', 'waiting_list_limit', 'start_date', 'end_date', 'image', 'is_private']
     template_name = 'event/event_form.html'
     context_object_name = 'events'
 
@@ -209,6 +209,35 @@ class HtmlRender:
         return render(request, 'event/my_events.html', context)
 
     @login_required
+    def invite_list(request, event_id):
+        user = request.user
+        contacts = user.profile.contacts.all()
+
+        # event_id = int(request.POST.get('event-id', False))
+        event = Post.objects.get(pk=event_id)
+
+        context = {
+            'contacts': contacts,
+            'event': event
+        }
+
+        return render(request, 'event/contacts.html', context)
+
+    @login_required
+    def attendee_list(request, event_id):
+        event = Post.objects.get(pk=event_id)
+
+        attendees = event.attendees.all()
+
+        context = {
+            'attending': attendees,
+            'event': event
+        }
+
+        return render(request, 'event/edit_attendees.html', context)
+
+
+    @login_required
     def editEvent(request, event_id):
         event = get_object_or_404(Post, pk=event_id)
 
@@ -225,139 +254,6 @@ class HtmlRender:
 
 
 class EventViews:
-
-    @login_required
-    def createEvent(request):
-        new_title = str(request.POST.get('event-title', False)).title()
-        new_start_date = str(request.POST.get('start_date', False))
-        new_start_time = str(request.POST.get('start_time', False))
-        new_end_date = str(request.POST.get('end_date', False))
-        new_end_time = str(request.POST.get('end_time', False))
-        new_location = str(request.POST.get('event-location', False))
-        new_attendance_limit = int(request.POST.get('attendance-limit', False))
-        new_content = str(request.POST.get('event-description', False))
-        creator = request.user
-        local_tz = pytz.timezone('Europe/Oslo')
-        new_start_date = Utility.toUTC(new_start_date, new_start_time, local_tz)
-        new_end_date = Utility.toUTC(new_end_date, new_end_time, local_tz)
-        new_is_private = request.POST.get('is_private', False)
-
-
-        if new_start_date < datetime.now(pytz.utc):
-            response = {
-                'status': 'fail',
-                'error_msg': 'Start date needs to be after current time.'
-            }
-        elif new_start_date > new_end_date:
-            response = {
-                'status': 'fail',
-                'error_msg': 'Start date need to be before end date.'
-            }
-        else:
-            # Create event
-            event = Post.objects.create(
-                title=new_title,
-                author=creator,
-                start_date=new_start_date,
-                end_date=new_end_date,
-                location=new_location,
-                attendance_limit=new_attendance_limit,
-                content=new_content,
-                is_private = new_is_private
-            )
-
-            response = {
-                'status': 'success',
-                'event_id': event.id
-            }
-
-        return JsonResponse(response)
-
-    @login_required
-    def updateEvent(request, event_id):
-        new_title = str(request.POST['event-title']).title()
-        new_location = str(request.POST['event-location'])
-        new_content = str(request.POST['event-description'])
-        new_start_date = str(request.POST['edit-event-start-date'])
-        new_start_time = str(request.POST['edit-event-start-time'])
-        new_end_date = str(request.POST['edit-event-end-date'])
-        new_end_time = str(request.POST['edit-event-end-time'])
-        new_attendance_limit = str(request.POST['attendance_limit'])
-        time_zone = request.session['django_timezone']
-        local_tz = pytz.timezone(time_zone)
-        event = get_object_or_404(Post, pk=event_id)
-
-
-        # Update Event
-        event.title =  new_title
-        event.location = new_location
-        event.content = new_content
-
-
-        # handle start/end dt's
-        try:
-            start_date = Utility.toUTC(new_start_date, new_start_time, local_tz)
-            end_date = Utility.toUTC(new_end_date, new_end_time, local_tz)
-
-            if start_date < datetime.now(pytz.utc):
-                response = {
-                    'status': 'fail',
-                    'error_msg': 'Start date needs to be after current time.'
-                }
-            elif start_date > end_date:
-                response = {
-                    'status': 'fail',
-                    'error_msg': 'Start date need to be before end date.'
-                }
-
-            event.start_date = start_date
-            event.end_date = end_date
-        # if date was unaltered it came in as humanized string; pass
-        except ValueError:
-            pass
-
-        try:
-            if event.attendees.all().count() > new_attendance_limit:
-                response = {
-                    'status': 'fail',
-                    'error_msg': 'Already too many attendees.'
-                }
-            event.attendance_limit = new_attendance_limit
-        except ValueError:
-            pass
-
-
-
-        # Save updated event
-        event.save()
-
-        # create response
-        response = {
-            'status': 'success',
-        }
-
-        return JsonResponse(response)
-
-    @login_required
-    def removeEvent(request):
-        event_id = json.loads(request.body)['post-id']
-        event = get_object_or_404(Post, pk=event_id)
-
-        # delete event
-        if event.author == request.user:
-            event.delete()
-
-            # create response
-            response = {
-                'status': 'success',
-            }
-        else:
-            response = {
-                'status': 'fail',
-                'error_msg': 'Cannot delete an event that you do not host.'
-            }
-
-        return JsonResponse(response)
 
     @login_required
     def eventJoin(request):
@@ -384,8 +280,39 @@ class EventViews:
             messages.success(request, f'You are now signed up for the event! ')
 
 
-        # send reponse JSON
+        if user in event.invited.all():
+            event.invited.remove(user)
+            user.profile.event_invites.remove(event)
+
         return redirect('event-detail', pk=event_id)
+
+    @login_required
+    def event_decline_from_invitation(request):
+        event_id = int(request.POST.get('event-id', False))
+        event = Post.objects.get(pk=event_id)
+        user = request.user
+
+        event.invited.remove(user)
+        user.profile.event_invites.remove(event)
+
+        messages.info(request, f'Invitation declined. ')
+
+        return redirect('event-invites')
+
+    @login_required
+    def remove_attendee(request):
+        event_id = int(request.POST.get('event-id', False))
+        event = Post.objects.get(pk=event_id)
+
+        user_id = int(request.POST.get('user-id', False))
+        user = User.objects.get(pk=user_id)
+
+        if user in event.attendees.all():
+            event.attendees.remove(user)
+            messages.success(request, f'User removed from event')
+
+        return redirect('event-detail', pk=event_id)
+
 
     @login_required
     def leaveEvent(request):
@@ -471,22 +398,45 @@ class EventViews:
         # send response JSON
         return render(request, "event/search.html", context)
 
-    def eventDetails(request):
-        # get event
-        event_id = json.loads(request.body)['event_id']
-        event = get_object_or_404(Post, pk=event_id)
 
-        # serialize json
-        serialized_event = serializers.serialize('json', [event])
+    @login_required
+    def invite_user(request):
+        event_id = int(request.POST.get('event-id', False))
+        event = Post.objects.get(pk=event_id)
+        user_id = int(request.POST.get('user-id', False))
+        user = User.objects.get(pk=user_id)
 
-        # create response
-        response = {
-            'status': 'success',
-            'event': serialized_event
-        }
+        user.profile.event_invites.add(event)
+        event.invited.add(user)
 
-        # send reponse JSON
-        return JsonResponse(response)
+        return redirect('event-detail', pk=event_id)
+
+    @login_required
+    def add_host(request):
+        event_id = int(request.POST.get('event-id', False))
+        event = Post.objects.get(pk=event_id)
+        user_id = int(request.POST.get('user-id', False))
+        user = User.objects.get(pk=user_id)
+
+        event.co_authors.add(user)
+
+        messages.success(request, f'User successfully added as host. ')
+
+        return redirect('event-detail', pk=event_id)
+
+    @login_required
+    def remove_host(request):
+        event_id = int(request.POST.get('event-id', False))
+        event = Post.objects.get(pk=event_id)
+        user_id = int(request.POST.get('user-id', False))
+        user = User.objects.get(pk=user_id)
+
+        if user in event.co_authors.all():
+            event.co_authors.remove(user)
+            messages.info(request, f'User removed as admin')
+
+        return redirect('event-detail', pk=event_id)
+
 
 class Utility:
 

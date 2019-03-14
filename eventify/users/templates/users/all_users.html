@@ -1,0 +1,36 @@
+{% extends "event/base.html" %}
+{% block content %}
+
+<form name="event-search-form" method="POST" action="{% url 'user-search' %}">
+    {% csrf_token %}
+    <table class="table">
+        <tr>
+            <td>Users: </td>
+            <td><input class="form-control" type="text" placeholder="Search for users..." name="search-field"></td>
+        </tr>
+    </table>
+</form>
+
+{% for friend in users %}
+
+    <div class="media">
+        <img class="rounded-circle account-img" src="{{ friend.profile.image.url }}">
+        <div class="media-body">
+            <h2 class="account-heading">{{ friend.username }}</h2>
+            <p class="text-secondary">{{ friend.email }}</p>
+            {% if friend in user.profile.sent_requests.all %}
+                <a class="btn btn-success">Request Sent</a>
+            {% elif friend in user.profile.contacts.all %}
+                <a class="btn btn-success">Already Your Contact</a>
+            {% else %}
+                <form method="POST" action="{% url 'add-contact' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="user-id" value="{{ friend.id }}">
+                    <input class="btn btn-success" type="submit" value="Add Contact"/>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+
+{% endfor %}
+{% endblock content %}
