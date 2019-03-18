@@ -1,0 +1,29 @@
+{% extends "event/base.html" %}
+{% block content %}
+
+{% for friend in requests %}
+    <div class="media">
+        <img class="rounded-circle account-img" src="{{ friend.profile.image.url }}">
+        <div class="media-body">
+            <h2 class="account-heading">{{ friend.username }}</h2>
+            <p class="text-secondary">{{ friend.email }}</p>
+            {% if friend in user.profile.contacts.all %}
+                <a class="btn btn-success">Already Accepted</a>
+            {% else %}
+                <form method="POST" action="{% url 'accept-request' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="user-id" value="{{ friend.id }}">
+                    <input class="btn btn-success" type="submit" value="Accept Request"/>
+                </form>
+                <form method="POST" action="{% url 'decline-request' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="user-id" value="{{ friend.id }}">
+                    <input class="btn btn-danger" type="submit" value="Decline Request"/>
+                </form>
+            {% endif %}
+
+        </div>
+    </div>
+{% endfor %}
+
+{% endblock content %}

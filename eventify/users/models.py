@@ -1,10 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import User
+from event.models import Post
 from PIL import Image #Brukes for bildehåndtering / profilbilde
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE) #Er en 1-1 relasjon mellom bruker og profil
     image = models.ImageField(default="default.jpg", upload_to="profile_pics") #Profilbilde til bruker
+    contacts = models.ManyToManyField(User, related_name="contacts")
+    requests = models.ManyToManyField(User, related_name="requests")
+    event_invites = models.ManyToManyField(Post, related_name="event_invites")
+    sent_requests = models.ManyToManyField(User, related_name="sent_requests")
 
 
     def __str__(self):

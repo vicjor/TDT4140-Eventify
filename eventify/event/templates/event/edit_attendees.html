@@ -1,0 +1,55 @@
+{% extends "event/base.html" %}
+{% block content %}
+
+<form name="event-search-form" method="POST" action="{% url 'user-search-event' %}">
+    {% csrf_token %}
+    <table class="table">
+        <tr>
+            <td>Users: </td>
+            <td><input type="hidden" name="event-id" value="{{ event.id }}"></td>
+            <td><input class="form-control" type="text" placeholder="Search for users..." name="search-field"></td>
+        </tr>
+    </table>
+</form>
+
+{% for friend in attending %}
+
+    <div class="media">
+        <img class="rounded-circle account-img" src="{{ friend.profile.image.url }}">
+        <div class="media-body">
+            <h2 class="account-heading">{{ friend.username }}</h2>
+            <p class="text-secondary">{{ friend.email }}</p>
+            {% if user == event.author or user in event.co_authors.all %}
+                {% if friend not in event.co_authors.all %}
+                    <form method="POST" action="{% url 'remove-attendee' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="event-id" value="{{ event.id }}">
+                        <input type="hidden" name="user-id" value="{{ friend.id }}">
+                        <input class="btn btn-success" type="submit" value="Remove Attendee"/>
+                    </form>
+                    {% if user == event.author %}
+                        <form method="POST" action="{% url 'add-host' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="event-id" value="{{ event.id }}">
+                            <input type="hidden" name="user-id" value="{{ friend.id }}">
+                            <input class="btn btn-success" type="submit" value="Promote to Host"/>
+                        </form>
+                    {% endif %}
+                {% else %}
+                    {% if user == event.author %}
+                        <form method="POST" action="{% url 'remove-host' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="event-id" value="{{ event.id }}">
+                                <input type="hidden" name="user-id" value="{{ friend.id }}">
+                                <input class="btn btn-success" type="submit" value="Remove as Host"/>
+                        </form>
+                    {% else %}
+                        <a class="btn btn-success">Already Host</a>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+{% endfor %}
+{% endblock content %}
