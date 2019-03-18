@@ -262,6 +262,19 @@ class EventViews:
 
         return JsonResponse(response)
 
+    def send_events_for_slide(request):
+        events = Post.object.all()
+
+        events = events[:4]
+        rest = events[4:]
+
+        context = {
+            'events': events,
+            'rest': rest
+        }
+
+        return render(request, 'event/home.html', context)
+
     @login_required
     def updateEvent(request, event_id):
         new_title = str(request.POST['event-title']).title()

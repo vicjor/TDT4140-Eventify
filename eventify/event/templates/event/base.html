@@ -49,9 +49,6 @@
                         <a class="nav-item nav-link" href="{% url 'created-by-user' %}">Created Events</a>
                     {% endif%}
 
-                    <a class="nav-item nav-link" href="{% url 'eventify-about' %}">About</a>
-
-
                 </div>
                 <!-- Navbar Right Side -->
                 <div class="navbar-nav">
@@ -74,7 +71,7 @@
 
 <div class="main-container">
 
-<main role="main" class="container">
+<main role="main">
     <div class="row">
         <div class="col-md-12">
             {% if messages %}
@@ -92,17 +89,40 @@
 
 </main>
 
-  <footer class="footer">
 
-      <div class="container" style="color:white;">
 
-          Contact:
-          <br>
+     <footer class="page-footer" style="background-color:black;">
+          <div class="container">
+            <div class="row">
+              <div class="col l6 s12">
+                <h5 class="white-text">Feedback</h5>
+                <p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
+              </div>
+              <div class="col l4 offset-l2 s12">
+                <h5 class="white-text">Contact</h5>
+                <ul>
+
           <i class="fab fa-facebook-f" style="font-size: 20px; color:#3b5998;">  </i>Facebook
+                    <br>
+                    <br>
           <i class="fab fa-twitter" style="font-size: 20px; color:#1DA1F2;">  </i>Twitter
-      </div>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="footer-copyright">
+            <div class="container">
+            © 2019 Copyright Text
+            <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
 
-    </footer>
+                 <a class="nav-item nav-link" href="{% url 'eventify-about' %}"><i class="fas fa-question" style="width=100px; height: 100px; color:white;"></i></a>
+                <br>
+                <p>About</p>
+
+
+            </div>
+          </div>
+        </footer>
 
 
     </div>
