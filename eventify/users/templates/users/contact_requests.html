@@ -1,6 +1,8 @@
 {% extends "event/base.html" %}
 {% block content %}
 
+<div class="content-section container" style="margin-top: 90px;">
+
 {% for friend in requests %}
     <div class="media">
         <img class="rounded-circle account-img" src="{{ friend.profile.image.url }}">
@@ -25,5 +27,7 @@
         </div>
     </div>
 {% endfor %}
+
+</div>
 
 {% endblock content %}
