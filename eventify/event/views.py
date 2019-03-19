@@ -72,8 +72,8 @@ class EventListAll(ListView):
     def get_queryset(self):
         events = Post.objects.filter(is_private=False).order_by('-date_posted')
         for event in events:
-            if event.attendance_limit <= event.attendees.all().count():
-                events.remove(event)
+            if event.attendance_limit == event.attendees.all().count():
+                events.filter(pk=event.id).delete()
         try:
             events.exclude(author=self)
         except TypeError:
@@ -264,12 +264,17 @@ class EventViews:
 
         # get updated attendance count
         attendance = event.attendees.all().count()
+        waiting = event.waiting_list.all().count()
 
         # create response
-        if event.attendance_limit == 0:
+        if event.attendance_limit == 0 and event.waiting_list_limit == 0:
             messages.error(request, f'This even is not open for attendees yet. ')
-        elif attendance + 1 >= event.attendance_limit:
-            messages.error(request, f'The event is already full.')
+        elif attendance + 1 > event.attendance_limit:
+            if waiting + 1 > event.waiting_list_limit:
+                messages.error(request, f'The event is already full.')
+            else:
+                event.waiting_list.add(user)
+                messages.success(request, f'Signed up for the waiting list. ')
         elif event.author == user:
             messages.error(request, f"Can't sign up for your own event. ")
         elif user in event.attendees.all():
@@ -327,6 +332,12 @@ class EventViews:
 
         else:
             messages.error(request, f"You can't sign off an event you're not signed up for. ")
+
+        waiting = event.waiting_list.all().count()
+
+        if waiting > 0:
+            event.attendees.add(event.waiting_list.first())
+            event.waiting_list.remove(event.waiting_list.first())
 
         return redirect('event-detail', pk=event_id)
 
