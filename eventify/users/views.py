@@ -120,6 +120,17 @@ def decline_request(request):
 
     return HttpResponseRedirect('contact-requests')
 
+@login_required
+def cancel_request(request):
+    user_id = int(request.POST.get('user-id', False))
+    user = User.objects.get(pk=user_id)
+
+    if user in request.user.profile.sent_requests.all():
+        request.user.profile.sent_requests.remove(user)
+        user.profile.requests.remove(request.user)
+
+    return HttpResponseRedirect(reverse('all-users'))
+
 
 @login_required
 def get_friends(request):

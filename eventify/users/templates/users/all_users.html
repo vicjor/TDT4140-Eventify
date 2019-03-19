@@ -1,6 +1,8 @@
 {% extends "event/base.html" %}
 {% block content %}
 
+<div class="content-section container" style="margin-top: 90px;">
+
 <form name="event-search-form" method="POST" action="{% url 'user-search' %}">
     {% csrf_token %}
     <table class="table">
@@ -19,7 +21,11 @@
             <h2 class="account-heading">{{ friend.username }}</h2>
             <p class="text-secondary">{{ friend.email }}</p>
             {% if friend in user.profile.sent_requests.all %}
-                <a class="btn btn-success">Request Sent</a>
+               <form method="POST" action="{% url 'cancel-request' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="user-id" value="{{ friend.id }}">
+                    <input class="btn btn-success" type="submit" value="Withdraw Request"/>
+                </form>
             {% elif friend in user.profile.contacts.all %}
                 <a class="btn btn-success">Already Your Contact</a>
             {% else %}
@@ -33,4 +39,6 @@
     </div>
 
 {% endfor %}
+
+    </div>
 {% endblock content %}

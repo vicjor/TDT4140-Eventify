@@ -223,6 +223,19 @@ class HtmlRender:
 
         return render(request, 'event/contacts.html', context)
 
+    def send_events_for_slide(request):
+        events = Post.object.all()
+
+        events = events[:4]
+        rest = events[4:]
+
+        context = {
+            'events': events,
+            'rest': rest
+        }
+
+        return render(request, 'event/home.html', context)
+
     @login_required
     def attendee_list(request, event_id):
         event = Post.objects.get(pk=event_id)
@@ -420,7 +433,20 @@ class EventViews:
         user.profile.event_invites.add(event)
         event.invited.add(user)
 
-        return redirect('event-detail', pk=event_id)
+        return redirect('invite-list', event_id)
+
+    @login_required
+    def cancel_invite(request):
+        event_id = int(request.POST.get('event-id', False))
+        event = Post.objects.get(pk=event_id)
+        user_id = int(request.POST.get('user-id', False))
+        user = User.objects.get(pk=user_id)
+
+        if user in event.invited.all():
+            event.invited.remove(user)
+            user.profile.event_invites.remove(event)
+
+        return redirect('invite-list', event_id)
 
     @login_required
     def add_host(request):
