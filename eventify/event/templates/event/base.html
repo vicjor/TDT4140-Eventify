@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Favicon hentet fra nettet-->
     <link rel="shortcut icon" href="http://d1ujqdpfgkvqfi.cloudfront.net/favicon-generator/htdocs/favicons/2015-01-09/502e5d90b726a726b80cb485280749ea.ico">
 
@@ -56,13 +57,46 @@
                         <a class="nav-item nav-link" href="{% url 'event-create' %}">New Event</a>
                         <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
                         <a class="nav-item nav-link" href="{% url 'logout' %}">Log Out</a>
+                        <!-- <body class = "container">
+                          <ul id = "dropdown" class = "dropdown-content">
+                              {% for notification in user.profile.notifications.all %}
+                                {% if notification.type == 'event' %}
+                                    <li>
+                                        <form method="POST" action="{% url 'event-detail' event.id %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="event-id" value="{{ event.id }}">
+                                            <input class="btn btn-success" type="submit" value="{{ notification.text }}"/>
+                                            <span class="badge">
+                                                Go to event
+                                            </span>
+                                        </form>
+                                    </li>
+                                {% else %}
+                                    <li>
+                                        <form method="POST" action="{% url 'contact-requests' %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="user-id" value="{{ user.id }}">
+                                            <input class="btn btn-success" type="submit" value="{{ notification.text }}"/>
+                                            <span class="badge">
+                                                Go to requests
+                                            </span>
+                                        </form>
+                                    </li>
+                                {% endif %}
+                              {% endfor %}
+                          </ul>
+
+                          <a class = "dropdown-button" href = "#" data-activates = "dropdown">
+                             <i class = "material-icons">notifications</i></a>
+                        </body>
                     {% elif user.is_authenticated %}
                         <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
                         <a class="nav-item nav-link" href="{% url 'logout' %}">Log Out</a>
+                        <a class="dropdown-trigger" data-target="drop-down1"><i class="material-icons alert-red">notifications</i></a>
                     {% else %}
                         <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
                         <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
-                    {% endif %}
+                    {% endif %} -->
                 </div>
             </div>
         </div>

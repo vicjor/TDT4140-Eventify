@@ -8,57 +8,56 @@
 
 
 {% block content %}
-<div>
-    <div style="padding: 10px;">
-        <div>
+<br>
+<br>
+<br>
+<div style="padding: 10px;">
+    <div class="slider">
+        <ul class="slides">
+          <li>
+            <img src="https://lorempixel.com/580/250/nature/1"> <!-- random image -->
+            <div class="caption center-align">
+              <h3>This is our big Tagline!</h3>
+              <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+            </div>
+          </li>
+          <li>
+            <img src="https://lorempixel.com/580/250/nature/2"> <!-- random image -->
+            <div class="caption left-align">
+              <h3>Left Aligned Caption</h3>
+              <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+            </div>
+          </li>
+          <li>
+            <img src="https://lorempixel.com/580/250/nature/3"> <!-- random image -->
+            <div class="caption right-align">
+              <h3>Right Aligned Caption</h3>
+              <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+            </div>
+          </li>
+          <li>
+            <img src="https://lorempixel.com/580/250/nature/4"> <!-- random image -->
+            <div class="caption center-align">
+              <h3>This is our big Tagline!</h3>
+              <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+            </div>
+          </li>
+          <script> $(document).ready(function () { $('.slider').slider({full_width: true}); }); </script>
+        </ul>
+      </div>
 
-            <div class="slider">
-                <ul class="slides">
-                  <li>
-                    <img src="https://lorempixel.com/580/250/nature/1"> <!-- random image -->
-                    <div class="caption center-align">
-                      <h3>This is our big Tagline!</h3>
-                      <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
-                    </div>
-                  </li>
-                  <li>
-                    <img src="https://lorempixel.com/580/250/nature/2"> <!-- random image -->
-                    <div class="caption left-align">
-                      <h3>Left Aligned Caption</h3>
-                      <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
-                    </div>
-                  </li>
-                  <li>
-                    <img src="https://lorempixel.com/580/250/nature/3"> <!-- random image -->
-                    <div class="caption right-align">
-                      <h3>Right Aligned Caption</h3>
-                      <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
-                    </div>
-                  </li>
-                  <li>
-                    <img src="https://lorempixel.com/580/250/nature/4"> <!-- random image -->
-                    <div class="caption center-align">
-                      <h3>This is our big Tagline!</h3>
-                      <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
-                    </div>
-                  </li>
-                  <script> $(document).ready(function () { $('.slider').slider({full_width: true}); }); </script>
-                </ul>
-              </div>
+        <!--Import jQuery before materialize.js-->
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 
-                <!--Import jQuery before materialize.js-->
-                <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <!-- Compiled and minified JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
 
-                <!-- Compiled and minified JavaScript -->
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
-
-                <!--Materializecss Slider-->
-                <script>
-                    $(document).ready(function () {
-                        $('.slider').slider({full_width: true});
-                    });
-                </script>
-        </div>
+        <!--Materializecss Slider-->
+        <script>
+            $(document).ready(function () {
+                $('.slider').slider({full_width: true});
+            });
+        </script>
 </div>
 <div>
     <div class="flex-container ">
@@ -95,7 +94,6 @@
             {% endif %}
 
             {% endfor %}
-        </div>
     </div>
 </div>
 
