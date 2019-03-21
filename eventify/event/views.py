@@ -62,7 +62,7 @@ class UserListView(ListView):  #Denne gjør at events vises på home i rekkeføl
     def get_queryset(self):
         user = get_object_or_404(User, username=self.kwargs.get('username'))
         return Post.objects.filter(author=user).order_by('-date_posted')
-    paginate_by = 5
+    paginate_by = 6
 
 
 class EventListAll(ListView):
@@ -80,7 +80,7 @@ class EventListAll(ListView):
         except TypeError:
             pass
         return events
-    paginate_by = 5
+    paginate_by = 6
 
 class EventDetailView(DetailView):
     model = Post
