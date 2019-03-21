@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 {% block content %}
 <!--Bruker crispyforms og forms.py for registreringssiden. forms.py står for backend-logikk-->
-<div class="content-section">
+<div class="card container" style=" margin-left: 15%;">
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <fieldset class="form-group">

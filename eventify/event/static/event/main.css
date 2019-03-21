@@ -3,6 +3,7 @@ body {
     color: #333333;
     background-color: #333333;
     heigth: 100vh;
+    margin-top: 5%;
 }
 
 main {
@@ -174,7 +175,7 @@ ul {
 
 .flex-container {
     display: flex;
-    flex-flow: wrap;
+    flex-wrap: wrap;
     justify-content: space-between;
     padding-top: 150px;
 
@@ -182,13 +183,23 @@ ul {
 
 .flex-container2 {
     display: flex;
-    flex-flow: wrap;
+    flex-wrap: wrap;
     justify-content: space-between;
     padding-right: 100px;
     width: 100%;
     height: 230%;
     margin-bottom: 20%;
 }
+
+.flex-container3 {
+    display: flex;
+    flex-flow: row wrap;
+    width: 40%;
+    height: 40%;
+    margin-left: 10%;
+    justify-content: space-between;
+}
+
 
 .event-row {
     background: white;

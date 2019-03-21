@@ -1,7 +1,7 @@
 {% extends "event/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-<div class="content-section container" style="margin-top: 90px;">
+<div class="card container" style="margin-left: 15%; padding:20px;">
     <div class="media">
         <img class="rounded-circle account-img" src="{{ user.profile.image.url }}">
         <div class="media-body">
@@ -20,11 +20,61 @@
                 <a class="btn btn-primary" href="{% url 'event-create' %}">Create Event</a>
             {% endif %}
             <a class="btn btn-info" href="{% url 'all-users' %}">Find Contacts</a>
-            <a class="btn btn-info" href="{% url 'contacts' %}">See Contacts</a>
             <a class="btn btn-info" href="{% url 'event-invites' %}">See Event Invites</a>
             <a class="btn btn-info" href="{% url 'contact-requests' %}">See Requests</a>
         </div>
+
     </form>
+
+      {% for friend in friends %}
+        {% if friend %}
+    <h4>Your contacts</h4>
+
+    <div class="media">
+        <img class="rounded-circle account-img" style="width: 50px; height: 50px; margin-top: 40px;" src="{{ friend.profile.image.url }}">
+        <div class="media-body">
+
+
+          <h2 class="account-heading">{{ friend.username }} </h2>
+            <p class="text-secondary">{{ friend.email }}</p>
+
+
+
+                <form method="POST" action="{% url 'remove-contact' %}">
+                    {% csrf_token %}
+
+
+                         <input type="hidden" name="user-id" value="{{ friend.id }}">
+
+                       <input class="btn btn-success" type="submit" value="X"/>
+
+
+
+
+                </form>
+                 </table>
+        </div>
+
+        {% else %}
+
+<h4>No friends</h4>
+    <a class="btn btn-info" href="{% url 'all-users' %}">Find Contacts</a>
+
+
+
+    </div>
+
+        {% endif %}
+
+
+
+
+
+{% endfor %}
+
+
+
+
 </div>
 {% endblock content %}
 

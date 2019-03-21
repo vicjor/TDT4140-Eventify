@@ -1,7 +1,10 @@
 {% extends "event/base.html" %}
+
 {% block content %}
 
-<div class="content-section container" style="margin-top: 90px;">
+<div style="margin-left: 15%;">
+
+<div class="card container"  style="width: 110vh;">
 
 <form name="event-search-form" method="POST" action="{% url 'user-search' %}">
     {% csrf_token %}
@@ -13,6 +16,13 @@
     </table>
 </form>
 
+
+    </div>
+
+<div class ="card container" style="height: 120vh; width: 110vh;">
+
+   <div class="flex-container3" >
+
 {% for friend in users %}
 
     <div class="media">
@@ -20,6 +30,7 @@
         <div class="media-body">
             <h2 class="account-heading">{{ friend.username }}</h2>
             <p class="text-secondary">{{ friend.email }}</p>
+
             {% if friend in user.profile.sent_requests.all %}
                 <a class="btn btn-success">Request Sent</a>
             {% elif friend in user.profile.contacts.all %}
@@ -34,7 +45,14 @@
         </div>
     </div>
 
+
+
 {% endfor %}
 
+           </div>
+
     </div>
+
+    </div>
+
 {% endblock content %}
