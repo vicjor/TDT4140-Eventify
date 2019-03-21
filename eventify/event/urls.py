@@ -8,6 +8,7 @@ urlpatterns = [
     path('events/', EventListAll.as_view(), name='events-all'),
     path('invite-friends/<int:event_id>/', views.HtmlRender.invite_list, name="invite-list"),
     path('send-invite/', views.EventViews.invite_user, name="invite-user"),
+    path('cancel-invite/', views.EventViews.cancel_invite, name="cancel-invite"),
     path('user/<str:username>', UserListView.as_view(), name='user-posts'),
     path('', EventListView.as_view(), name='event-home'),
     path('event/<int:pk>/', EventDetailView.as_view(), name='event-detail'),

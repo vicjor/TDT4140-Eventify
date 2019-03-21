@@ -18,6 +18,13 @@ ul {
     margin: 0;
 }
 
+footertry {
+    clear: both;
+    position: relative;
+    height: 40px;
+    margin-top: -40px;
+}
+
 .myButton {
 	-moz-box-shadow: 3px 4px 0px 0px #1564ad;
 	-webkit-box-shadow: 3px 4px 0px 0px #1564ad;
@@ -176,8 +183,6 @@ ul {
 .flex-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
-    padding-top: 150px;
 
 }
 

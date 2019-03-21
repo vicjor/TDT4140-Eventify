@@ -47,53 +47,49 @@
 {% for event in events %}
     {% if event != events.first %}
 
-         <div class="card z-depth-5 card-panel hoverable " style="border-radius: 5px; padding: 5px;">
+    <div class="card hoverable" style="margin: 10px;">
 
-                <div class="card-image waves-effect waves-block waves-light">
+                        <div class="card-image waves-effect waves-block"  style = "margin:5px; padding:10px;">
+                            <img class="activator" src="{{ event.image.url }}" style="width: 290px; height: 160px; padding-bottom: 2px;">
+                            <div class="card-content">
+                                <div class="overlay_text_event">
 
+                                    {% if user.is_authenticated %}
+                                        <a class="waves-effect waves-light btn-small" style="transform: translate(130%, 45%);" href="{% url 'event-detail' event.id %}">Join event</a>
+                                    {% else  %}
+                                        <p class="waves-effect waves-light btn-small" style="transform: translate(130%, 45%);" href="{% url 'event-detail' event.id %}">See event</p>
+                                    {% endif %}
 
-                  <img class="activator" src="{{ event.image.url }}" style="width: 290px; height: 160px; padding-bottom: 2px;">
-
-                <div class="card-content">
-
-
-                    <div class="overlay_text_event">
-
-                 {% if user.is_authenticated %}
-                    <a class="waves-effect waves-light btn-small" style="transform: translate(130%, 45%);" href="{% url 'event-detail' event.id %}">Join event</a>
-                {% else  %}
-                   <p class="waves-effect waves-light btn-small" style="transform: translate(130%, 45%);" href="{% url 'event-detail' event.id %}">See event</p>
-                {% endif %}
-
-                </div>
-
-                </div>
+                                </div>
+                            </div>
+                            <span class="card-title activator grey-text text-darken-4 center" style="font-size: 22pt;">{{ event.title }} </span>
+                        </div>
 
 
-                  <span class="card-title activator grey-text text-darken-4 center" style="font-size: 22pt;">{{ event.title }} </span>
+                        <div class="card-reveal">
+                          <span class="card-title grey-text text-darken-4">{{ event.title}}<i class="material-icons right">close</i></span>
+                          <p>{{ event.content}}
+                          <br><br>
+                          <i class="fas fa-map-marker-alt"> </i> {{ event.location}}</p>
+                             {% if user.is_authenticated %}
+                                <a class="waves-effect waves-light btn-small" href="{% url 'event-detail' event.id %}">Join event</a>
+                             {% else  %}
+                                <p class="waves-effect waves-light btn-small" href="{% url 'event-detail' event.id %}">See event</p>
+                            {% endif %}
+                        </div>
+        </div>
 
 
-                </div>
 
-                <div class="card-reveal">
-                  <span class="card-title grey-text text-darken-4">{{ event.title}}<i class="material-icons right">close</i></span>
-                  <p>{{ event.content}}
-                  <br><br>
-                  <i class="fas fa-map-marker-alt"> </i> {{ event.location}}</p>
+            {% endif %}
 
-                     {% if user.is_authenticated %}
-                    <a class="waves-effect waves-light btn-small" href="{% url 'event-detail' event.id %}">Join event</a>
-                {% else  %}
-                   <p class="waves-effect waves-light btn-small" href="{% url 'event-detail' event.id %}">See event</p>
-                {% endif %}
-                </div>
-              </div>
-    {% endif %}
 
-    {% endfor %}
-       </div>
+            {% endfor %}
 
-    </div>
+
+
+            </div>
+
 
 
 {% endblock content %}

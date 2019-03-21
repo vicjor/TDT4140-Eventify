@@ -59,14 +59,28 @@
                         </form>
                     </div>
                 {% else %}
-                    {% if object.attendance_limit > 0 %}
+                    {% if object.attendees.all.count == object.attendance_limit and object.waiting_list.all.count == object.waiting_list_limit %}
                         <div>
-                            <form method="POST" action="{% url 'event-join' %}">
-                                {% csrf_token %}
-                                <input type="hidden" name="event-id" value="{{ object.id }}">
-                                <input class="btn btn-success" type="submit" value="Join Event"/>
-                            </form>
+                            <a class="btn btn-info" value="Full"/>
                         </div>
+                    {% else %}
+                        {% if object.attendees.all.count == object.attendance_limit %}
+                            <div>
+                                <form method="POST" action="{% url 'event-join' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="event-id" value="{{ object.id }}">
+                                    <input class="btn btn-success" type="submit" value="Join Waiting List"/>
+                                </form>
+                            </div>
+                        {% else %}
+                            <div>
+                                <form method="POST" action="{% url 'event-join' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="event-id" value="{{ object.id }}">
+                                    <input class="btn btn-success" type="submit" value="Join Event"/>
+                                </form>
+                            </div>
+                        {% endif %}¨
                     {% endif %}
                 {% endif %}
             {% endif %}

@@ -11,7 +11,12 @@
             {% if user in event.attendees.all %}
                 <a class="btn btn-success">Contact Already Signed Up</a>
             {% elif user in event.invited.all %}
-                <a class="btn btn-success">Invite Sent</a>
+               <form method="POST" action="{% url 'cancel-invite' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="user-id" value="{{ user.id }}">
+                    <input type="hidden" name="event-id" value="{{ event.id }}">
+                    <input class="btn btn-success" type="submit" value="Withdraw Invite"/>
+                </form>
             {% else %}
                 <form method="POST" action="{% url 'invite-user' %}">
                     {% csrf_token %}

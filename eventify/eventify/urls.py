@@ -42,6 +42,7 @@ urlpatterns = [
     path('add-friend/', user_views.add_contact, name="add-contact"),
     path('accept-friend/', user_views.accept_request, name="accept-request"),
     path('decline-friend/', user_views.decline_request, name="decline-request"),
+    path('cancel-request/', user_views.cancel_request, name="cancel-request"),
     path('requests/', user_views.see_requests, name="contact-requests"),
     path('contacts/', user_views.get_friends, name="contacts"),
     path('remove-contact/', user_views.remove_contact, name="remove-contact"),
