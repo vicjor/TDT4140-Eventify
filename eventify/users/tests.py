@@ -1,9 +1,11 @@
 from django.test import TestCase
 from .models import User, Profile
+from PIL import Image
 from django.test import Client
 from unittest.mock import patch
 
 # Create your tests here.
+
 
 class UserTestCase(TestCase):
     @classmethod
@@ -22,7 +24,13 @@ class UserTestCase(TestCase):
         self.assertTrue(len(Profile.objects.filter(username='Ole')) == 1)
         # Bruker kan velge å avregistrere seg senere #
 
-    """def test_authenticated_user(self):
-        self.c = Client()
-        self.c.login(username='Ole', password='ole')
-        self.c.login()"""
+    def test_profile_to_string(self):
+        self.assertEqual(str(self.profile1), self.profile1.text)
+
+    def test_profile_pre_save_hook(self):
+        img = Image.new('RGB', (400, 400), color='red')
+        img.save('pil_red.png')
+        self.profile1.image = img
+        self.profile1.save()
+        self.assertTrue(Profile.objects.filter(image="pil_red.png").exists())
+        self.assertEqual(self.profile1.image.size, (300, 300))

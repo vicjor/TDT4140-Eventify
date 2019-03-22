@@ -41,7 +41,10 @@ class PostTestCase(TestCase):
         self.assertTrue(Post.objects.filter(title="Heklekveld").exists())
 
     def test_event_to_string(self):
-        self.assertEqual(self.event1.__str__(), "Strikkekveld")
+        self.assertEqual(str(self.event1), self.event1.title)
+
+    def test_absolute_url(self):
+        self.assertFalse(self.event1.get_absolute_url() == self.event2.get_absolute_url())
 
     # def test_search(self):
     # def test_remove_event(self):

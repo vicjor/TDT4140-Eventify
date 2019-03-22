@@ -29,7 +29,6 @@ class Profile(models.Model):
     notifications = models.ManyToManyField(Notification, related_name="notifications")
     new_notifications = models.IntegerField(default=0)
 
-
     def __str__(self):
         return self.user.id
 
