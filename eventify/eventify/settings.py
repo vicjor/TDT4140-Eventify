@@ -25,7 +25,7 @@ SECRET_KEY = 'u3i(sz5&5@#*68ygrvxi=276)cy@kl0u7(49_y7@p@#757i!1b'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['188.166.34.41', 'localhost', 'eventifypu.com']
 
 
 # Application definition
