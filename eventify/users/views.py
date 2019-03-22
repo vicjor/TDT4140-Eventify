@@ -1,6 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
+from .models import Notification
 from django.contrib import messages
 from django.urls import reverse
 from django.db.models import Q
@@ -78,6 +79,14 @@ def add_contact(request):
     user.profile.requests.add(request.user)
     request.user.profile.sent_requests.add(user)
 
+    notification = Notification.objects.create(
+        user=user,
+        text='{} {} sent you a contact request'.format(request.user.first_name, request.user.last_name),
+        type="profile"
+    )
+
+    user.profile.notifications.add(notification)
+
     messages.info(request, f'Request sent. ')
 
     return HttpResponseRedirect(reverse('all-users'))
@@ -105,6 +114,14 @@ def accept_request(request):
     request.user.profile.requests.remove(user)
     request.user.profile.contacts.add(user)
 
+    notification = Notification.objects.create(
+        user=user,
+        text='{} {} accepted your contact request.'.format(request.user.first_name, request.user.last_name),
+        type="profile"
+    )
+
+    user.profile.notifications.add(notification)
+
     messages.success(request, f'Request has been accepted. ')
 
     return HttpResponseRedirect(reverse('contact-requests'))
@@ -119,6 +136,14 @@ def decline_request(request):
 
     request.user.profile.requests.remove(user)
     messages.info(request, f'Request has been declined. ')
+
+    notification = Notification.objects.create(
+        user=user,
+        text='{} {} declined your contact request.'.format(request.user.first_name, request.user.last_name),
+        type="profile"
+    )
+
+    user.profile.notifications.add(notification)
 
     return HttpResponseRedirect('contact-requests')
 
@@ -196,4 +221,3 @@ def event_invites(request):
     }
 
     return render(request, 'users/event_invites.html', context)
-

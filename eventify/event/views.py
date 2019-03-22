@@ -5,6 +5,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Post
+from users.models import Notification
 from django.contrib import messages
 from django.utils import timezone
 import pytz
@@ -61,7 +62,7 @@ class UserListView(ListView):  #Denne gjør at events vises på home i rekkeføl
     def get_queryset(self):
         user = get_object_or_404(User, username=self.kwargs.get('username'))
         return Post.objects.filter(author=user).order_by('-date_posted')
-    paginate_by = 5
+    paginate_by = 6
 
 
 class EventListAll(ListView):
@@ -79,7 +80,7 @@ class EventListAll(ListView):
         except TypeError:
             pass
         return events
-    paginate_by = 5
+    paginate_by = 6
 
 class EventDetailView(DetailView):
     model = Post
@@ -108,7 +109,15 @@ class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         event = self.get_object()
-        if self.request.user == event.author:
+        if self.request.user == event.author or self.request.user in event.co_authors:
+            for user in event.attendees:
+                notification = Notification.objects.create(
+                    user=user,
+                    event=event,
+                    text='{} {} has edited the event {}.'.format(self.request.user.first_name,
+                                                                 self.request.user.last_name, event.title)
+                )
+                user.profile.notifications.add(notification)
             return True
         return False
 
@@ -123,6 +132,14 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         event = self.get_object()
         if self.request.user == event.author:
+            for user in event.attendees:
+                notification = Notification.objects.create(
+                    user=user,
+                    event=event,
+                    text='{} {} has deleted the event {}.'.format(self.request.user.first_name,
+                                                                 self.request.user.last_name, event.title)
+                )
+                user.profile.notifications.add(notification)
             return True
         return False
 
@@ -302,6 +319,15 @@ class EventViews:
             event.invited.remove(user)
             user.profile.event_invites.remove(event)
 
+        if event.is_private:
+            notification = Notification.objects.create(
+                user = event.author,
+                event=event,
+                text = '{} signed up for your event.'.format(user.first_name),
+                type="profile"
+            )
+            event.author.profile.notifications.add(notification)
+
         return redirect('event-detail', pk=event_id)
 
     @login_required
@@ -328,6 +354,14 @@ class EventViews:
         if user in event.attendees.all():
             event.attendees.remove(user)
             messages.success(request, f'User removed from event')
+            if event.is_private:
+                notification = Notification.objects.create(
+                    user=user,
+                    event=event,
+                    text='{} {} har removed you from their event.'.format(request.user.first_name, request.user.last_name),
+                    type="profile"
+                )
+                user.profile.notifications.add(notification)
 
         return redirect('event-detail', pk=event_id)
 
@@ -342,6 +376,15 @@ class EventViews:
         if user in event.attendees.all():
             event.attendees.remove(user)
             messages.success(request, f'You are now signed off the event. ')
+
+            if event.is_private:
+                notification = Notification.objects.create(
+                    user=event.author,
+                    event=event,
+                    text='{} {} is no longer going to your event.'.format(user.first_name, user.last_name),
+                    type="profile"
+                )
+                event.author.profile.notifications.add(notification)
 
         else:
             messages.error(request, f"You can't sign off an event you're not signed up for. ")
@@ -433,6 +476,15 @@ class EventViews:
         user.profile.event_invites.add(event)
         event.invited.add(user)
 
+        notification = Notification.objects.create(
+            user=user,
+            event=event,
+            text='%s %s has sent you an invitation to their event.'.format(request.user.first_name, request.user.last_name),
+            type="event"
+        )
+
+        user.profile.notifications.add(notification)
+
         return redirect('invite-list', event_id)
 
     @login_required
@@ -459,6 +511,15 @@ class EventViews:
 
         messages.success(request, f'User successfully added as host. ')
 
+        notification = Notification.objects.create(
+            user=user,
+            event=event,
+            text='{} {} has added you as a administrator for the event {}.'.format(request.user.first_name, request.user.last_name, event.title),
+            type="event"
+        )
+
+        user.profile.notifications.add(notification)
+
         return redirect('event-detail', pk=event_id)
 
     @login_required
@@ -471,6 +532,16 @@ class EventViews:
         if user in event.co_authors.all():
             event.co_authors.remove(user)
             messages.info(request, f'User removed as admin')
+
+        notification = Notification.objects.create(
+            user=user,
+            event=event,
+            text='{} {} has removed you as a administrator for the event {}.'.format(request.user.first_name,
+                                                                                   request.user.last_name, event.title),
+            type="event"
+        )
+
+        user.profile.notifications.add(notification)
 
         return redirect('event-detail', pk=event_id)
 

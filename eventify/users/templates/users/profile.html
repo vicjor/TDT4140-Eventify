@@ -1,6 +1,9 @@
 {% extends "event/base.html" %}
+
 {% load crispy_forms_tags %}
+
 {% block content %}
+
 <div class="card container" style="margin-left: 15%; padding:20px;">
     <div class="media">
         <img class="rounded-circle account-img" src="{{ user.profile.image.url }}">
@@ -9,6 +12,7 @@
             <p class="text-secondary">{{ user.email }}</p>
         </div>
     </div>
+
     <form method="POST" enctype="multipart/form-data" action="editProfile.html/">
         {% csrf_token %}
 
@@ -26,18 +30,20 @@
 
     </form>
 
+       <h4>Your contacts</h4>
+
+
       {% for friend in friends %}
         {% if friend %}
-    <h4>Your contacts</h4>
+
 
     <div class="media">
         <img class="rounded-circle account-img" style="width: 50px; height: 50px; margin-top: 40px;" src="{{ friend.profile.image.url }}">
-        <div class="media-body">
 
+        <div class="media-body">
 
           <h2 class="account-heading">{{ friend.username }} </h2>
             <p class="text-secondary">{{ friend.email }}</p>
-
 
 
                 <form method="POST" action="{% url 'remove-contact' %}">
@@ -48,12 +54,10 @@
 
                        <input class="btn btn-success" type="submit" value="X"/>
 
-
-
-
                 </form>
-                 </table>
+
         </div>
+
 
         {% else %}
 
@@ -65,8 +69,6 @@
     </div>
 
         {% endif %}
-
-
 
 
 

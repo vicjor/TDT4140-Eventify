@@ -1,7 +1,8 @@
 {% load static %}
-<html lang="en">
+<html lang="en" id="top">
 <head>
 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Favicon hentet fra nettet-->
     <link rel="shortcut icon" href="http://d1ujqdpfgkvqfi.cloudfront.net/favicon-generator/htdocs/favicons/2015-01-09/502e5d90b726a726b80cb485280749ea.ico">
 
@@ -31,13 +32,15 @@
 
 <body>
 
-<header class="site-header">
+<header class="site-header"  >
     <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container">
             <a class="navbar-brand mr-4" href="{% url 'event-home' %}">Eventify</a>
+
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarToggle">
                 <div class="navbar-nav mr-auto">
                     <a class="nav-item nav-link" href="{% url 'events-all' %}">All Events</a>
@@ -56,9 +59,46 @@
                         <a class="nav-item nav-link" href="{% url 'event-create' %}">New Event</a>
                         <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
                         <a class="nav-item nav-link" href="{% url 'logout' %}">Log Out</a>
+
+                          <ul id = "dropdown" class = "dropdown-content" style="width: 200px; height: 200px;">
+                              {% for notification in user.profile.notifications.all %}
+                                {% if notification.type == 'event' %}
+                                    <li>
+                                        <form method="POST" action="{% url 'event-detail' event.id %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="event-id" value="{{ event.id }}">
+                                            <input class="btn btn-success" type="submit" value="{{ notification.text }}"/>
+                                            <span class="badge">
+                                                Go to event
+                                            </span>
+                                        </form>
+                                    </li>
+                                {% else %}
+                                    <li>
+                                        <form method="POST" action="{% url 'contact-requests' %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="user-id" value="{{ user.id }}">
+                                            <input class="btn btn-success" type="submit" value="{{ notification.text }}"/>
+                                            <span class="badge">
+                                                Go to requests
+                                            </span>
+                                        </form>
+                                    </li>
+                                {% endif %}
+                              {% endfor %}
+                          </ul>
+
+
+
+                          <a class = "dropdown-button" href = "#" data-activates = "dropdown">
+                             <i class = "material-icons">notifications</i></a>
+
+
+
                     {% elif user.is_authenticated %}
                         <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
                         <a class="nav-item nav-link" href="{% url 'logout' %}">Log Out</a>
+                        <a class="dropdown-trigger" data-target="drop-down1"><i class="material-icons alert-red">notifications</i></a>
                     {% else %}
                         <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
                         <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
@@ -93,38 +133,71 @@
 
     </div>
 
-  <footer class="page-footer" style="background-color:black;">
+  <footer class="page-footer" style="background-color:black; ">
           <div class="container">
             <div class="row">
-              <div class="col l3 s12">
+              <div class="col-md-4">
 
-                 <a class="nav-item nav-link" href="{% url 'eventify-about' %}"><i class="fas fa-info" style="font-size: 70px; color:white;"></i>
-                <br>
-                <p style="padding-left: 0px;">About</a>
 
-                  <a href="#"> <i class="far fa-address-card" style="font-size: 70px; color:white;"></i></a>
-                  <p style="padding-left: 0px;">Contact</a>
+                  <h6 style="color:white;">ABOUT EVENTIFY</h6>
+                  <br>
+                  <br>
+
+                  <p> <i class="fas fa-info" style=" color:orange;"></i> Eventify was created in 2019 by some students at NTNU in Trondheim, Norway.</p>
+                  <br>
+                  <p>Eline Gotaas, Ola Holde, Victor Jørgensen, Axel Kjønsberg, Katrine Nguyen and Sjur Wold</p>
+
+
               </div>
-              <div class="col l2 offset-l2 s12">
-                <ul>
 
-          <i class="fab fa-facebook-f" style="font-size: 20px; color:#3b5998;">  </i> Facebook
-                    <br>
-                    <br>
-          <i class="fab fa-twitter" style="font-size: 20px; color:#1DA1F2;">  </i> Twitter
 
+                <div class="col-md-4">
+                    <h6 style="color:white; ">ADDRESS</h6>
                     <br>
                     <br>
 
-                    <i class="fas fa-map-marker-alt" style="font-size: 20px; color:white;"></i>  Address Eventify
+                    <i class="fas fa-phone"  style="font-size: 20px; color: orange;"></i> +47 48 34 23 10
+                    <br>
+                    <br>
+                         <i class="far fa-envelope" style="font-size: 20px; color: orange;"></i> eventify.pu@hotmail.com
+                    <br>
+                    <br>
+                    <p>  <i class="fas fa-map-marker-alt" style="font-size:15pt; color:orange;"></i> Høgskoleringen 1, 7491 Trondheim,</p>
+                    <p>NORWAY</p>
+
+
+                </div>
+
+                    <div class="col-md-4">
+                      <h6 style="color:white; ">FOLLOW US</h6>
+                        <br>
+                        <br>
+                     <ul>
+
+          <i class="fab fa-facebook-f" style="font-size: 20px; color:#3b5998;">  </i> Eventify Programvareutvikling
+                    <br>
+                    <br>
+          <i class="fab fa-twitter" style="font-size: 20px; color:#1DA1F2;">  </i> @EventifyPU
+
+                    <br>
+                    <br>
+
+                         <i class="fab fa-instagram" style="font-size: 20px; color: orange;"></i> @EventifyPU
+
+                    <br>
+                    <br>
+
                 </ul>
-              </div>
+                </div>
+
             </div>
-          </div>
+
+
+
           <div class="footer-copyright">
             <div class="container">
 
-            <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+            <a class="grey-text text-lighten-4 right" href="#top">Go to top</a>
 
 
                  © 2019 Copyright Text
