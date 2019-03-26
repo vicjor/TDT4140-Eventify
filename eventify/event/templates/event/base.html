@@ -60,7 +60,7 @@
                         <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
                         <a class="nav-item nav-link" href="{% url 'logout' %}">Log Out</a>
 
-                          <ul id = "dropdown" class = "dropdown-content" style="width: 200px; height: 200px;">
+                          <ul id = "dropdown" class = "dropdown-content">
                               {% for notification in user.profile.notifications.all %}
                                 {% if notification.type == 'event' %}
                                     <li>
