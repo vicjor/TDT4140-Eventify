@@ -1,7 +1,7 @@
 {% extends "event/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-<div class="content-section-newevent">
+<div class="content-section-newevent container" style="margin-top: 90px;">
     <form method="POST" action="event/create/">
         {% csrf_token %}
         <fieldset class="form-group">

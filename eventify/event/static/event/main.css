@@ -3,6 +3,7 @@ body {
     color: #333333;
     background-color: #333333;
     heigth: 100vh;
+    margin-top: 5%;
 }
 
 main {
@@ -523,21 +524,29 @@ footertry {
 
 .flex-container {
     display: flex;
-    flex-flow: wrap;
-    justify-content: space-between;
-    padding-top: 150px;
+    flex-wrap: wrap;
 
 }
 
 .flex-container2 {
     display: flex;
-    flex-flow: wrap;
+    flex-wrap: wrap;
     justify-content: space-between;
     padding-right: 100px;
     width: 100%;
     height: 230%;
     margin-bottom: 20%;
 }
+
+.flex-container3 {
+    display: flex;
+    flex-flow: row wrap;
+    width: 40%;
+    height: 40%;
+    margin-left: 10%;
+    justify-content: space-between;
+}
+
 
 .event-row {
     background: white;
@@ -894,4 +903,64 @@ a.article-title:hover {
 }
 .navbar-default .dropdown-menu.notify-drop .notify-drop-footer a:hover {
   color: #333;
+}
+
+nav.dot {
+  background: none;
+  box-shadow: none;
+}
+nav.dot a {
+  position: relative;
+  color: #6f6f6f;
+  display: inline-block;
+  padding: 0 2.5rem;
+}
+nav.dot a:hover:before, nav.dot a:hover:first-child:before {
+  width: 12px;
+  height: 12px;
+  margin: 0 0 0 -6px;
+  bottom: -1px;
+}
+nav.dot a:before, nav.dot a:first-child:before {
+  content: "";
+  position: absolute;
+  background: #f7585e;
+  display: block;
+  width: 10px;
+  height: 10px;
+  margin: 0 0 0 -5px;
+  border-radius: 50%;
+  bottom: 0;
+  left: 50%;
+  z-index: 1;
+  transition: width ease-in 0.1s, height ease-in 0.1s, margin ease-in 0.1s, bottom ease-in 0.1s;
+}
+nav.dot a:after {
+  content: "";
+  position: absolute;
+  background: #f7585e;
+  display: block;
+  width: calc(100% + 15px);
+  height: 2px;
+  bottom: 4px;
+  left: 50%;
+}
+nav.dot a:nth-last-child(2):after {
+  width: calc(100% + 5px);
+  background: #fcc3c5;
+}
+nav.dot a:last-child {
+  color: black;
+}
+nav.dot a:last-child:hover:before, nav.dot a:last-child:hover:first-child:before {
+  width: 10px;
+  height: 10px;
+  margin: 0 0 0 -5px;
+  bottom: 0px;
+}
+nav.dot a:last-child:before {
+  background: #fcc3c5;
+}
+nav.dot a:last-child:after {
+  display: none;
 }

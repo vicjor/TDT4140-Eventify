@@ -98,9 +98,11 @@ def check_valid_card(card, sec, month, year, amount):
 @login_required  # Du må være logget inn for å få tilgang til profilsiden. Sendes til registrering hvis ikke
 def profile(request):
     user = request.user
+    friends = user.profile.contacts.all();
 
     context = {
-        'user': user
+        'user': user,
+        'friends': friends
     }
 
     return render(request, 'users/profile.html', context)
@@ -224,7 +226,7 @@ def remove_contact(request):
         user.profile.contacts.remove(request.user)
         messages.info(request, f'User successfully removed as contact.')
 
-    return HttpResponseRedirect(reverse('contacts'))
+    return HttpResponseRedirect(reverse('profile'))
 
 @login_required
 def search_user(request):

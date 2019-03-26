@@ -1,5 +1,5 @@
 {% load static %}
-<html lang="en">
+<html lang="en" id="top">
 <head>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -57,9 +57,12 @@
                         <a class="nav-item nav-link" href="{% url 'event-create' %}">New Event</a>
                         <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
                         <a class="nav-item nav-link" href="{% url 'logout' %}">Log Out</a>
+
+                          <ul id = "dropdown" class = "dropdown-content" style="width: 200px; height: 200px;">
                        <!-- <body class = "container">
                           <ul id = "dropdown" class = "dropdown-content">
                               {% for notification in user.profile.notifications.all %}
+                                {% if notification.type == 'event' %}
                                     <li>
                                         <form method="POST" action="{% url 'redirect-notification' %}">
                                             {% csrf_token %}
@@ -70,8 +73,11 @@
                                             </span>
                                         </form>
                                     </li>
+                                {% endif %}
                               {% endfor %}
                           </ul>
+
+
 
                           <a class = "dropdown-button" href = "#" data-activates = "dropdown">
                              <i class = "material-icons">notifications</i> ({{ user.profile.notifications.all.count }}</a>
@@ -114,20 +120,57 @@
 
     </div>
 
-  <footer class="page-footer" style="background-color:black;">
+  <footer class="page-footer" style="background-color:black; ">
           <div class="container">
             <div class="row">
-              <div class="col l6 s12">
+              <div class="col-md-4">
 
-                 <a class="nav-item nav-link" href="{% url 'eventify-about' %}"><i class="fas fa-bolt" style="font-size: 70px; color:white;"></i>
-                <br>
-                <p style="padding-left: 0px;">About</a>
+
+                  <h6 style="color:white;">ABOUT EVENTIFY</h6>
+                  <br>
+                  <br>
+
+                  <p> <i class="fas fa-info" style=" color:orange;"></i> Eventify was created in 2019 by some students at NTNU in Trondheim, Norway.</p>
+                  <br>
+                  <p>Eline Gotaas, Ola Holde, Victor Jørgensen, Axel Kjønsberg, Katrine Nguyen and Sjur Wold</p>
+
+
               </div>
-              <div class="col l4 offset-l2 s12">
-                <h5 class="white-text">Contact</h5>
-                <ul>
 
-          <i class="fab fa-facebook-f" style="font-size: 20px; color:#3b5998;">  </i>Facebook
+
+                <div class="col-md-4">
+                    <h6 style="color:white; ">ADDRESS</h6>
+                    <br>
+                    <br>
+
+                    <i class="fas fa-phone"  style="font-size: 20px; color: orange;"></i> +47 48 34 23 10
+                    <br>
+                    <br>
+                         <i class="far fa-envelope" style="font-size: 20px; color: orange;"></i> eventify.pu@hotmail.com
+                    <br>
+                    <br>
+                    <p>  <i class="fas fa-map-marker-alt" style="font-size:15pt; color:orange;"></i> Høgskoleringen 1, 7491 Trondheim,</p>
+                    <p>NORWAY</p>
+
+
+                </div>
+
+                    <div class="col-md-4">
+                      <h6 style="color:white; ">FOLLOW US</h6>
+                        <br>
+                        <br>
+                     <ul>
+
+          <i class="fab fa-facebook-f" style="font-size: 20px; color:#3b5998;">  </i> Eventify Programvareutvikling
+                    <br>
+                    <br>
+          <i class="fab fa-twitter" style="font-size: 20px; color:#1DA1F2;">  </i> @EventifyPU
+
+                    <br>
+                    <br>
+
+                         <i class="fab fa-instagram" style="font-size: 20px; color: orange;"></i> @EventifyPU
+
                     <br>
                     <br>
           <i class="fab fa-twitter" style="font-size: 20px; color:#1DA1F2;">  </i>Twitter
@@ -138,7 +181,7 @@
           <div class="footer-copyright">
             <div class="container">
 
-            <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+            <a class="grey-text text-lighten-4 right" href="#top">Go to top</a>
 
 
                  © 2019 Copyright Text
