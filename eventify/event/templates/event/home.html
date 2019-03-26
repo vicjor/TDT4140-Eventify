@@ -8,6 +8,7 @@
 
 
 {% block content %}
+<div style="padding: 10px;">
     <div class="slider">
         <ul class="slides">
             {% for event in slide_events %}
@@ -48,13 +49,13 @@
         {% for event in events %}
             {% if event != events.first %}
 
-                 <div class="card" style="border-radius: 5px; margin: 25px; padding: 5px;">
+                 <div class="card" style="border-radius: 5px; margin: 20px; padding: 5px;">
                         <div class="card-image waves-effect waves-block waves-light">
                             <img class="activator" src="{{ event.image.url }}" style="width: 290px; height: 160px; padding-bottom: 2px;">
                             <div class="card-content">
                                 <div class="overlay_text_event">
 
-                                        <p class="waves-effect waves-light btn-small" style="transform: translate(130%, 45%);" href="{% url 'event-detail' event.id %}">See event</p>
+                                        <a class="waves-effect waves-light btn-small" style="transform: translate(130%, 45%);" href="{% url 'event-detail' event.id %}">See event</a>
 
 
                                 </div>
@@ -66,11 +67,9 @@
                           <p>{{ event.content}}
                           <br><br>
                           <i class="fas fa-map-marker-alt"> </i> {{ event.location}}</p>
-                             {% if user.is_authenticated %}
-                                <a class="waves-effect waves-light btn-small" href="{% url 'event-detail' event.id %}">Join event</a>
-                             {% else  %}
-                                <p class="waves-effect waves-light btn-small" href="{% url 'event-detail' event.id %}">See event</p>
-                            {% endif %}
+
+                                <a class="waves-effect waves-light btn-small" href="{% url 'event-detail' event.id %}">See event</a>
+
                         </div>
                  </div>
             {% endif %}

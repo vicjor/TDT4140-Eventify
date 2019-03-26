@@ -5,8 +5,9 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Post
-from users.models import Notification
+from users.models import Notification, Credit
 from django.contrib import messages
+from django.db.models import F
 from django.utils import timezone
 import pytz
 import json
@@ -318,11 +319,48 @@ class EventViews:
 
         return redirect('event-detail', pk=event_id)
 
+
     @login_required
-    def buy_ticket(request, credit_id):
-        user = request.user
+    def buy_ticket(request):
+        event = Post.objects.get(pk=request.POST.get('event-id', False))
+        cards = request.user.profile.credit_card.all()
+
+        context = {
+            'cards': cards,
+            'event': event
+        }
+
+        return render(request, 'event/confirm_transaction.html', context)
+
+    @login_required
+    def redirect_to_execution(request, credit_id):
         event_id = request.POST.get('event-id', False)
         event = Post.objects.get(pk=event_id)
+        card = Credit.objects.get(pk=credit_id)
+
+        context = {
+            'card': card,
+            'object': event
+        }
+
+        return render(request, 'event/execute_transaction.html', context)
+
+    @login_required
+    def execute_transaction(request, credit_id):
+        event_id = request.POST.get('event-id', False)
+        event = Post.objects.get(pk=event_id)
+        price = event.price
+        user = request.user
+        max_amount = user.profile.credit_card.get(pk=credit_id).amount
+
+        if price > max_amount:
+            messages.error(request, f'Not enough money on your credit card. ')
+        else:
+            user.profile.credit_card.filter(pk=credit_id).update(amount=F('amount') - price)
+            event.attendees.add(user)
+            messages.success(request, f'Transaction complete! ')
+
+        return redirect('event-detail', event_id)
 
 
 

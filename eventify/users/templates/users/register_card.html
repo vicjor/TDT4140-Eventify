@@ -1,11 +1,9 @@
 {% extends "event/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-<br>
-<br>
-<br>
+
 <!--Bruker crispyforms og bootstrap for styling og -->
-<div class="content-section">
+<div class="card container" style="margin-left: 15%;">
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <fieldset class="form-group">
@@ -14,7 +12,7 @@
             <!--U for user, p for profile. Bruker klassene fra forms.py.-->
         </fieldset>
         <div class="form-group">
-            <button class="myButton" type="submit">Register</button>
+            <button class="btn btn-info" type="submit">Register</button>
         </div>
     </form>
 </div>
