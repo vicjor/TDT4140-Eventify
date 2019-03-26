@@ -10,7 +10,7 @@ urlpatterns = [
     path('send-invite/', views.EventViews.invite_user, name="invite-user"),
     path('cancel-invite/', views.EventViews.cancel_invite, name="cancel-invite"),
     path('user/<str:username>', UserListView.as_view(), name='user-posts'),
-    path('', EventListView.as_view(), name='event-home'),
+    path('', views.HtmlRender.homePage, name='event-home'),
     path('event/<int:pk>/', EventDetailView.as_view(), name='event-detail'),
     path('event/new/', EventCreateView.as_view(), name='event-create'),# Denne som gjør at vi kan aksessere events på event/1, pk er primary key for en post
     path('event/<int:pk>/update', EventUpdateView.as_view(), name='event-update'),
@@ -20,5 +20,6 @@ urlpatterns = [
     path('remove-attendee/', views.EventViews.remove_attendee, name="remove-attendee"),
     path('add-host/', views.EventViews.add_host, name='add-host'),
     path('remove-host/', views.EventViews.remove_host, name='remove-host'),
-    path('event/created/', views.HtmlRender.created_events, name='created-by-user')
+    path('event/created/', views.HtmlRender.created_events, name='created-by-user'),
+    path('handle-notification/', views.EventViews.redirect_notification, name="redirect-notification")
 ]

@@ -1,0 +1,17 @@
+{% extends "event/base.html" %}
+{% block content %}
+<br>
+<br>
+{% for card in cards %}
+
+    <div class="media">
+        <div class="media-body">
+            <h2 class="account-heading"> Card Number: {{ card.card_number }}</h2>
+            <p class="text-secondary"> Security Code: {{ card.security_code }} Expiration Date: {{ card.expiration_month }} / {{  card.expiration_year }}</p>
+            <p class="text-secondary"> Available Amount: {{ card.amount }} </p>
+        </div>
+    </div>
+
+{% endfor %}
+
+{% endblock content %}
