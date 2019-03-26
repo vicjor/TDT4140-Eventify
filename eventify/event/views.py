@@ -115,8 +115,9 @@ class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                 notification = Notification.objects.create(
                     user=user,
                     event=event,
-                    text='{} {} has edited the event {}.'.format(self.request.user.first_name,
-                                                                 self.request.user.last_name, event.title)
+                    text='{} {} has edited the event {}.'.format(str(self.request.user.first_name),
+                                                                 str(self.request.user.last_name), str(event.title)),
+                    type='event'
                 )
                 user.profile.notifications.add(notification)
             return True
@@ -137,8 +138,9 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
                 notification = Notification.objects.create(
                     user=user,
                     event=event,
-                    text='{} {} has deleted the event {}.'.format(self.request.user.first_name,
-                                                                 self.request.user.last_name, event.title)
+                    text='{} {} has deleted the event {}.'.format(str(self.request.user.first_name),
+                                                                 str(self.request.user.last_name), str(event.title)),
+                    type='home'
                 )
                 user.profile.notifications.add(notification)
             return True
@@ -312,8 +314,8 @@ class EventViews:
             notification = Notification.objects.create(
                 user=event.author,
                 event=event,
-                text='{} signed up for your event.'.format(user.first_name),
-                type="profile"
+                text='{} signed up for your event.'.format(str(user.first_name)),
+                type="person_joined"
             )
             event.author.profile.notifications.add(notification)
 
@@ -392,8 +394,8 @@ class EventViews:
                 notification = Notification.objects.create(
                     user=user,
                     event=event,
-                    text='{} {} har removed you from their event.'.format(request.user.first_name, request.user.last_name),
-                    type="profile"
+                    text='{} {} har removed you from their event.'.format(str(request.user.first_name), str(request.user.last_name)),
+                    type="home"
                 )
                 user.profile.notifications.add(notification)
 
@@ -415,8 +417,8 @@ class EventViews:
                 notification = Notification.objects.create(
                     user=event.author,
                     event=event,
-                    text='{} {} is no longer going to your event.'.format(user.first_name, user.last_name),
-                    type="profile"
+                    text='{} {} is no longer going to your event.'.format(str(user.first_name), str(user.last_name)),
+                    type="event"
                 )
                 event.author.profile.notifications.add(notification)
 
@@ -432,20 +434,25 @@ class EventViews:
         return redirect('event-detail', pk=event_id)
 
     @login_required
-    def redirect_notification(request):
-        user = request.user
-        notification = Notification.objects.get(pk=request.POST.get('notification-id', False))
+    def redirect_notification(request, notification_id):
+        notification = Notification.objects.get(pk=notification_id)
 
-        user.profile.notifications.remove(notification)
+        Notification.objects.filter(pk=notification_id).read = True
+        Notification.save(notification)
 
         if notification.type == 'event':
-            event_id = request.POST.get('event-id', False)
+            event_id = notification.event.id
             return redirect('event-detail', event_id)
+        elif notification.type == 'home':
+            return redirect('event-home')
+        elif notification.type == 'person_joined':
+            event_id = notification.event.id
+            return redirect('attendee-list', event_id)
+        elif notification.type == 'new_request':
+            return redirect('contact-requests')
+
         else:
             return redirect('profile')
-
-
-
 
 
     def search_events(request):
@@ -530,7 +537,7 @@ class EventViews:
         notification = Notification.objects.create(
             user=user,
             event=event,
-            text='{} {} has sent you an invitation to their event.'.format(request.user.first_name, request.user.last_name),
+            text='{} {} has sent you an invitation to their event.'.format(str(request.user.first_name), str(request.user.last_name)),
             type="event"
         )
 
@@ -565,7 +572,7 @@ class EventViews:
         notification = Notification.objects.create(
             user=user,
             event=event,
-            text='{} {} has added you as a administrator for the event {}.'.format(request.user.first_name, request.user.last_name, event.title),
+            text='{} {} has added you as a administrator for the event {}.'.format(str(request.user.first_name), str(request.user.last_name), str(event.title)),
             type="event"
         )
 
@@ -587,8 +594,8 @@ class EventViews:
         notification = Notification.objects.create(
             user=user,
             event=event,
-            text='{} {} has removed you as a administrator for the event {}.'.format(request.user.first_name,
-                                                                                   request.user.last_name, event.title),
+            text='{} {} has removed you as a administrator for the event {}.'.format(str(request.user.first_name),
+                                                                                   str(request.user.last_name), str(event.title)),
             type="event"
         )
 
