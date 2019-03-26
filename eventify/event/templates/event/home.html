@@ -5,43 +5,30 @@
 <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> -->
 <!--<link rel="stylesheet" href="main.css">-->
 
+
+
 {% block content %}
-    <div style="padding: 0px;">
-
-
-            <div class="slider">
-                <ul class="slides">
-                  <li>
-                    <img src="KygoKonsert.jpg"> <!-- random image -->
+    <div class="slider">
+        <ul class="slides">
+            {% for event in slide_events %}
+              <li>
+                <a href="{% url 'event-detail' event.id %}">
+                    <img src="{{ event.image.url }}"> <!-- random image -->
                     <div class="caption center-align">
-                      <h3>This is our big Tagline!</h3>
-                      <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+                    <div class="overlay-header">
+
+                      <h3 style="color:white;">{{ event.title }}</h3>
+                       <p><i class="fas fa-map-marker-alt"> </i> {{ event.location}}</p>
+                        <p> <i class="fas fa-calendar-alt"> </i> {{ event.start_date }}</p>
+
+                        </div>
                     </div>
-                  </li>
-                  <li>
-                    <img src="https://lorempixel.com/580/250/nature/2"> <!-- random image -->
-                    <div class="caption left-align">
-                      <h3>Left Aligned Caption</h3>
-                      <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
-                    </div>
-                  </li>
-                  <li>
-                    <img src="https://lorempixel.com/580/250/nature/3"> <!-- random image -->
-                    <div class="caption right-align">
-                      <h3>Right Aligned Caption</h3>
-                      <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
-                    </div>
-                  </li>
-                  <li>
-                    <img src="https://lorempixel.com/580/250/nature/4"> <!-- random image -->
-                    <div class="caption center-align">
-                      <h3>This is our big Tagline!</h3>
-                      <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
-                    </div>
-                  </li>
-                  <script> $(document).ready(function () { $('.slider').slider({full_width: true}); }); </script>
-                </ul>
-              </div>
+                </a>
+              </li>
+            {% endfor %}
+          <script> $(document).ready(function () { $('.slider').slider({full_width: true}); }); </script>
+        </ul>
+      </div>
 
               <!--Import jQuery before materialize.js-->
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
@@ -56,23 +43,19 @@
             });
         </script>
 
-
-
+<div>
     <div class="flex-container ">
         {% for event in events %}
             {% if event != events.first %}
 
-    <div class="card hoverable" style="margin: 20px; border-radius: 5px;">
-
-                        <div class="card-image waves-effect waves-block"  style = "margin:3px; padding:3px;">
+                 <div class="card" style="border-radius: 5px; margin: 25px; padding: 5px;">
+                        <div class="card-image waves-effect waves-block waves-light">
                             <img class="activator" src="{{ event.image.url }}" style="width: 290px; height: 160px; padding-bottom: 2px;">
                             <div class="card-content">
                                 <div class="overlay_text_event">
-                                    {% if user.is_authenticated %}
-                                        <a class="waves-effect waves-light btn-small" style="transform: translate(150%, 45%);" href="{% url 'event-detail' event.id %}">Join event</a>
-                                    {% else  %}
-                                        <p class="waves-effect waves-light btn-small" style="transform: translate(150%, 45%);" href="{% url 'event-detail' event.id %}">See event</p>
-                                    {% endif %}
+
+                                        <p class="waves-effect waves-light btn-small" style="transform: translate(130%, 45%);" href="{% url 'event-detail' event.id %}">See event</p>
+
 
                                 </div>
                             </div>
@@ -89,10 +72,7 @@
                                 <p class="waves-effect waves-light btn-small" href="{% url 'event-detail' event.id %}">See event</p>
                             {% endif %}
                         </div>
-        </div>
-
-
-
+                 </div>
             {% endif %}
 
             {% endfor %}

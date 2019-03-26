@@ -23,6 +23,8 @@
 
     <link rel="stylesheet" type="text/css" href="{% static 'event/main.css' %}">
 
+  <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
+
     {% if title %}
         <title>Eventify - {{title}}</title>
     {% else %}
@@ -32,11 +34,10 @@
 
 <body>
 
-<header class="site-header"  >
+<header class="site-header">
     <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container">
             <a class="navbar-brand mr-4" href="{% url 'event-home' %}">Eventify</a>
-
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -55,44 +56,22 @@
                 </div>
                 <!-- Navbar Right Side -->
                 <div class="navbar-nav">
+
+                  <div class="w3-dropdown-hover">
+                    <button style="margin-top: 30px; background: black; color: white; border: none; height: 30px;" ><i class="far fa-bell"></i></button>
+                    <div class="w3-dropdown-content w3-bar-block" style="text-decoration: none; min-width: 477px; background: black;">
+                      <a href="#" class="w3-bar-item w3-button">Link 1</a>
+
+                      <a href="#" class="w3-bar-item w3-button">Link 2</a>
+
+                      <a href="#" class="w3-bar-item w3-button">Link 3</a>
+                    </div>
+                  </div>
+
                     {% if user.is_staff or user.is_admin %}
                         <a class="nav-item nav-link" href="{% url 'event-create' %}">New Event</a>
                         <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
                         <a class="nav-item nav-link" href="{% url 'logout' %}">Log Out</a>
-
-                          <ul id = "dropdown" class = "dropdown-content">
-                              {% for notification in user.profile.notifications.all %}
-                                {% if notification.type == 'event' %}
-                                    <li>
-                                        <form method="POST" action="{% url 'event-detail' event.id %}">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="event-id" value="{{ event.id }}">
-                                            <input class="btn btn-success" type="submit" value="{{ notification.text }}"/>
-                                            <span class="badge">
-                                                Go to event
-                                            </span>
-                                        </form>
-                                    </li>
-                                {% else %}
-                                    <li>
-                                        <form method="POST" action="{% url 'contact-requests' %}">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="user-id" value="{{ user.id }}">
-                                            <input class="btn btn-success" type="submit" value="{{ notification.text }}"/>
-                                            <span class="badge">
-                                                Go to requests
-                                            </span>
-                                        </form>
-                                    </li>
-                                {% endif %}
-                              {% endfor %}
-                          </ul>
-
-
-
-                          <a class = "dropdown-button" href = "#" data-activates = "dropdown">
-                             <i class = "material-icons">notifications</i></a>
-
 
 
                     {% elif user.is_authenticated %}
@@ -103,13 +82,16 @@
                         <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
                         <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
                     {% endif %}
+
+
                 </div>
+
+
+
             </div>
         </div>
     </nav>
 </header>
-
-<div class="main-container">
 
 <main role="main">
     <div class="row">
@@ -131,7 +113,7 @@
 
 
 
-    </div>
+
 
   <footer class="page-footer" style="background-color:black; ">
           <div class="container">
@@ -186,14 +168,11 @@
 
                     <br>
                     <br>
-
+          <i class="fab fa-twitter" style="font-size: 20px; color:#1DA1F2;">  </i>Twitter
                 </ul>
-                </div>
-
+              </div>
             </div>
-
-
-
+          </div>
           <div class="footer-copyright">
             <div class="container">
 

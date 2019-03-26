@@ -90,7 +90,7 @@ class EventDetailView(DetailView):
 
 class EventCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'location', 'content', 'attendance_limit', 'waiting_list_limit', 'start_date', 'end_date', 'image', 'is_private']
+    fields = ['title', 'location', 'content', 'price', 'attendance_limit', 'waiting_list_limit', 'start_date', 'end_date', 'image', 'is_private']
     template_name = 'event/event_form.html'
 
     def form_valid(self, form):
@@ -99,7 +99,7 @@ class EventCreateView(LoginRequiredMixin, CreateView):
 
 class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
-    fields = ['title', 'location', 'content', 'attendance_limit', 'waiting_list_limit', 'start_date', 'end_date', 'image', 'is_private']
+    fields = ['title', 'location', 'content', 'price', 'attendance_limit', 'waiting_list_limit', 'start_date', 'end_date', 'image', 'is_private']
     template_name = 'event/event_form.html'
     context_object_name = 'events'
 
@@ -162,10 +162,10 @@ class HtmlRender:
         return render(request, 'event/event.html', context)
 
     def homePage(request):
-        events = Post.objects.filter(is_private=False)
-        bigEvent = Post.objects.first()
+        events = Post.objects.filter(is_private=False).order_by('start_date')
+        slide_events = events[0:4]
         context = {
-            'bigEvent': bigEvent,
+            'slide_events': slide_events,
             'events': events
         }
 
@@ -240,18 +240,6 @@ class HtmlRender:
 
         return render(request, 'event/contacts.html', context)
 
-    def send_events_for_slide(request):
-        events = Post.object.all()
-
-        events = events[:4]
-        rest = events[4:]
-
-        context = {
-            'events': events,
-            'rest': rest
-        }
-
-        return render(request, 'event/home.html', context)
 
     @login_required
     def attendee_list(request, event_id):
@@ -321,14 +309,22 @@ class EventViews:
 
         if event.is_private:
             notification = Notification.objects.create(
-                user = event.author,
+                user=event.author,
                 event=event,
-                text = '{} signed up for your event.'.format(user.first_name),
+                text='{} signed up for your event.'.format(user.first_name),
                 type="profile"
             )
             event.author.profile.notifications.add(notification)
 
         return redirect('event-detail', pk=event_id)
+
+    @login_required
+    def buy_ticket(request, credit_id):
+        user = request.user
+        event_id = request.POST.get('event-id', False)
+        event = Post.objects.get(pk=event_id)
+
+
 
     @login_required
     def event_decline_from_invitation(request):
@@ -396,6 +392,23 @@ class EventViews:
             event.waiting_list.remove(event.waiting_list.first())
 
         return redirect('event-detail', pk=event_id)
+
+    @login_required
+    def redirect_notification(request):
+        user = request.user
+        notification = Notification.objects.get(pk=request.POST.get('notification-id', False))
+
+        user.profile.notifications.remove(notification)
+
+        if notification.type == 'event':
+            event_id = request.POST.get('event-id', False)
+            return redirect('event-detail', event_id)
+        else:
+            return redirect('profile')
+
+
+
+
 
     def search_events(request):
 
@@ -479,7 +492,7 @@ class EventViews:
         notification = Notification.objects.create(
             user=user,
             event=event,
-            text='%s %s has sent you an invitation to their event.'.format(request.user.first_name, request.user.last_name),
+            text='{} {} has sent you an invitation to their event.'.format(request.user.first_name, request.user.last_name),
             type="event"
         )
 

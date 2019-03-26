@@ -26,6 +26,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 # path(URL-pattern (ex. 'admin/' -> localhost:8000/admin/), method to whom you
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('get-cards/', user_views.get_credit_cards, name="get-cards"),
     path('register/', user_views.register, name="register"),
     path('profile/', user_views.profile, name="profile"),
     path('edit-profile/', user_views.editProfile, name="edit-profile"),
@@ -52,6 +53,7 @@ urlpatterns = [
     path('user-search-event/', user_views.search_user_event, name='user-search-event'),
     path('invites/', user_views.event_invites, name='event-invites'),
     path('decline-invite/', event_views.EventViews.event_decline_from_invitation, name='event-decline-from-invitation'),
+    path('register-card/', user_views.register_credit, name='register-card'),
     path('', include('event.urls'))
 ]
 

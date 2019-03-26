@@ -1,14 +1,14 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
-from .models import Notification
+from .models import Notification, Credit
 from django.contrib import messages
 from django.urls import reverse
 from django.db.models import Q
 from event.models import Post
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
+from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, CreditCardRegisterForm
 from .models import Profile
 
 
@@ -45,6 +45,54 @@ def editProfile(request):
         'p_form': p_form
     }
     return render(request, 'users/editProfile.html', context)
+
+@login_required
+def register_credit(request):
+    if request.method == 'POST':
+        form = CreditCardRegisterForm(request.POST, instance=request.user)
+        data = request.POST.copy()
+        card_n = data.get('card_number')
+        sec_code = data.get('security_code')
+        exp_m = data.get('expiration_month')
+        exp_y = data.get('expiration_year')
+        amount = data.get('amount')
+        if check_valid_card(card_n, sec_code, exp_m, exp_y, amount):
+            card = Credit.objects.create(
+                card_number=card_n,
+                security_code=sec_code,
+                expiration_month=exp_m,
+                expiration_year=exp_y,
+                amount=amount
+            )
+            card.save()
+            request.user.profile.credit_card.add(card)
+            form.save()
+            messages.success(request, f'Credit card has been registered')
+            return redirect('profile')
+        else:
+            messages.error(request, f'Check over your input, something went wrong. ')
+    else:
+        messages.error(request, f'Check over your input, something went wrong. ')
+        form = CreditCardRegisterForm(instance=request.user)
+
+    context = {
+        'form': form
+    }
+    return render(request, 'users/register_card.html', context)
+
+def check_valid_card(card, sec, month, year, amount):
+    if len(card) != 16 or not card.isdigit():
+        return False
+    if len(sec) != 3 or not sec.isdigit():
+        return False
+    if len(month) != 2 or not month.isdigit() or int(month) > 12 or int(month) < 1:
+        return False
+    if len(year) != 2 or not year.isdigit() or int(year) < 19:
+        return False
+    if int(amount) < 0:
+        return False
+    return True
+
 
 
 @login_required  # Du må være logget inn for å få tilgang til profilsiden. Sendes til registrering hvis ikke
@@ -221,3 +269,25 @@ def event_invites(request):
     }
 
     return render(request, 'users/event_invites.html', context)
+
+@login_required
+def new_notifications_count(request):
+    profile = request.user.profile
+    counter = 0;
+
+    for notification in profile.notifications:
+        if not notification.read:
+            counter += 1
+
+    return counter;
+
+@login_required
+def get_credit_cards(request):
+    profile = request.user.profile
+
+    context = {
+        'cards': profile.credit_card.all()
+    }
+
+    return render(request, 'users/get_cards.html', context)
+

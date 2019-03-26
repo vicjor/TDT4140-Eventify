@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import Profile
+from .models import Profile, Credit
 
 class UserRegisterForm(UserCreationForm):   #Bruker crispyforms for å lettere opprette register form. Trenger da disse klassene
     email = forms.EmailField()
@@ -23,3 +23,8 @@ class ProfileUpdateForm(forms.ModelForm):   # Tillater bruker å laste opp eget 
     class Meta:
         model = Profile
         fields = ['image']
+
+class CreditCardRegisterForm(forms.ModelForm):
+    class Meta:
+        model = Credit
+        fields = ['card_number', 'security_code', 'expiration_month', 'expiration_year', 'amount']

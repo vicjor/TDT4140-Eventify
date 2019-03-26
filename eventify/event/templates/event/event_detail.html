@@ -78,21 +78,37 @@
                         </div>
                     {% else %}
                         {% if object.attendees.all.count == object.attendance_limit %}
-                            <div>
-                                <form method="POST" action="{% url 'event-join' %}">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="event-id" value="{{ object.id }}">
-                                    <input class="btn btn-success" type="submit" value="Join Waiting List"/>
-                                </form>
-                            </div>
+                            {% if object.price == 0 %}
+                                <div>
+                                    <form method="POST" action="{% url 'event-join' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="event-id" value="{{ object.id }}">
+                                        <input class="btn btn-success" type="submit" value="Join Waiting List"/>
+                                    </form>
+                                </div>
+                            {% else %}
+                                <div>
+                                    <a class="btn btn-info" value="Full"/>
+                                </div>
+                            {% endif %}
                         {% else %}
-                            <div>
-                                <form method="POST" action="{% url 'event-join' %}">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="event-id" value="{{ object.id }}">
-                                    <input class="btn btn-success" type="submit" value="Join Event"/>
-                                </form>
-                            </div>
+                            {% if object.price == 0 %}
+                                <div>
+                                    <form method="POST" action="{% url 'event-join' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="event-id" value="{{ object.id }}">
+                                        <input class="btn btn-success" type="submit" value="Join Event"/>
+                                    </form>
+                                </div>
+                            {% else %}
+                                <div>
+                                    <form method="POST" action="{% url 'buy-ticket' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="event-id" value="{{ object.id }}">
+                                        <input class="btn btn-success" type="submit" value="Buy Ticket"/>
+                                    </form>
+                                </div>
+                            {% endif %}
                         {% endif %}¨
                     {% endif %}
                 {% endif %}
