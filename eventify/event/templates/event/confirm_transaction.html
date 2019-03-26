@@ -1,15 +1,20 @@
 {% extends "event/base.html" %}
 {% block content %}
-
+<h1> SELECT THE CREDIT CARD YOU WANT TO USE: </h1>
 {% for card in cards %}
-
-    <div class="media">
-        <div class="media-body">
+    <div>
+        <form method="POST" action="{% url 'to-transaction' card.id %}">
             <h2 class="account-heading"> Card Number: {{ card.card_number }}</h2>
             <p class="text-secondary"> Security Code: {{ card.security_code }} Expiration Date: {{ card.expiration_month }} / {{  card.expiration_year }}</p>
             <p class="text-secondary"> Available Amount: {{ card.amount }} </p>
-        </div>
+            {% csrf_token %}
+            <input type="hidden" name="event-id" value="{{ event.id }}">
+            <input class="btn btn-success" type="submit" value="Select Card"/>
+        </form>
     </div>
+
+
+
 
 {% endfor %}
 
