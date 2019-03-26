@@ -1,6 +1,8 @@
 {% extends "event/base.html" %}
 {% block content %}
 
+<div class="card container" style="margin-left: 15%; padding: 50px;">
+
 <form name="event-search-form" method="POST" action="{% url 'user-search-event' %}">
     {% csrf_token %}
     <table class="table">
@@ -52,4 +54,6 @@
     </div>
 
 {% endfor %}
+
+    </div>
 {% endblock content %}
