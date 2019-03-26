@@ -3,13 +3,36 @@
 
 {% for card in cards %}
 
-    <div class="media">
-        <div class="media-body">
-            <h2 class="account-heading"> Card Number: {{ card.card_number }}</h2>
-            <p class="text-secondary"> Security Code: {{ card.security_code }} Expiration Date: {{ card.expiration_month }} / {{  card.expiration_year }}</p>
-            <p class="text-secondary"> Available Amount: {{ card.amount }} </p>
-        </div>
+    <table style="padding: 10px; width: 1000px;">
+
+    <tr>
+
+        <td>
+    <div class="card container" style="width: 500px; padding: 20px; border-radius: 5px; margin-left: 15%; margin-right: 15%;">
+        <form method="POST" action="{% url 'to-transaction' card.id %}">
+            <br>
+            <br>
+           <p style="font-size: 20pt;"><i class="far fa-credit-card"></i> <i class="fas fa-wifi" style=" transform: rotate(90deg)"></i></p>
+            <h4>{{ card.card_number }}</h4>
+            <p class="text-secondary"> Security Code: {{ card.security_code }}</p>
+              <p class="text-secondary">   Expiration Date: {{ card.expiration_month }} / {{  card.expiration_year }}</p>
+
+            {% csrf_token %}
+            <input type="hidden" name="event-id" value="{{ event.id }}">
+           	<p align="right"><i style = "font-size: 35pt; color: darkblue;" class="fab fa-cc-visa"></i></p>
+        </form>
     </div>
+
+            </td>
+
+        <td>
+
+        <p style="color:white;"><i class="fas fa-coins"></i> Available Amount: {{ card.amount }} </p>
+
+        </td>
+
+    </tr>
+    </table>
 
 {% endfor %}
 
