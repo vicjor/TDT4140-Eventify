@@ -1,9 +1,9 @@
 {% extends "event/base.html" %}
 {% block content %}
-
+<h1 style="color:white;"> SELECT THE CREDIT CARD YOU WANT TO USE: </h1>
 {% for card in cards %}
 
-    <table style="padding: 10px; width: 1000px;">
+<table style="padding: 10px; width: 1000px;">
 
     <tr>
 
@@ -28,6 +28,7 @@
         <td>
 
         <p style="color:white;"><i class="fas fa-coins"></i> Available Amount: {{ card.amount }} </p>
+         <input class="btn btn-success" type="submit" value="Select Card"/>
 
         </td>
 
@@ -35,5 +36,7 @@
     </table>
 
 {% endfor %}
+
+
 
 {% endblock content %}

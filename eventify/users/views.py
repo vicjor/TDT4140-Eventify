@@ -129,8 +129,8 @@ def add_contact(request):
 
     notification = Notification.objects.create(
         user=user,
-        text='{} {} sent you a contact request'.format(request.user.first_name, request.user.last_name),
-        type="profile"
+        text='{} {} sent you a contact request'.format(str(request.user.first_name), str(request.user.last_name)),
+        type="new_request"
     )
 
     user.profile.notifications.add(notification)
@@ -164,7 +164,7 @@ def accept_request(request):
 
     notification = Notification.objects.create(
         user=user,
-        text='{} {} accepted your contact request.'.format(request.user.first_name, request.user.last_name),
+        text='{} {} accepted your contact request.'.format(str(request.user.first_name), str(request.user.last_name)),
         type="profile"
     )
 
@@ -187,8 +187,8 @@ def decline_request(request):
 
     notification = Notification.objects.create(
         user=user,
-        text='{} {} declined your contact request.'.format(request.user.first_name, request.user.last_name),
-        type="profile"
+        text='{} {} declined your contact request.'.format(str(request.user.first_name), str(request.user.last_name)),
+        type="sent_requests"
     )
 
     user.profile.notifications.add(notification)

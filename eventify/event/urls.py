@@ -21,5 +21,8 @@ urlpatterns = [
     path('add-host/', views.EventViews.add_host, name='add-host'),
     path('remove-host/', views.EventViews.remove_host, name='remove-host'),
     path('event/created/', views.HtmlRender.created_events, name='created-by-user'),
-    path('handle-notification/', views.EventViews.redirect_notification, name="redirect-notification")
+    path('handle-notification/<int:notification_id>', views.EventViews.redirect_notification, name="redirect-notification"),
+    path('select-card/', views.EventViews.buy_ticket, name="buy-ticket"),
+    path('to-transaction/<int:credit_id>', views.EventViews.redirect_to_execution, name='to-transaction'),
+    path('execute-transaction/<int:credit_id>', views.EventViews.execute_transaction, name="execute-transaction")
 ]

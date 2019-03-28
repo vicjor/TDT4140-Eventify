@@ -16,6 +16,9 @@ class Notification(models.Model):
     sender = models.CharField(max_length=100) # Hvem/Hva utløste varselet?
     type = models.CharField(max_length=10, default="profile")
 
+    class Meta:
+        ordering = ['-time']
+
     def __str__(self):
         return self.text
 

@@ -18,3 +18,4 @@ def check_valid_card_test(card, sec, month, year, amount):
     return True
 
 check_valid_card_test('1234123412341234', '123', '3', '20', 2)
+print("{} {} formattering".format("Test", "test"))

@@ -4,16 +4,25 @@
 {% for event in invites %}
 
     {% if user not in event.attendees.all %}
-        <article class="media content-section-event">
-                <div class="media-body-home">
-                    <a href="{% url 'event-detail' event.id %}"> <img src="{{ event.image.url }}" alt="" width="300px" height="150px" ></a>
-                    <div class="overlay-text-event">
-                        <h2><a class="article-title" href="{% url 'event-detail' event.id %}" style="color:white;">{{ event.title }}</a></h2>
-                        <h4><a class="article-title" href="{% url 'user-posts' event.author.username %}" style="color:grey;">{{ event.author }}</a></h4>
-                    </div>
 
-                     <div>
-                        <form method="POST" action="{% url 'event-join' %}">
+ <div class="card z-depth-5 card-panel hoverable" style="width: 350px; margin-left: 15%; margin-top:3%; text-align: center; border-radius: 5px;">
+
+        <div class="card-image">
+
+           <a href="{% url 'event-detail' event.id %}"><img src="{{ event.image.url }}" alt="" width="300px" height="150px"></a>
+          <span class="card-title" style="font-size: 10pt; padding-bottom: 10px; color: black;" ></span>
+        </div>
+
+        <div class="card-content" style="font-size: 25pt; padding-bottom: 3px; padding-top: 6px;">
+          <p>{{ event.title }}</p>
+
+        </div>
+
+        <div class="card-action">
+             <i class="fas fa-map-marker-alt"></i> {{ event.location }}
+            <br>
+            <br>
+            <form method="POST" action="{% url 'event-join' %}">
                             {% csrf_token %}
                             <input type="hidden" name="event-id" value="{{ event.id }}">
                             <input class="btn btn-success" type="submit" value="Accept Invitation"/>
@@ -23,10 +32,10 @@
                             <input type="hidden" name="event-id" value="{{ event.id }}">
                             <input class="btn btn-danger" type="submit" value="Decline Invitation"/>
                         </form>
-                    </div>
+        </div>
+      </div>
 
-                </div>
-        </article>
+
     {% endif %}
 
 {% endfor %}
