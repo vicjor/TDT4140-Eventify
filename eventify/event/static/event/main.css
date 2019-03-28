@@ -1083,6 +1083,11 @@ nav.dot a:last-child:after {
 	white-space:normal;
 }
 
+.notifications-dropdown a:hover {
+	background-color: #262626;
+	opacity: 1;
+}
+
 .w3-bar .w3-bar-item{padding:8px 16px;float:left;width:auto;border:none;display:block;outline:0}
 .w3-bar .w3-dropdown-hover,.w3-bar .w3-dropdown-click{position:static;float:left}
 .w3-bar .w3-button{white-space:normal}
