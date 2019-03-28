@@ -1,38 +1,138 @@
 {% extends "event/search.html" %}
 
-{% block content%}
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<div class="flex-container" style="margin-left: 5%;">
-    {% for event in events %}
-
+{% block content %}
 
 
-      <div class="card z-depth-5 card-panel hoverable" style="width: 350px; margin: 30px; text-align: center; border-radius: 5px;">
 
-        <div class="card-image">
 
-           <a href="{% url 'event-detail' event.id %}"><img src="{{ event.image.url }}" alt="" width="300px" height="150px"></a>
-          <span class="card-title" style="font-size: 10pt; padding-bottom: 10px; color: black;" ></span>
-        </div>
+<div class="container" style="margin-left: 150px;">
 
-        <div class="card-content" style="font-size: 25pt; padding-bottom: 3px; padding-top: 6px;">
-          <p>{{ event.title }}</p>
 
-        </div>
+<div class="header">
 
-        <div class="card-action">
-             <i class="fas fa-map-marker-alt"></i> {{ event.location }}
-            <br>
-            <br>
-           <a href="{% url 'event-detail' event.id %}">Go to event</a>
+
+
+  <head class="header"><img width="1100px" height="500px" src="{{ object.image.url }}" alt=""></head>
+
+</div>
+
+<div class="row">
+
+
+
+    <div class="col-md-9" style="margin-top: 2%;">
+      <div class="card white darken-1">
+        <div class="card-content white-text">
+          <span class="card-title" style="color:black;">{{ object.title }}</span>
+          <p style="color:black;">{{ object.content }}</p>
         </div>
       </div>
-
-
-
-    {% endfor %}
     </div>
 
+
+<div class="col-md-1" style="margin-top: 2%;">
+
+    <article class="media content-section-info">
+
+    <div class="article-metadata">
+        {% if object.is_private or object.author == user  or user in object.co_authors.all %}
+            <input type="hidden" name="event-id" value="{{ object.id }}">
+            <a class="btn btn-seconday btn-sm mt-1 mb-1" href="{% url 'attendee-list' object.id %}">See Attendees</a>
+        {% endif %}
+
+        {% if object.author == user or user in object.co_authors.all %}
+                        <div>
+                            {% if object.is_private %}
+                                <input type="hidden" name="event-id" value="{{ object.id }}">
+                                <a class="btn btn-seconday btn-sm mt-1 mb-1" href="{% url 'invite-list' object.id %}">Invite Friends</a>
+                            {% endif %}
+                            <a class="btn btn-seconday btn-sm mt-1 mb-1" href="{% url 'event-update' object.id %}">Update</a>
+                            {% if user == object.author %}
+                                <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'event-delete' object.id %}">Delete</a>
+                            {% endif %}
+                        </div>
+
+        {% else %}
+            {% if user.is_authenticated %}
+                {% if user in object.attendees.all %}
+                    <div>
+                        <form method="POST" action="{% url 'event-leave' %}" >
+                            {% csrf_token %}
+                            <input type="hidden" name="event-id" value="{{ object.id }}">
+                            <input class="btn btn-danger" type="submit" value="Sign Off Event"/>
+                        </form>
+                    </div>
+                {% else %}
+                    {% if object.attendees.all.count == object.attendance_limit and object.waiting_list.all.count == object.waiting_list_limit %}
+                        <div>
+                            <a class="btn btn-info" value="Full"/>
+                        </div>
+                    {% else %}
+                        {% if object.attendees.all.count == object.attendance_limit %}
+                            {% if object.price == 0 %}
+                                <div>
+                                    <form method="POST" action="{% url 'event-join' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="event-id" value="{{ object.id }}">
+                                        <input class="btn btn-success" type="submit" value="Join Waiting List"/>
+                                    </form>
+                                </div>
+                            {% else %}
+                                <div>
+                                    <a class="btn btn-info" value="Full"/>
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            {% if object.price == 0 %}
+                                <div>
+                                    <form method="POST" action="{% url 'event-join' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="event-id" value="{{ object.id }}">
+                                        <input class="btn btn-success" type="submit" value="Join Event"/>
+                                    </form>
+                                </div>
+                            {% else %}
+                                <div>
+                                    <form method="POST" action="{% url 'buy-ticket' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="event-id" value="{{ object.id }}">
+                                        <input class="btn btn-success" type="submit" value="Buy Ticket"/>
+                                    </form>
+                                </div>
+                            {% endif %}
+                        {% endif %}¨
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        {% endif %}
+
+        <p class="text-muted" > {{object.attendees.all.count}} / {{object.attendance_limit}}</p>
+
+        <p> <i class="fas fa-map-marker-alt"> </i> {{ object.location }}</p>
+
+       <p> <i class="fas fa-calendar-alt"> </i> {{ object.start_date }} - {{ object.end_date}}</p>
+
+
+    </div>
+
+    </article>
+
+
+<article class="media content-section-info">
+    <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}" alt="">
+    <a <a class="article-title" href="{% url 'user-posts' object.author.username %}" >{{ object.author }}</a>
+
+</article>
+
+    </div>
+
+    </div>
+    </div>
+
+
+{% endblock content %}
 <div style="text-align: center;">
 
 {% if is_paginated %}

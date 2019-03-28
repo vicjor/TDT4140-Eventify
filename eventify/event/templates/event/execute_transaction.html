@@ -1,8 +1,6 @@
 {% extends "event/base.html" %}
 {% block content %}
 
-
-
 <div class="container" style="margin-left: 150px;">
 
 
@@ -26,7 +24,132 @@
         </div>
       </div>
     </div>
-</div>
+
+
+<div class="col-md-1" style="margin-top: 2%;">
+
+    <article class="media content-section-info">
+
+    <div class="article-metadata">
+        {% if object.is_private or object.author == user  or user in object.co_authors.all %}
+            <input type="hidden" name="event-id" value="{{ object.id }}">
+            <a class="btn btn-seconday btn-sm mt-1 mb-1" href="{% url 'attendee-list' object.id %}">See Attendees</a>
+        {% endif %}
+
+        {% if object.author == user or user in object.co_authors.all %}
+                        <div>
+                            {% if object.is_private %}
+                                <input type="hidden" name="event-id" value="{{ object.id }}">
+                                <a class="btn btn-seconday btn-sm mt-1 mb-1" href="{% url 'invite-list' object.id %}">Invite Friends</a>
+                            {% endif %}
+                            <a class="btn btn-seconday btn-sm mt-1 mb-1" href="{% url 'event-update' object.id %}">Update</a>
+                            {% if user == object.author %}
+                                <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'event-delete' object.id %}">Delete</a>
+                            {% endif %}
+                        </div>
+
+        {% else %}
+            {% if user.is_authenticated %}
+                {% if user in object.attendees.all %}
+                    <div>
+                        <form method="POST" action="{% url 'event-leave' %}" >
+                            {% csrf_token %}
+                            <input type="hidden" name="event-id" value="{{ object.id }}">
+                            <input class="btn btn-danger" type="submit" value="Sign Off Event"/>
+                        </form>
+                    </div>
+                {% else %}
+                    {% if object.attendees.all.count == object.attendance_limit and object.waiting_list.all.count == object.waiting_list_limit %}
+                        <div>
+                            <a class="btn btn-info" value="Full"/>
+                        </div>
+                    {% else %}
+                        {% if object.attendees.all.count == object.attendance_limit %}
+                            {% if object.price == 0 %}
+                                <div>
+                                    <form method="POST" action="{% url 'event-join' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="event-id" value="{{ object.id }}">
+                                        <input class="btn btn-success" type="submit" value="Join Waiting List"/>
+                                    </form>
+                                </div>
+                            {% else %}
+                                <div>
+                                    <a class="btn btn-info" value="Full"/>
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            {% if object.price == 0 %}
+                                <div>
+                                    <form method="POST" action="{% url 'event-join' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="event-id" value="{{ object.id }}">
+                                        <input class="btn btn-success" type="submit" value="Join Event"/>
+                                    </form>
+                                </div>
+                            {% else %}
+                                <div>
+                                    <form method="POST" action="{% url 'buy-ticket' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="event-id" value="{{ object.id }}">
+                                        <input class="btn btn-success" type="submit" value="Buy Ticket"/>
+                                    </form>
+                                </div>
+                            {% endif %}
+                        {% endif %}¨
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        {% endif %}
+
+        <p class="text-muted" > {{object.attendees.all.count}} / {{object.attendance_limit}}</p>
+
+        <p> <i class="fas fa-map-marker-alt"> </i> {{ object.location }}</p>
+
+       <p> <i class="fas fa-calendar-alt"> </i> {{ object.start_date }} - {{ object.end_date}}</p>
+
+
+    </div>
+
+    </article>
+
+
+<article class="media content-section-info">
+    <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}" alt="">
+    <a <a class="article-title" href="{% url 'user-posts' object.author.username %}" >{{ object.author }}</a>
+
+</article>
+
+    </div>
+
+    </div>
+    </div>
+
+
+<div style="text-align: center;">
+
+{% if is_paginated %}
+    {% if page_obj.has_previous %}
+        <a class="btn btn-outline-info mb-4" href="?page=1"><i class="fas fa-angle-double-left"></i></i></a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}"><i class="fas fa-angle-left"></i></a>
+    {% endif %}
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}"><i class="fas fa-angle-right"></i></a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}"><i class="fas fa-angle-double-right"></i></a>
+    {% endif %}
+{% endif %}
+
+    </div style="text-align: center;">
+
+
 
     <div>
          <div>
@@ -37,6 +160,6 @@
             </form>
         </div>
     </div>
-</div>
+
 
 {% endblock content %}

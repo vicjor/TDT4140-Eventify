@@ -23,6 +23,7 @@
 
     <link rel="stylesheet" type="text/css" href="{% static 'event/main.css' %}">
 
+
   <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
 
     {% if title %}
@@ -64,7 +65,7 @@
                     <p style="color: orange; transform: translate(75%,-90%);">{{user.profile.notifications.count}}</p>
                     </a>
 
-                    <div class="w3-dropdown-content w3-bar-block scrollable-menu" role="menu" style="text-decoration: none; min-width: 400px; background: black;  margin-top: 10px; opacity:1;">
+                    <div class="w3-dropdown-content w3-bar-block scrollable-menu" role="menu" style="text-decoration: none; min-width: 400px; background-color: black;  margin-top: 10px; opacity:1; height: auto;">
                       {% for notification in user.profile.notifications.all %}
                         <div class="notifications-dropdown">
 
