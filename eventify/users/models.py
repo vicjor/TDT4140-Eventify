@@ -39,7 +39,10 @@ class Profile(models.Model):
     event_invites = models.ManyToManyField(Post, related_name="event_invites")
     sent_requests = models.ManyToManyField(User, related_name="sent_requests")
     notifications = models.ManyToManyField(Notification, related_name="notifications")
-    new_notifications = models.IntegerField(default=0)
+    on_contact = models.BooleanField(default=True)
+    on_event_invite = models.BooleanField(default=True)
+    on_event_update_delete = models.BooleanField(default=True)
+    on_event_host = models.BooleanField(default=True)
 
 
     def __str__(self):

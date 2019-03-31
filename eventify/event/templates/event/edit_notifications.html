@@ -1,0 +1,109 @@
+{% extends "event/base.html" %}
+
+{% block content %}
+
+<h2> Edit Notification Settings </h2>
+<div>
+    <h5> Notifications on Contact Requests: </h5>
+    {% if user.profile.on_contact %}
+        <label class="switcher">
+            <form method="POST" action="{% url 'change-on-contact' %}">
+                {% csrf_token %}
+                <input type="hidden" name="user-id" value="{{ user.id }}">
+                <input type="submit">
+                <input type="checkbox" checked>
+                <span class="sliderSwitch round"></span>
+            </form>
+        </label>
+    {% else %}
+        <label class="switcher">
+            <form method="POST" action="{% url 'change-on-contact' %}">
+                {% csrf_token %}
+                <input type="hidden" name="user-id" value="{{ user.id }}">
+                <input type="submit">
+                <input type="checkbox">
+                <span class="sliderSwitch round"></span>
+            </form>
+        </label>
+    {% endif %}
+</div>
+
+
+<div>
+<h5> Notifications on Event Invites and Removal from Events: </h5>
+    {% if user.profile.on_event_invite %}
+        <label class="switcher">
+            <form method="POST" action="{% url 'change-event-invite' %}">
+                {% csrf_token %}
+                <input type="hidden" name="user-id" value="{{ user.id }}">
+                <input type="submit">
+                <input type="checkbox" checked>
+                <span class="sliderSwitch round"></span>
+            </form>
+        </label>
+    {% else %}
+        <label class="switcher">
+            <form method="POST" action="{% url 'change-event-invite' %}">
+                {% csrf_token %}
+                <input type="hidden" name="user-id" value="{{ user.id }}">
+                <input type="submit">
+                <input type="checkbox">
+                <span class="sliderSwitch round"></span>
+            </form>
+        </label>
+    {% endif %}
+</div>
+
+<div>
+<h5> Notifications when Joined Event is Updated or Deleted: </h5>
+    {% if user.profile.on_event_update_delete %}
+        <label class="switcher">
+            <form method="POST" action="{% url 'update-delete' %}">
+                {% csrf_token %}
+                <input type="hidden" name="user-id" value="{{ user.id }}">
+                <input type="submit">
+                <input type="checkbox" checked>
+                <span class="sliderSwitch round"></span>
+            </form>
+        </label>
+    {% else %}
+        <label class="switcher">
+            <form method="POST" action="{% url 'update-delete' %}">
+                {% csrf_token %}
+                <input type="hidden" name="user-id" value="{{ user.id }}">
+                <input type="submit">
+                <input type="checkbox">
+                <span class="sliderSwitch round"></span>
+            </form>
+        </label>
+    {% endif %}
+</div>
+
+
+<div>
+<h5> Notifications when Promoted or Removed as Host: </h5>
+    {% if user.profile.on_event_host %}
+        <label class="switcher">
+            <form method="POST" action="{% url 'event-host' %}">
+                {% csrf_token %}
+                <input type="hidden" name="user-id" value="{{ user.id }}">
+                <input type="submit">
+                <input type="checkbox" checked>
+                <span class="sliderSwitch round"></span>
+            </form>
+        </label>
+    {% else %}
+        <label class="switcher">
+            <form method="POST" action="{% url 'event-host' %}">
+                {% csrf_token %}
+                <input type="hidden" name="user-id" value="{{ user.id }}">
+                <input type="submit">
+                <input type="checkbox">
+                <span class="sliderSwitch round"></span>
+            </form>
+        </label>
+    {% endif %}
+</div>
+
+
+{% endblock content %}

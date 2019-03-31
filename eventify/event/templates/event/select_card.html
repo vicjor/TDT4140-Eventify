@@ -1,0 +1,51 @@
+{% extends "event/base.html" %}
+
+
+{% block content %}
+
+
+<h1 style="color:white;"> SELECT THE CREDIT CARD YOU WANT TO USE: </h1>
+{% for card in cards %}
+
+<table style="padding: 10px; width: 1000px;">
+
+    <tr>
+
+        <td>
+    <div class="card container" style="width: 500px; padding: 20px; border-radius: 5px; margin-left: 15%; margin-right: 15%;">
+            <br>
+            <br>
+           <p style="font-size: 20pt;"><i class="far fa-credit-card"></i> <i class="fas fa-wifi" style=" transform: rotate(90deg)"></i></p>
+            <h4>{{ card.card_number }}</h4>
+            <p class="text-secondary"> Security Code: {{ card.security_code }}</p>
+              <p class="text-secondary">   Expiration Date: {{ card.expiration_month }} / {{  card.expiration_year }}</p>
+
+
+
+           	<p align="right"><i style = "font-size: 35pt; color: darkblue;" class="fab fa-cc-visa"></i></p>
+
+    </div>
+
+            </td>
+
+        <td>
+
+        <p style="color:white;"><i class="fas fa-coins"></i> Available Amount: {{ card.amount }} </p>
+        <form method="POST" action="{% url 'select-card' %}">
+             {% csrf_token %}
+             <input type="hidden" name="card-id" value="{{ card.id }}">
+             <input type="hidden" name="event-id" value="{{ event.id }}">
+             <input class="btn btn-success" type="submit" value="Select Card"/>
+        </form>
+
+        </td>
+
+    </tr>
+    </table>
+
+
+
+
+{% endfor %}
+
+{% endblock content %}

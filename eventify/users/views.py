@@ -4,12 +4,14 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import Notification, Credit
 from django.contrib import messages
 from django.urls import reverse
+from django.conf import settings
 from django.db.models import Q
 from event.models import Post
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, CreditCardRegisterForm
 from .models import Profile
+from django.core.mail import send_mail, send_mass_mail
 
 
 def register(request):  # Funksjon for å registrere bruker
@@ -127,13 +129,23 @@ def add_contact(request):
     user.profile.requests.add(request.user)
     request.user.profile.sent_requests.add(user)
 
-    notification = Notification.objects.create(
-        user=user,
-        text='{} {} sent you a contact request'.format(str(request.user.first_name), str(request.user.last_name)),
-        type="new_request"
-    )
+    if user.profile.on_event_invite:
+        notification = Notification.objects.create(
+            user=user,
+            text='{} {} sent you a contact request'.format(str(request.user.first_name), str(request.user.last_name)),
+            type="new_request"
+        )
 
-    user.profile.notifications.add(notification)
+        user.profile.notifications.add(notification)
+
+        if user.email != "":
+            subject = str(request.user) + " sent you a friend request!"
+            from_email = settings.EMAIL_HOST_USER
+            to_email = [user.email]
+            message = str(
+                request.user) + " sent you a friend request! Folowing this link to accept invitation: http://eventifypu.com/requests/"
+            send_mail(subject=subject, from_email=from_email, recipient_list=to_email, message=message,
+                      fail_silently=False)
 
     messages.info(request, f'Request sent. ')
 
@@ -162,13 +174,22 @@ def accept_request(request):
     request.user.profile.requests.remove(user)
     request.user.profile.contacts.add(user)
 
-    notification = Notification.objects.create(
-        user=user,
-        text='{} {} accepted your contact request.'.format(str(request.user.first_name), str(request.user.last_name)),
-        type="profile"
-    )
+    if user.profile.on_event_invite:
+        notification = Notification.objects.create(
+            user=user,
+            text='{} {} accepted your contact request.'.format(str(request.user.first_name), str(request.user.last_name)),
+            type="profile"
+        )
 
-    user.profile.notifications.add(notification)
+        user.profile.notifications.add(notification)
+
+        if user.email != "":
+            subject = str(request.user) + " accepted your friend request!"
+            from_email = settings.EMAIL_HOST_USER
+            to_email = [user.email]
+            message = str(request.user) + " accepted your friend request! "
+            send_mail(subject=subject, from_email=from_email, recipient_list=to_email, message=message,
+                      fail_silently=False)
 
     messages.success(request, f'Request has been accepted. ')
 
@@ -271,17 +292,6 @@ def event_invites(request):
     return render(request, 'users/event_invites.html', context)
 
 @login_required
-def new_notifications_count(request):
-    profile = request.user.profile
-    counter = 0;
-
-    for notification in profile.notifications:
-        if not notification.read:
-            counter += 1
-
-    return counter;
-
-@login_required
 def get_credit_cards(request):
     profile = request.user.profile
 
@@ -291,3 +301,84 @@ def get_credit_cards(request):
 
     return render(request, 'users/get_cards.html', context)
 
+@login_required
+def change_on_contact(request):
+    profile = request.user.profile
+
+    if profile.on_contact:
+        profile.on_contact = False
+        profile.save()
+    else:
+        profile.on_contact = True
+        profile.save()
+
+    messages.success(request, f'Settings successfully changed. ')
+
+    return redirect('to-notifications')
+
+
+@login_required
+def change_event_invite(request):
+    profile = request.user.profile
+
+    if profile.on_event_invite:
+        profile.on_event_invite = False
+        profile.save()
+    else:
+        profile.on_event_invite = True
+        profile.save()
+
+    messages.success(request, f'Settings successfully changed. ')
+
+    return redirect('to-notifications')
+
+
+@login_required
+def change_on_event_update_delete(request):
+    profile = request.user.profile
+
+    if profile.on_event_update_delete:
+        profile.on_event_update_delete = False
+        profile.save()
+    else:
+        profile.on_event_update_delete = True
+        profile.save()
+
+    messages.success(request, f'Settings successfully changed. ')
+
+    return redirect('to-notifications')
+
+
+@login_required
+def change_on_event_host(request):
+    profile = request.user.profile
+
+    if profile.on_event_host:
+        profile.on_event_host = False
+        profile.save()
+    else:
+        profile.on_event_host = True
+        profile.save()
+
+    messages.success(request, f'Settings successfully changed. ')
+
+    return redirect('to-notifications')
+@login_required
+def redirect_to_not(request):
+    user = request.user
+
+    context = {
+        'user': user
+    }
+
+    return render(request, 'event/edit_notifications.html', context)
+
+@login_required
+def delete_notifications(request):
+    profile = request.user.profile
+
+    for notification in profile.notifications.all():
+        profile.notifications.remove(notification)
+
+    profile.save()
+    return redirect('event-home')

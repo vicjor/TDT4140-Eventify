@@ -121,6 +121,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/dev/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT ='/home/victor/eventify/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media') #Standard directory for å lagre profilbilder
 MEDIA_URL = '/media/'   #Path til media

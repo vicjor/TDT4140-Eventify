@@ -4,8 +4,7 @@
 {% block content %}
 
 
-<h1 style="color:white;"> SELECT THE CREDIT CARD YOU WANT TO USE: </h1>
-{% for card in cards %}
+<h1 style="color:white;"> ARE YOU SURE YOU WANT TO USE THIS CARD? </h1>
 
 <table style="padding: 10px; width: 1000px;">
 
@@ -33,18 +32,14 @@
         <p style="color:white;"><i class="fas fa-coins"></i> Available Amount: {{ card.amount }} </p>
 
              {% csrf_token %}
+             <input type="hidden" name="card-id" value="{{ card.id }}">
              <input type="hidden" name="event-id" value="{{ event.id }}">
-             <button id="myBtn"><input class="btn btn-success" type="submit" value="Select Card" /></button>
+             <button id="myBtn"><input class="btn btn-success" type="submit" value="Yes, Select Card" /></button>
 
         </td>
 
     </tr>
     </table>
-
-
-
-
-{% endfor %}
 
 
 <!-- The Modal -->
@@ -61,7 +56,15 @@
       <p class="secondary-content"> {{ event.start_date}}</p>
 
 
-      <button class="btn btn-success" style="width: 50%;">Confirm</button> <button class="btn btn-success" style="width: 50%;">Decline</button>
+
+      <form method="POST" action="{% url 'execute-transaction' %}" >
+            {% csrf_token %}
+            <input type="hidden" name="card-id" value="{{ card.id }}">
+            <input type="hidden" name="event-id" value="{{ event.id }}">
+            <input class="btn btn-danger" style="width:360px" type="submit" value="Confirm Transaction, Sum: {{ event.price }}"/>
+
+      </form>
+      <a class="btn btn-danger" style="color:#b9151b; width:360px;" type="submit" href="{% url 'event-detail' event.id %}">Delete</a>
 
   </div>
 

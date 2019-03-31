@@ -18,6 +18,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .forms import UploadFileForm
+from django.core.mail import send_mail, send_mass_mail
 import os
 from django.conf import settings
 
@@ -101,7 +102,7 @@ class EventCreateView(LoginRequiredMixin, CreateView):
 class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
     fields = ['title', 'location', 'content', 'price', 'attendance_limit', 'waiting_list_limit', 'start_date', 'end_date', 'image', 'is_private']
-    template_name = 'event/event_form.html'
+    template_name = 'event/event_update.html'
     context_object_name = 'events'
 
     def form_valid(self, form):
@@ -111,15 +112,26 @@ class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         event = self.get_object()
         if self.request.user == event.author or self.request.user in event.co_authors:
-            for user in event.attendees:
-                notification = Notification.objects.create(
-                    user=user,
-                    event=event,
-                    text='{} {} has edited the event {}.'.format(str(self.request.user.first_name),
-                                                                 str(self.request.user.last_name), str(event.title)),
-                    type='event'
-                )
-                user.profile.notifications.add(notification)
+            for user in event.attendees.all():
+                email_list = []
+                if user.profile.on_event_update_delete:
+                    email_list.append(user.email)
+                    notification = Notification.objects.create(
+                        user=user,
+                        event=event,
+                        text='{} {} has edited the event {}.'.format(str(self.request.user.first_name),
+                                                                     str(self.request.user.last_name), str(event.title)),
+                        type='event'
+                    )
+                    user.profile.notifications.add(notification)
+            if email_list.__len__() > 0:
+                subject = event.title + " was updated!"
+                from_email = settings.EMAIL_HOST_USER
+                to_email = [user.email]
+                message = event.title + " was updated. Please visit the event site to see the new updates."
+                send_mail(subject=subject, from_email=from_email, recipient_list=to_email, message=message,
+                          fail_silently=False)
+
             return True
         return False
 
@@ -134,15 +146,26 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         event = self.get_object()
         if self.request.user == event.author:
-            for user in event.attendees:
-                notification = Notification.objects.create(
-                    user=user,
-                    event=event,
-                    text='{} {} has deleted the event {}.'.format(str(self.request.user.first_name),
-                                                                 str(self.request.user.last_name), str(event.title)),
-                    type='home'
-                )
-                user.profile.notifications.add(notification)
+            email_list = []
+            for user in event.attendees.all():
+                email_list.append(user.email)
+                if user.profile.on_event_update_delete:
+                    notification = Notification.objects.create(
+                        user=user,
+                        event=event,
+                        text='{} {} has deleted the event {}.'.format(str(self.request.user.first_name),
+                                                                     str(self.request.user.last_name), str(event.title)),
+                        type='home'
+                    )
+                    user.profile.notifications.add(notification)
+            if email_list.__len__() > 0:
+                subject = event.title + " was deleted!"
+                from_email = settings.EMAIL_HOST_USER
+                to_email = [user.email]
+                message = event.title + " was deleted by" + str(event.author.first_name) + " " + str(event.author.last_name) + "."
+                send_mail(subject=subject, from_email=from_email, recipient_list=to_email, message=message,
+                          fail_silently=False)
+
             return True
         return False
 
@@ -301,23 +324,31 @@ class EventViews:
         elif user in event.attendees.all():
             messages.error(request, f'You are already signed up for this event.')
         else:
+            if user.email != "":
+                subject = "Successfully joined " + event.title + "!"
+                from_email = settings.EMAIL_HOST_USER
+                to_email = [user.email]
+                message = "You successfully joined " + event.title + "! We look forward to seeing you there!"
+                send_mail(subject=subject, from_email=from_email, recipient_list=to_email, message=message,
+                          fail_silently=False)
+
             # add user to event
             event.attendees.add(user)
             messages.success(request, f'You are now signed up for the event! ')
+
+            if event.is_private and event.author.profile.on_event_invite:
+                notification = Notification.objects.create(
+                    user=event.author,
+                    event=event,
+                    text='{} signed up for your event.'.format(str(user.first_name)),
+                    type="person_joined"
+                )
+                event.author.profile.notifications.add(notification)
 
 
         if user in event.invited.all():
             event.invited.remove(user)
             user.profile.event_invites.remove(event)
-
-        if event.is_private:
-            notification = Notification.objects.create(
-                user=event.author,
-                event=event,
-                text='{} signed up for your event.'.format(str(user.first_name)),
-                type="person_joined"
-            )
-            event.author.profile.notifications.add(notification)
 
         return redirect('event-detail', pk=event_id)
 
@@ -332,32 +363,43 @@ class EventViews:
             'event': event
         }
 
-        return render(request, 'event/confirm_transaction.html', context)
+        return render(request, 'event/select_card.html', context)
 
     @login_required
-    def redirect_to_execution(request, credit_id):
+    def redirect_to_execution(request):
         event_id = request.POST.get('event-id', False)
+        credit_id = request.POST.get('card-id', False)
         event = Post.objects.get(pk=event_id)
         card = Credit.objects.get(pk=credit_id)
 
         context = {
             'card': card,
-            'object': event
+            'event': event
         }
 
-        return render(request, 'event/execute_transaction.html', context)
+        return render(request, 'event/confirm_transaction.html', context)
 
     @login_required
-    def execute_transaction(request, credit_id):
+    def execute_transaction(request):
         event_id = request.POST.get('event-id', False)
         event = Post.objects.get(pk=event_id)
         price = event.price
         user = request.user
+        credit_id = request.POST.get('card-id', False)
         max_amount = user.profile.credit_card.get(pk=credit_id).amount
 
         if price > max_amount:
             messages.error(request, f'Not enough money on your credit card. ')
         else:
+            if user.email != "":
+                subject = "Transaction for" + event.title + " complete!"
+                from_email = settings.EMAIL_HOST_USER
+                to_email = [user.email]
+                message = "You successfully payed" + str(
+                    price) + " for " + event.title + "! We look forward to seeing you there!"
+                send_mail(subject=subject, from_email=from_email, recipient_list=to_email, message=message,
+                          fail_silently=False)
+
             user.profile.credit_card.filter(pk=credit_id).update(amount=F('amount') - price)
             event.attendees.add(user)
             messages.success(request, f'Transaction complete! ')
@@ -390,7 +432,15 @@ class EventViews:
         if user in event.attendees.all():
             event.attendees.remove(user)
             messages.success(request, f'User removed from event')
-            if event.is_private:
+            if event.is_private and user.profile.on_event_invite:
+                if user.email != "":
+                    subject = "You have been removed from " + event.title + "."
+                    from_email = settings.EMAIL_HOST_USER
+                    to_email = [user.email]
+                    message = "A host removed you from the event " + event.title + "."
+                    send_mail(subject=subject, from_email=from_email, recipient_list=to_email, message=message,
+                              fail_silently=False)
+
                 notification = Notification.objects.create(
                     user=user,
                     event=event,
@@ -413,7 +463,7 @@ class EventViews:
             event.attendees.remove(user)
             messages.success(request, f'You are now signed off the event. ')
 
-            if event.is_private:
+            if event.is_private and event.author.profile.on_event_invite:
                 notification = Notification.objects.create(
                     user=event.author,
                     event=event,
@@ -421,6 +471,14 @@ class EventViews:
                     type="event"
                 )
                 event.author.profile.notifications.add(notification)
+                if user.email != "":
+                    subject = "Successfully signed off " + event.title + "!"
+                    from_email = settings.EMAIL_HOST_USER
+                    to_email = [user.email]
+                    message = "You successfully signed oss from " + event.title + "! Sad to see you go :("
+                    send_mail(subject=subject, from_email=from_email, recipient_list=to_email, message=message,
+                              fail_silently=False)
+
 
         else:
             messages.error(request, f"You can't sign off an event you're not signed up for. ")
@@ -534,14 +592,15 @@ class EventViews:
         user.profile.event_invites.add(event)
         event.invited.add(user)
 
-        notification = Notification.objects.create(
-            user=user,
-            event=event,
-            text='{} {} has sent you an invitation to their event.'.format(str(request.user.first_name), str(request.user.last_name)),
-            type="event"
-        )
+        if user.profile.on_event_invite:
+            notification = Notification.objects.create(
+                user=user,
+                event=event,
+                text='{} {} has sent you an invitation to their event.'.format(str(request.user.first_name), str(request.user.last_name)),
+                type="event"
+            )
 
-        user.profile.notifications.add(notification)
+            user.profile.notifications.add(notification)
 
         return redirect('invite-list', event_id)
 
@@ -569,14 +628,15 @@ class EventViews:
 
         messages.success(request, f'User successfully added as host. ')
 
-        notification = Notification.objects.create(
-            user=user,
-            event=event,
-            text='{} {} has added you as a administrator for the event {}.'.format(str(request.user.first_name), str(request.user.last_name), str(event.title)),
-            type="event"
-        )
+        if user.profile.on_event_host:
+            notification = Notification.objects.create(
+                user=user,
+                event=event,
+                text='{} {} has added you as a administrator for the event {}.'.format(str(request.user.first_name), str(request.user.last_name), str(event.title)),
+                type="event"
+            )
 
-        user.profile.notifications.add(notification)
+            user.profile.notifications.add(notification)
 
         return redirect('event-detail', pk=event_id)
 
@@ -591,15 +651,16 @@ class EventViews:
             event.co_authors.remove(user)
             messages.info(request, f'User removed as admin')
 
-        notification = Notification.objects.create(
-            user=user,
-            event=event,
-            text='{} {} has removed you as a administrator for the event {}.'.format(str(request.user.first_name),
-                                                                                   str(request.user.last_name), str(event.title)),
-            type="event"
-        )
+        if user.profile.on_event_host:
+            notification = Notification.objects.create(
+                user=user,
+                event=event,
+                text='{} {} has removed you as a administrator for the event {}.'.format(str(request.user.first_name),
+                                                                                       str(request.user.last_name), str(event.title)),
+                type="event"
+            )
 
-        user.profile.notifications.add(notification)
+            user.profile.notifications.add(notification)
 
         return redirect('event-detail', pk=event_id)
 

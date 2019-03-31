@@ -36,6 +36,7 @@
 <body>
 
 <header class="site-header">
+
     <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container">
             <a class="navbar-brand mr-4" href="{% url 'event-home' %}">Eventify</a>
@@ -57,59 +58,67 @@
                 </div>
                 <!-- Navbar Right Side -->
                 <div class="navbar-nav">
+                {% if user.is_authenticated %}
 
-                  <div class="w3-dropdown-hover">
-                    <a style="color: red; position: absolute; top: -6px; left: -57px; font-size: larger;  padding: 10px; margin: 0px;" >
-                        <button style="margin-top: 30px; background: black; color: white; border: none; height: 30px;" ><i class="far fa-bell"></i></button>
+                      <div class="w3-dropdown-hover">
+                        <a style="color: red; position: absolute; top: -6px; left: -57px; font-size: larger;  padding: 10px; margin: 0px;" >
+                            <button style="margin-top: 30px; background: black; color: white; border: none; height: 30px;" ><i class="far fa-bell"></i></button>
 
-                    <p style="color: orange; transform: translate(75%,-90%);">{{user.profile.notifications.count}}</p>
-                    </a>
+                        <p style="color: orange; transform: translate(75%,-90%);">{{user.profile.notifications.count}}</p>
+                        </a>
 
-                    <div class="w3-dropdown-content w3-bar-block scrollable-menu" role="menu" style="text-decoration: none; min-width: 400px; background-color: black;  margin-top: 10px; opacity:1; height: auto;">
-                      {% for notification in user.profile.notifications.all %}
-                        <div class="notifications-dropdown">
+                        <div class="w3-dropdown-content w3-bar-block scrollable-menu" role="menu" style="text-decoration: none; min-width: 400px; background-color: black;  margin-top: 10px; opacity:1; height: auto;">
+                          {% for notification in user.profile.notifications.all %}
+                            <div class="notifications-dropdown">
 
-                        {% if notification.read == False %}
-                            <a class="w3-bar-item w3-button" href="{% url 'redirect-notification' notification.id %}">
-                                {% csrf_token %}
-                                <div style="text-decoration: none;">
+                            {% if notification.read == False %}
+                                <a class="w3-bar-item w3-button" href="{% url 'redirect-notification' notification.id %}">
+                                    {% csrf_token %}
+                                    <div style="text-decoration: none;">
 
-                                    <table>
+                                        <table>
 
-                                        <tr>
+                                            <tr>
 
-                                            <td>
-                                        {% if notification.type == 'event' or notification.type == 'home' %}
-                                        <img class="rounded-circle account-img" style="width: 60px; height: 60px; margin: 3px; padding: 5px;" src="{{ notification.event.image.url }}">
-                                    {% else %}
-                                          <img class="rounded-circle account-img" style="width: 60px; height: 60px; margin: 3px; padding: 5px;" src="{{ notification.user.profile.image.url }}">
-                                    {% endif %}
+                                                <td>
+                                            {% if notification.type == 'event' or notification.type == 'home' %}
+                                            <img class="rounded-circle account-img" style="width: 60px; height: 60px; margin: 3px; padding: 5px;" src="{{ notification.event.image.url }}">
+                                        {% else %}
+                                              <img class="rounded-circle account-img" style="width: 60px; height: 60px; margin: 3px; padding: 5px;" src="{{ notification.user.profile.image.url }}">
+                                        {% endif %}
 
-                                            </td>
+                                                </td>
 
-                                            <td>
-                                    <div >
+                                                <td>
+                                        <div >
 
-                                          <p style="color: white; font-size: 7pt;">{{ notification.time }} </p>
-                                          <p style="color: white; margin:0px;">{{ notification.text }}</p>
+                                              <p style="color: white; font-size: 7pt;">{{ notification.time }} </p>
+                                              <p style="color: white; margin:0px;">{{ notification.text }}</p>
+                                        </div>
+                                                </td>
+                                            </tr>
+
+                                            </table>
+
                                     </div>
-                                            </td>
-                                        </tr>
-
-                                        </table>
+                                </a>
+                            {% endif %}
 
                                 </div>
-                            </a>
-                        {% endif %}
+                          {% endfor %}
+
+                            <div id="block_container">
+
+                                <div id="bloc1">
+                                    <a href="{% url 'to-notifications' %}"> <p style="color:white;"><i class="fas fa-cog"></i> Settings</p></a>
+                                </div>
+                                &emps;
+                                <div id="bloc2">
+                                    <a href="{% url 'delete-notifications' %}"> <p style="color:white;"> Delete All Notifications </p></a>
+                                </div>
 
                             </div>
-                      {% endfor %}
-
-                        <div style="margin-left:20px; margin-button: 0px;">
-
-                        <a href="#"> <p style="color:white;"><i class="fas fa-cog"></i> Settings</p></a>
-
-                        </div>
+                        {% endif %}
 
                     </div>
                   </div>
@@ -123,7 +132,6 @@
                     {% elif user.is_authenticated %}
                         <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
                         <a class="nav-item nav-link" href="{% url 'logout' %}">Log Out</a>
-                        <a class="dropdown-trigger" data-target="drop-down1"><i class="material-icons alert-red">notifications</i></a>
                     {% else %}
                         <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
                         <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>

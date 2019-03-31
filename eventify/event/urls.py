@@ -24,5 +24,6 @@ urlpatterns = [
     path('handle-notification/<int:notification_id>', views.EventViews.redirect_notification, name="redirect-notification"),
     path('select-card/', views.EventViews.buy_ticket, name="buy-ticket"),
     path('to-transaction/<int:credit_id>', views.EventViews.redirect_to_execution, name='to-transaction'),
-    path('execute-transaction/<int:credit_id>', views.EventViews.execute_transaction, name="execute-transaction")
+    path('execute-transaction', views.EventViews.execute_transaction, name="execute-transaction"),
+    path('confirm-card/', views.EventViews.redirect_to_execution, name='select-card')
 ]

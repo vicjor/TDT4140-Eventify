@@ -54,7 +54,13 @@ urlpatterns = [
     path('invites/', user_views.event_invites, name='event-invites'),
     path('decline-invite/', event_views.EventViews.event_decline_from_invitation, name='event-decline-from-invitation'),
     path('register-card/', user_views.register_credit, name='register-card'),
-    path('', include('event.urls'))
+    path('', include('event.urls')),
+    path('change-on-contact/', user_views.change_on_contact, name='change-on-contact'),
+    path('change-event-invite/', user_views.change_event_invite, name='change-event-invite'),
+    path('change-on-event-update-delete/', user_views.change_on_event_update_delete, name='update-delete'),
+    path('change-on-event-host/', user_views.change_on_event_host, name='event-host'),
+    path('edit-notifications/', user_views.redirect_to_not, name='to-notifications'),
+    path('delete-notifcations', user_views.delete_notifications, name='delete-notifications')
 ]
 
 if settings.DEBUG:
