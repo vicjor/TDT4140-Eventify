@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
 from PIL import Image
+from django.views.generic import ListView
 
 
 # Create your models here.
@@ -12,13 +13,13 @@ class Post(models.Model):
     date_posted = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     co_authors = models.ManyToManyField(User, related_name='co_authors')
-    price = models.FloatField(default=0)
+    price = models.FloatField(default=0, blank=True)
     attendees = models.ManyToManyField(User, related_name='attendees')
     waiting_list = models.ManyToManyField(User, related_name='waiting_list')
     start_date = models.DateTimeField(null=True, blank=True)
     end_date = models.DateTimeField(null=True, blank=True)
-    attendance_limit = models.IntegerField(null=True, default=10000, blank=True)
-    waiting_list_limit = models.IntegerField(null=True, default=0, blank=True)
+    attendance_limit = models.PositiveIntegerField(null=True, default=10000, blank=True)
+    waiting_list_limit = models.PositiveIntegerField(null=True, default=0, blank=True, )
     location = models.CharField(max_length=100, null=True)
     content = models.TextField()
     image = models.ImageField(default="default_event.jpg", upload_to="event_images", blank=True)
@@ -39,3 +40,9 @@ class Post(models.Model):
 
     class Meta:
        ordering = ['start_date']
+
+
+class PostListView(ListView):
+    model = Post
+    template_name = 'event/search.html'
+    paginate_by = 6

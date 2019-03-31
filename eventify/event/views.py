@@ -517,16 +517,16 @@ class EventViews:
 
         event_search = str(request.POST.get('event-search', False))
         location_search = str(request.POST.get('location-search', False))
-        date_start = str(request.POST.get('event-start', False))
 
-        if len(location_search) != 0 and len(event_search) != 0:
+
+        if len(location_search) == 0 or len(event_search) == 0:
             if len(location_search) == 0:
-                location_search = "asdfasfgdsgsafasdas"
+                if len(event_search) != 0:
+                    location_search = "asdfasfgdsgsafasdas"
 
             if len(event_search) == 0:
-                event_search = "asdfasfgdsgsafasdas"
-
-
+                if len(location_search) != 0:
+                    event_search = "asdfasfgdsgsafasdas"
 
         # filter for matching events and serialize for json
         title_search_results = list(Post.objects.filter(
@@ -536,12 +536,6 @@ class EventViews:
         location_search_results = list(Post.objects.filter(
             location__icontains=location_search
         ))
-
-        # date_search_result = list(Post.objects.filter(
-        #    name_icontains=date_start
-        # ).values(
-        #    'start_date'
-        # ))
 
         best_match = []
 
@@ -555,12 +549,8 @@ class EventViews:
         if local:
             event_search_results = best_match
         else:
-            event_search_results = title_search_results + location_search_results  # + date_search_result
+            event_search_results = title_search_results + location_search_results
 
-
-        # reformat start dates
-        #for i in event_search_results:
-        #    i['start_date'] = i['start_date'].date()
 
         if len(event_search_results) == 0:
             context = {
@@ -576,9 +566,6 @@ class EventViews:
                 'events': event_search_results
             }
 
-        # return JsonResponse(context)
-
-        # send response JSON
         return render(request, "event/search.html", context)
 
 

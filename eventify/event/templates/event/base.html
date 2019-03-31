@@ -82,10 +82,10 @@
 
                                                 <td>
                                             {% if notification.type == 'event' or notification.type == 'home' %}
-                                            <img class="rounded-circle account-img" style="width: 60px; height: 60px; margin: 3px; padding: 5px;" src="{{ notification.event.image.url }}">
-                                        {% else %}
-                                              <img class="rounded-circle account-img" style="width: 60px; height: 60px; margin: 3px; padding: 5px;" src="{{ notification.user.profile.image.url }}">
-                                        {% endif %}
+                                                <img class="rounded-circle account-img" style="width: 60px; height: 60px; margin: 3px; padding: 5px;" src="{{ notification.event.image.url }}">
+                                            {% else %}
+                                                <img class="rounded-circle account-img" style="width: 60px; height: 60px; margin: 3px; padding: 5px;" src="{{ notification.user.profile.image.url }}">
+                                            {% endif %}
 
                                                 </td>
 
