@@ -25,5 +25,6 @@ urlpatterns = [
     path('select-card/', views.EventViews.buy_ticket, name="buy-ticket"),
     path('to-transaction/<int:credit_id>', views.EventViews.redirect_to_execution, name='to-transaction'),
     path('execute-transaction', views.EventViews.execute_transaction, name="execute-transaction"),
-    path('confirm-card/', views.EventViews.redirect_to_execution, name='select-card')
+    path('confirm-card/', views.EventViews.redirect_to_execution, name='select-card'),
+    path('leave-waiting-list/', views.EventViews.leave_waiting_list, name='leave-waiting-list')
 ]

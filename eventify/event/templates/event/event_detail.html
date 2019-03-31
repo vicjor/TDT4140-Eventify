@@ -65,6 +65,14 @@
                             <input class="btn btn-danger" type="submit" value="Sign Off Event"/>
                         </form>
                     </div>
+                {% elif user in object.waiting_list.all %}
+                    <div>
+                        <form method="POST" action="{% url 'leave-waiting-list' %}" >
+                            {% csrf_token %}
+                            <input type="hidden" name="event-id" value="{{ object.id }}">
+                            <input class="btn btn-danger" type="submit" value="Sign Off Waiting List"/>
+                        </form>
+                    </div>
                 {% else %}
                     {% if object.attendees.all.count == object.attendance_limit and object.waiting_list.all.count == object.waiting_list_limit %}
                         <div>
@@ -109,8 +117,18 @@
             {% endif %}
         {% endif %}
 
-        <p class="text-muted" > {{object.attendees.all.count}} / {{object.attendance_limit}}</p>
+        {% if user in object.waiting_list.all %}
+            {% for waiting_user in object.waiting_list.all %}
+                {% if user.id == waiting_user.id %}
+                    <p class="text-muted" > Your position in the waiting list: {{ forloop.counter }} / {{ object.waiting_list_limit }}</p>
+                {% endif %}
+            {% endfor %}
 
+        {% else %}
+
+            <p class="text-muted" > {{object.attendees.all.count}} / {{object.attendance_limit}}</p>
+
+        {% endif %}
         <p> <i class="fas fa-map-marker-alt"> </i> {{ object.location }}</p>
 
        <p> <i class="fas fa-calendar-alt"> </i> {{ object.start_date }} - {{ object.end_date}}</p>

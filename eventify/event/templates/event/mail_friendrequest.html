@@ -1,0 +1,23 @@
+{% extends "event/base.html" %}
+
+{% block content %}
+
+<h1>You got a new friendrequest</h1>
+
+<div class="card container" style="margin-left: 15%; margin-top: 3%;">
+
+    <img class="rounded-circle account-img" style="width: 50px; height: 50px; margin-top: 40px;" src="{{ friend.profile.image.url }}">
+
+        <div class="media-body">
+
+          <h2 class="account-heading">{{ friend.username }} </h2>
+            <p class="text-secondary">{{ friend.email }}</p>
+
+
+        </div>
+
+
+</div>
+
+
+{% endblock content %}

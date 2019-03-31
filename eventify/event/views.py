@@ -260,7 +260,7 @@ class HtmlRender:
         event = Post.objects.get(pk=event_id)
 
         context = {
-            'contacts': contacts,
+            'contacts': _contacts,
             'event': event
         }
 
@@ -488,6 +488,32 @@ class EventViews:
         if waiting > 0:
             event.attendees.add(event.waiting_list.first())
             event.waiting_list.remove(event.waiting_list.first())
+
+        return redirect('event-detail', pk=event_id)
+
+    @login_required
+    def leave_waiting_list(request):
+        # get event
+        event_id = int(request.POST.get('event-id', False))
+        user = request.user
+        event = Post.objects.get(pk=event_id)
+
+        if user in event.waiting_list.all():
+            event.waiting_list.remove(user)
+            messages.success(request, f'You are now signed off the event. ')
+
+            if event.is_private and event.author.profile.on_event_invite:
+                notification = Notification.objects.create(
+                    user=event.author,
+                    event=event,
+                    text='{} {} is no longer in the waiting list for your event.'.format(str(user.first_name), str(user.last_name)),
+                    type="event"
+                )
+                event.author.profile.notifications.add(notification)
+
+
+        else:
+            messages.error(request, f"You can't sign off the waiting list for an event you're not signed up for. ")
 
         return redirect('event-detail', pk=event_id)
 
