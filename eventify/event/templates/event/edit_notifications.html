@@ -2,108 +2,144 @@
 
 {% block content %}
 
-<h2> Edit Notification Settings </h2>
+<div class="card container" style="margin-left: 15%; margin-top: 3%;">
+
+<h2> EDIT NOTIFICATION SETTINGS </h2>
 <div>
-    <h5> Notifications on Contact Requests: </h5>
+    <h5>CONTACT REQUESTS: </h5>
     {% if user.profile.on_contact %}
-        <label class="switcher">
+        <div class="switch">
             <form method="POST" action="{% url 'change-on-contact' %}">
                 {% csrf_token %}
+                <label>
+                OFF
                 <input type="hidden" name="user-id" value="{{ user.id }}">
-                <input type="submit">
+                <input type="submit" style="display: none;">
                 <input type="checkbox" checked>
-                <span class="sliderSwitch round"></span>
+                <span class="lever"></span>
+                ON
+                </label>
             </form>
-        </label>
+        </div>
     {% else %}
-        <label class="switcher">
+        <div class="switch">
             <form method="POST" action="{% url 'change-on-contact' %}">
                 {% csrf_token %}
+                <label>
+                OFF
                 <input type="hidden" name="user-id" value="{{ user.id }}">
-                <input type="submit">
-                <input type="checkbox">
-                <span class="sliderSwitch round"></span>
+                <input type="submit" style="display: none;">
+                <input disabled type="checkbox">
+                <span class="lever"></span>
+                ON
+                </label>
             </form>
-        </label>
+        </div>
     {% endif %}
 </div>
 
 
 <div>
-<h5> Notifications on Event Invites and Removal from Events: </h5>
+<h5>EVENT INVITES AND REMOVAL FROM EVENTS: </h5>
     {% if user.profile.on_event_invite %}
-        <label class="switcher">
+         <div class="switch">
             <form method="POST" action="{% url 'change-event-invite' %}">
                 {% csrf_token %}
+                <label>
+                OFF
                 <input type="hidden" name="user-id" value="{{ user.id }}">
-                <input type="submit">
+                <input type="submit" style=" display: none;">
                 <input type="checkbox" checked>
-                <span class="sliderSwitch round"></span>
+                <span class="lever"></span>
+                ON
+                </label>
             </form>
-        </label>
+        </div>
     {% else %}
-        <label class="switcher">
+        <div class="switch">
             <form method="POST" action="{% url 'change-event-invite' %}">
                 {% csrf_token %}
+                <label>
+                OFF
                 <input type="hidden" name="user-id" value="{{ user.id }}">
-                <input type="submit">
-                <input type="checkbox">
-                <span class="sliderSwitch round"></span>
+                <input type="submit" style="display: none;">
+                <input disabled type="checkbox">
+                <span class="lever"></span>
+                ON
+                </label>
             </form>
-        </label>
+        </div>
     {% endif %}
 </div>
 
 <div>
-<h5> Notifications when Joined Event is Updated or Deleted: </h5>
+<h5>JOINED EVENT IS UPDATED OR DELETED: </h5>
     {% if user.profile.on_event_update_delete %}
-        <label class="switcher">
+          <div class="switch">
             <form method="POST" action="{% url 'update-delete' %}">
                 {% csrf_token %}
+                <label>
+                OFF
                 <input type="hidden" name="user-id" value="{{ user.id }}">
-                <input type="submit">
+                <input type="submit" style="display: none;">
                 <input type="checkbox" checked>
-                <span class="sliderSwitch round"></span>
+                <span class="lever"></span>
+                ON
+                </label>
             </form>
-        </label>
+        </div>
     {% else %}
-        <label class="switcher">
+          <div class="switch">
             <form method="POST" action="{% url 'update-delete' %}">
                 {% csrf_token %}
+                <label>
+                OFF
                 <input type="hidden" name="user-id" value="{{ user.id }}">
-                <input type="submit">
-                <input type="checkbox">
-                <span class="sliderSwitch round"></span>
+                <input type="submit" style="display: none;">
+                <input disabled type="checkbox">
+                <span class="lever"></span>
+                ON
+                </label>
             </form>
-        </label>
+        </div>
     {% endif %}
 </div>
 
 
 <div>
-<h5> Notifications when Promoted or Removed as Host: </h5>
+<h5>PROMOTED OR REMOVED AS HOST: </h5>
     {% if user.profile.on_event_host %}
-        <label class="switcher">
+        <div class="switch">
             <form method="POST" action="{% url 'event-host' %}">
                 {% csrf_token %}
+                <label>
+                OFF
                 <input type="hidden" name="user-id" value="{{ user.id }}">
-                <input type="submit">
+                <input type="submit" style="display: none;">
                 <input type="checkbox" checked>
-                <span class="sliderSwitch round"></span>
+                <span class="lever"></span>
+                ON
+                </label>
             </form>
-        </label>
+        </div>
     {% else %}
-        <label class="switcher">
+         <div class="switch">
             <form method="POST" action="{% url 'event-host' %}">
                 {% csrf_token %}
+                <label>
+                OFF
                 <input type="hidden" name="user-id" value="{{ user.id }}">
-                <input type="submit">
-                <input type="checkbox">
-                <span class="sliderSwitch round"></span>
+                <input type="submit" style="display: none;">
+                <input disabled type="checkbox">
+                <span class="lever"></span>
+                ON
+                </label>
             </form>
-        </label>
+        </div>
     {% endif %}
 </div>
 
+
+    </div>
 
 {% endblock content %}

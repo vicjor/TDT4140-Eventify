@@ -34,7 +34,7 @@
              {% csrf_token %}
              <input type="hidden" name="card-id" value="{{ card.id }}">
              <input type="hidden" name="event-id" value="{{ event.id }}">
-             <button id="myBtn"><input class="btn btn-success" type="submit" value="Yes, Select Card" /></button>
+             <button id="myBtn" class="btn btn-success" "><input class="btn btn-success" type="submit" value="Yes, Select Card" /></button>
 
         </td>
 
@@ -64,9 +64,11 @@
             <input class="btn btn-danger" style="width:360px" type="submit" value="Confirm Transaction, Sum: {{ event.price }}"/>
 
       </form>
-      <a class="btn btn-danger" style="color:#b9151b; width:360px;" type="submit" href="{% url 'event-detail' event.id %}">Delete</a>
+      <a class="btn btn-danger" style="color:#b9151b; width:360px; text-align: center;" type="submit" href="{% url 'event-detail' event.id %}">Delete</a>
 
   </div>
+
+
 
 </div>
 
