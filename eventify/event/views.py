@@ -260,7 +260,7 @@ class HtmlRender:
         event = Post.objects.get(pk=event_id)
 
         context = {
-            'contacts': contacts,
+            'contacts': _contacts,
             'event': event
         }
 
