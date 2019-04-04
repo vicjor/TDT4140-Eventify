@@ -1,4 +1,4 @@
-**Eventify** 
+#Eventify
 
 **Motivation**
 
