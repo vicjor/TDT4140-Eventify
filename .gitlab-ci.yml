@@ -30,5 +30,6 @@ test:
    - pip install -r requirements.txt
    - ls -l
    - cd eventify
+   - rm db.sqlite3
    - python manage.py test
  
