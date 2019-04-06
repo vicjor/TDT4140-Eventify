@@ -29,5 +29,5 @@ test:
   script:
    - ls -l
    - cd eventify
-   - python mange.py test
+   - python manage.py test
  
