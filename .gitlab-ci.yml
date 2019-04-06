@@ -32,5 +32,6 @@ test:
    - cd eventify
    - rm db.sqlite3
    - rm eventify/db.sqlite3
+   - rm users/db.sqlite3
    - python manage.py test
  
