@@ -112,8 +112,8 @@ class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         event = self.get_object()
         if self.request.user == event.author or self.request.user in event.co_authors:
+            email_list = []
             for user in event.attendees.all():
-                email_list = []
                 if user.profile.on_event_update_delete:
                     email_list.append(user.email)
                     notification = Notification.objects.create(

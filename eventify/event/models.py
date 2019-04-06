@@ -13,7 +13,7 @@ class Post(models.Model):
     date_posted = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     co_authors = models.ManyToManyField(User, related_name='co_authors')
-    price = models.FloatField(default=0, blank=True)
+    price = models.FloatField(default=0, blank=True, null=True)
     attendees = models.ManyToManyField(User, related_name='attendees')
     waiting_list = models.ManyToManyField(User, related_name='waiting_list')
     start_date = models.DateTimeField(null=True, blank=True)
