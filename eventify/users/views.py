@@ -14,29 +14,42 @@ from .models import Profile
 from django.core.mail import send_mail, send_mass_mail
 
 
-def register(request):  # Funksjon for å registrere bruker
+def register(request):
+    """
+    The function for the registration of new users. Takes in a request containing user input, checks that the forms is
+    valid, if so the form is saved as a new profile. Otherwise relevant error messages are displayed.
+    :param request: An HTTP request from user containing input.
+    :return: Redirects the user to the login page if the input is valid, otherwise stays on the registration page.
+    """
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
-        if form.is_valid():  # Sjekker at form er gyldig, og lagrer og oppretter bruker om den er det
+        if form.is_valid():
             form.save()
-            username = form.cleaned_data.get('username')
             messages.success(request, f'Your account has been created! You are now able to log in.')
-            return redirect('login')  # Dirigerer deg til login siden når du har opprettet en bruker
+            return redirect('login')
     else:
         form = UserRegisterForm()
     return render(request, 'users/register.html', {'form': form})
 
 
-@login_required  # Triviell, men krever at bruker er logget inn for å kunne redigere bruker
+@login_required
 def editProfile(request):
+    """
+    Functionality for updating an already existing profile. Checks that all user input is valid and executes the update.
+    If the input is invalid relevant error messages are displayed.
+    :param request: An HTTP request from user containing input.
+    :return: Redirects the user to the profile page if the input is valid, otherwise stays on the update page.
+    """
     if request.method == 'POST':
         u_form = UserUpdateForm(request.POST, instance=request.user)
-        p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
-        if u_form.is_valid() and p_form.is_valid():  # Både user og profile må være gyldig
+        p_form = ProfileUpdateForm(request.POST,
+                                   request.FILES,
+                                   instance=request.user.profile)
+        if u_form.is_valid() and p_form.is_valid():
             u_form.save()
             p_form.save()
             messages.success(request, f'Your account has been updated!')
-            return redirect('profile')  # Redirigerer deg tilbake til profilen
+            return redirect('profile')
 
     else:
         u_form = UserUpdateForm(instance=request.user)
@@ -50,8 +63,15 @@ def editProfile(request):
 
 @login_required
 def register_credit(request):
+    """
+    Functionality for registration of credit cards related to the requesting user. Uses a help method to verify that all
+    input is valid, if so the card is registered, otherwise relevant error messages are displayed.
+    :param request: An HTTP request from user containing input.
+    :return: Redirects the user to the profile page if the input is valid, otherwise stays on the registration page.
+    """
     if request.method == 'POST':
-        form = CreditCardRegisterForm(request.POST, instance=request.user)
+        form = CreditCardRegisterForm(request.POST,
+                                      instance=request.user)
         data = request.POST.copy()
         card_n = data.get('card_number')
         sec_code = data.get('security_code')
@@ -83,6 +103,15 @@ def register_credit(request):
     return render(request, 'users/register_card.html', context)
 
 def check_valid_card(card, sec, month, year, amount):
+    """
+    Boolean function checking that all the user input for registrating a card is valid.
+    :param card: Checks that the card number is 16 digits long.
+    :param sec: Checks that the security code is 3 digits long.
+    :param month: Checks that the month is an integer between 0 and 13.
+    :param year: Checks that the year is a valid year (not before this date).
+    :param amount: The amount the user wants to deposit to its card. Must be an integer.
+    :return: True if all input is valid, false otherwise.
+    """
     if len(card) != 16 or not card.isdigit():
         return False
     if len(sec) != 3 or not sec.isdigit():
@@ -97,10 +126,15 @@ def check_valid_card(card, sec, month, year, amount):
 
 
 
-@login_required  # Du må være logget inn for å få tilgang til profilsiden. Sendes til registrering hvis ikke
+@login_required
 def profile(request):
+    """
+    Function for redirection the user to its profile page.
+    :param request: An HTTP request.
+    :return: Redirects the user to its profile.
+    """
     user = request.user
-    friends = user.profile.contacts.all();
+    friends = user.profile.contacts.all()
 
     context = {
         'user': user,
@@ -112,6 +146,10 @@ def profile(request):
 
 @login_required
 def get_users(request):
+    """
+    :param request: An HTTP request.
+    :return: Returns a list containing all users in the database to the template for displaying them.
+    """
     users = User.objects.filter(~Q(pk=request.user.id))
 
     context = {
@@ -123,6 +161,13 @@ def get_users(request):
 
 @login_required
 def add_contact(request):
+    """
+    Function for sending a contact request to another user. Extracts necessary information to identify the added user
+    and if the user is not already your contact it is added. If the added user has notifications on it will receive a
+    notification and an email.
+    :param request: An HTTP request.
+    :return: Redirects the requesting user back to the page displaying all users.
+    """
     user_id = int(request.POST.get('user-id', False))
     user = User.objects.get(pk=user_id)
 
@@ -154,6 +199,11 @@ def add_contact(request):
 
 @login_required
 def see_requests(request):
+    """
+    Functions for getting all the contact requests of an users.
+    :param request: An HTTP request.
+    :return: A list of all contact request to the template displaying them.
+    """
     requests = request.user.profile.requests.all()
 
     context = {
@@ -165,6 +215,12 @@ def see_requests(request):
 
 @login_required
 def accept_request(request):
+    """
+    Logic for accepting a contact request. Extracts information needed to identify the user that sent the request. Adds
+    the user to the list of your contacts and adds you to its list of contacts. Triggers a notification and an email.
+    :param request: An HTTP request.
+    :return: Returns the requesting user to the list of all requests.
+    """
     user_id = int(request.POST.get('user-id', False))
     user = User.objects.get(pk=user_id)
 
@@ -198,6 +254,12 @@ def accept_request(request):
 
 @login_required
 def decline_request(request):
+    """
+    Logic for declining a contact request. Identifies the user that sent the request and deletes it from the list of
+    requests and deletes this user from the others list of users that have received requests.
+    :param request: An HTTP request.
+    :return: Redirects the user back to the list of all requests.
+    """
     user_id = int(request.POST.get('user-id', False))
     user = User.objects.get(pk=user_id)
 
@@ -218,6 +280,12 @@ def decline_request(request):
 
 @login_required
 def cancel_request(request):
+    """
+    Logic for withdrawing a contact request that has already been sent. Checks that the request has been sent, and
+    deletes it.
+    :param request: An HTTP request.
+    :return: Redirects the user to the list of all users.
+    """
     user_id = int(request.POST.get('user-id', False))
     user = User.objects.get(pk=user_id)
 
@@ -230,7 +298,10 @@ def cancel_request(request):
 
 @login_required
 def get_friends(request):
-
+    """
+    :param request: An HTTP request.
+    :return: Returns the list of all the contacts of an user to the template for displaying them.
+    """
     context = {
         'friends': request.user.profile.contacts.all()
     }
@@ -239,6 +310,12 @@ def get_friends(request):
 
 @login_required
 def remove_contact(request):
+    """
+    Logic for removing a contact from the requesting users' contact list. Checks that the contact is in fact in the
+    contact list and if so, removes it.
+    :param request: An HTTP request.
+    :return: Redirects the user to the list of all contacts.
+    """
     user_id = int(request.POST.get('user-id', False))
     user = User.objects.get(pk=user_id)
 
@@ -247,10 +324,17 @@ def remove_contact(request):
         user.profile.contacts.remove(request.user)
         messages.info(request, f'User successfully removed as contact.')
 
-    return HttpResponseRedirect(reverse('profile'))
+    return HttpResponseRedirect(reverse('contacts'))
 
 @login_required
 def search_user(request):
+    """
+    Searching algorithm for searching after users. Checks if the user input is contained within the username, first
+    name or last name and returns all the users that matches.
+    :param request: An HTTP request.
+    :return: A list of all users containing the user input in one of the mentioned fields and sends this list to the
+    template for displaying.
+    """
     search = str(request.POST.get('search-field', False))
 
     search_result = list(User.objects.filter(
@@ -265,6 +349,13 @@ def search_user(request):
 
 @login_required
 def search_user_event(request):
+    """
+    Searching algorithm for searching after users within an event. Checks if the user input is contained within the
+    username, first name or last name and returns all the users that matches.
+    :param request: An HTTP request.
+    :return: A list of all users containing the user input in one of the mentioned fields and sends this list to the
+    template for displaying.
+    """
     search = str(request.POST.get('search-field', False))
     event = Post.objects.get(pk=int(request.POST.get('event-id', False)))
 
@@ -282,6 +373,11 @@ def search_user_event(request):
 
 @login_required
 def event_invites(request):
+    """
+    Retrieves all the invites to events for the requesting user.
+    :param request: An HTTP request.
+    :return: Returns a list of all event invites and sends this list to the template for displaying them.
+    """
 
     event = request.user.profile.event_invites.all()
 
@@ -293,6 +389,11 @@ def event_invites(request):
 
 @login_required
 def get_credit_cards(request):
+    """
+    Retrieves all the credit cards for the requesting user.
+    :param request: An HTTP request.
+    :return: Returns a list of all credit cards and sends this list to the template for displaying them.
+    """
     profile = request.user.profile
 
     context = {
@@ -319,6 +420,11 @@ def change_on_contact(request):
 
 @login_required
 def change_event_invite(request):
+    """
+    Change the boolean variable for the notification setting for this type of notifications.
+    :param request: An HTTP request.
+    :return: Redirects the user to the template where the
+    """
     profile = request.user.profile
 
     if profile.on_event_invite:
@@ -335,6 +441,11 @@ def change_event_invite(request):
 
 @login_required
 def change_on_event_update_delete(request):
+    """
+    Change the boolean variable for the notification setting for this type of notifications.
+    :param request: An HTTP request.
+    :return: Redirects the user to the template where the
+    """
     profile = request.user.profile
 
     if profile.on_event_update_delete:
@@ -351,6 +462,11 @@ def change_on_event_update_delete(request):
 
 @login_required
 def change_on_event_host(request):
+    """
+    Change the boolean variable for the notification setting for this type of notifications.
+    :param request: An HTTP request.
+    :return: Redirects the user to the template where the
+    """
     profile = request.user.profile
 
     if profile.on_event_host:
@@ -365,6 +481,11 @@ def change_on_event_host(request):
     return redirect('to-notifications')
 @login_required
 def redirect_to_not(request):
+    """
+    Handles the redirection of a user clicking a notification. Redirects the user to a relevant page.
+    :param request: An HTTP request.
+    :return: Redirects the user to a relevant page in terms of the notification clicked.
+    """
     user = request.user
 
     context = {
@@ -375,6 +496,11 @@ def redirect_to_not(request):
 
 @login_required
 def delete_notifications(request):
+    """
+    Function for deleting all notifications from this user.
+    :param request: An HTTP request
+    :return: Redirects the user to the home page after the notifcations has been deleted.
+    """
     profile = request.user.profile
 
     for notification in profile.notifications.all():

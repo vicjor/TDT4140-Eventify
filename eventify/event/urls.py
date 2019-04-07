@@ -15,7 +15,6 @@ urlpatterns = [
     path('event/new/', EventCreateView.as_view(), name='event-create'),# Denne som gjør at vi kan aksessere events på event/1, pk er primary key for en post
     path('event/<int:pk>/update', EventUpdateView.as_view(), name='event-update'),
     path('event/<int:pk>/delete', EventDeleteView.as_view(), name='event-delete'),
-    path('about/', views.HtmlRender.about, name='eventify-about'),
     path('attendees/<int:event_id>/', views.HtmlRender.attendee_list, name="attendee-list"),
     path('remove-attendee/', views.EventViews.remove_attendee, name="remove-attendee"),
     path('add-host/', views.EventViews.add_host, name='add-host'),
