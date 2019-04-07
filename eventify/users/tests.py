@@ -1,8 +1,11 @@
+from unittest.mock import *
+from django.core.files.base import ContentFile
 from django.test import TestCase
 from .models import User, Profile
 from PIL import Image
 from django.test import Client
-from unittest.mock import patch
+
+
 
 # Create your tests here.
 
@@ -29,3 +32,11 @@ class ModelTestCase(TestCase):
     def test_profile_to_string(self):
         self.assertEqual(str(self.profile1), str(self.profile1.user.id))
 
+"""
+    def test_profile_pre_save_hook(self):
+        file_mock = mock.MagicMock(name='FileMock', spec=ContentFile)
+        self.profile1.image = file_mock
+        self.profile1.save()
+        self.assertTrue(Profile.objects.filter(image="test_image.jpg").exists())
+        self.assertEqual(self.profile1.image.size, (300, 300))
+"""
