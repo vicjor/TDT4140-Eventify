@@ -1,33 +1,13 @@
-from django.test import TestCase
+from django.test import TestCase, RequestFactory, Client
 from .models import Post
 from .forms import UploadFileForm
 from .urls import urlpatterns
 from django.contrib.auth.models import User
 from django.urls import resolve
 from django.urls import reverse
-from unittest.mock import patch
-import django.http.request
+
+
 # Create your tests here.
-
-@patch('django.http.request')
-def test_request(self, mock_request):
-    class TestRequest(object):
-
-        def _init__(self, user, POST):
-            self.user = user
-            self.POST = POST
-
-    mock_request.return_value = TestRequest
-
-
-@classmethod
-def setUpClass(cls):
-    request = test_request()
-    pass
-
-
-
-
 class FormsTestCase(TestCase):
     def test_valid_form(self):
         form_data = {'something'}
@@ -48,14 +28,18 @@ class UrlsTestCase(TestCase):
 class PostTestCase(TestCase):
     def setUp(self):
         print("Setting up: PostTestCase")
-        self.user1 = User.objects.create_user(username='Ole', email='ole@mail.no', password='ole')
-        self.user2 = User.objects.create_user(username='Sjur', email='sjur@mail.no', password='sjur')
+        self.user1 = User.objects.create_user(username='Ole', email='ole@mail.no', password='oletest123')
+        self.user2 = User.objects.create_user(username='Sjur', email='sjur@mail.no', password='sjurtest123')
         self.event1 = Post.objects.create(title='Strikkekveld', author=self.user1, location='Trondheim',
                                           content='Syk strikkekveld i Trondheim')
         self.event2 = Post.objects.create(title='Sykveld', author=self.user2, location='Oslo',
                                           content='Sykveld i hovedstaden')
-        EventViews.eventJoin(test_request())
-        EventViews.eventJoin(test_request())
+
+        self.c = Client(HTTP_USER_AGENT='Mozilla/5.0')
+        self.c.login(username='Ole', password='oletest123')
+        self.request = RequestFactory().get('/event/join/')
+        self.user1.eventJoin(self.request)
+        self.user2.eventJoin(self.request)
 
     def test_author(self):
         self.assertEqual(self.event1.author, 'Ole')
@@ -85,5 +69,3 @@ class PostTestCase(TestCase):
     # def test_search(self):
     # def test_remove_event(self):
     # def test_update_event(self):
-
-
