@@ -31,7 +31,6 @@ urlpatterns = [
     path('profile/', user_views.profile, name="profile"),
     path('edit-profile/', user_views.editProfile, name="edit-profile"),
     path('my-events/', event_views.HtmlRender.myEvents, name='my-events'),
-    path('all-events/', event_views.HtmlRender.allEvents, name='all-events'),
     path('events/search/', event_views.EventViews.search_events, name='event-search'),
     path('event/join/', event_views.EventViews.eventJoin, name='event-join'),
     path('event/leave/', event_views.EventViews.leaveEvent, name='event-leave'),

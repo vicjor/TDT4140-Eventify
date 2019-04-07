@@ -1,12 +1,12 @@
 {% extends "event/base.html" %}
 
-{% block search %}
+{% block content %}
 <div class="table" >
     {% if request.get_full_path == "/events/event/search/" %}
-    <form name="event-search-form" method="POST">
-        {% else %}
+        <form name="event-search-form" method="POST">
+    {% else %}
         <form name="event-search-form" method="POST" action="{% url 'event-search' %}">
-            {% endif %}
+    {% endif %}
             {% csrf_token %}
             <table class="table">
 
@@ -32,17 +32,17 @@
 <div class="flex-container2">
     {% for event in events %}
     <div class="event-row">
-        <article class="media content-section-allevents">
-            <a href="{% url 'event-detail' event.id %}"><img width="390px" height="250px" src="{{ event.image.url }}" alt="" style="padding:20px"></a>
+    <article class="media content-section-allevents">
+        <a href="{% url 'event-detail' event.id %}"><img width="390px" height="250px" src="{{ event.image.url }}" alt="" style="padding:20px"></a>
             <br>
-        </article>
-        <br>
-        <h2><a class="article-title" href="{% url 'event-detail' event.id %}">{{ event.title }}</a></h2>
-        <p class="article-content" style="color:black;"> <i class="fas fa-map-marker-alt"> </i> {{ event.location }}</p>
-        <p> <i class="fas fa-calendar-alt"> </i> {{ event.start_date }}</p>
-    </div>
+    </article>
+<br>
+ <h2><a class="article-title" href="{% url 'event-detail' event.id %}">{{ event.title }}</a></h2>
+            <p class="article-content" style="color:black;"> <i class="fas fa-map-marker-alt"> </i> {{ event.location }}</p>
+             <p> <i class="fas fa-calendar-alt"> </i> {{ event.start_date }}</p>
+        </div>
     {% endfor %}
-    {% else %}
+{% else %}
     <div class="flex-container" style="margin-left: 5%;">
         {% for event in events %}
         <div class="card z-depth-5 card-panel hoverable" style="width: 350px; margin: 30px; text-align: center; border-radius: 5px;">
@@ -62,8 +62,33 @@
         </div>
         {% endfor %}
     </div>
+{% endif %}
+
+    </div>
+
+
+<div style="text-align: center;">
+
+{% if is_paginated %}
+    {% if page_obj.has_previous %}
+        <a class="btn btn-outline-info mb-4" href="?page=1"><i class="fas fa-angle-double-left"></i></i></a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}"><i class="fas fa-angle-left"></i></a>
     {% endif %}
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}"><i class="fas fa-angle-right"></i></a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}"><i class="fas fa-angle-double-right"></i></a>
+    {% endif %}
+{% endif %}
 
 </div>
-{% endblock search%}
+{% endblock content %}
+
 

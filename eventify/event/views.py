@@ -33,12 +33,20 @@ events = [
 #START
 
 def handle_upload(request):
+    """
+    Functionality for updating an already existing profile. Checks that all user input is valid and executes the update.
+    If the input is invalid relevant error messages are displayed.
+    :param request: An HTTP request from user containing input.
+    :return: Redirects the user to the profile page.
+    """
     if request.method == 'POST':
-        p_form = UploadFileForm(request.POST, request.FILES, instance=request.user.profile)
-        if p_form.is_valid(): # Både user og profile må være gyldig
+        p_form = UploadFileForm(request.POST,
+                                request.FILES,
+                                instance=request.user.profile)
+        if p_form.is_valid():
             p_form.save()
             messages.success(request, f'Your account has been updated!')
-            return redirect('profile') #Redirigerer deg tilbake til profilen
+            return redirect('profile')
 
     else:
         p_form = UploadFileForm(instance=request.user.profile)
@@ -49,34 +57,52 @@ def handle_upload(request):
     return render(request, 'users/profile.html', context)
 
 
-class EventListView(ListView):  #Denne gjør at events vises på home i rekkefølge fra nyeste til eldste
+class EventListView(ListView):
+    """
+    Class for displaying the events ordered by the date the events are starting.
+    """
     model = Post
-    template_name = 'event/home.html' #<app>/<model>_<viewtype>.html
+    template_name = 'event/home.html'
     context_object_name = 'events'
-    ordering = ['-date_posted']
+    ordering = ['-start_date']
     def get_queryset(self):
-        return Post.objects.filter(is_private=False).order_by('-date_posted')
+        """
+        Filters all events such that the private events are excluded and sorts them by date.
+        :return: A list where all private events are excluded.
+        """
+        return Post.objects.filter(is_private=False).order_by('-start_date')
 
-class UserListView(ListView):  #Denne gjør at events vises på home i rekkefølge fra nyeste til eldste
+class UserListView(ListView):
+    """
+    Class for displaying all the events creating by a specific user.
+    """
     model = Post
     template_name = 'event/user_posts.html' #<app>/<model>_<viewtype>.html
     context_object_name = 'events'
     def get_queryset(self):
+        """
+        Filters out all the events created by the user with "username"
+        :return: The list of all events created by a specific user sorted by the date they were posted.
+        """
         user = get_object_or_404(User, username=self.kwargs.get('username'))
         return Post.objects.filter(author=user).order_by('-date_posted')
     paginate_by = 6
 
 
 class EventListAll(ListView):
+    """
+    Class for displaying the events ordered by the date the events are starting.
+    """
     model = Post
     template_name = 'event/all_events.html'
     context_object_name = 'events'
     ordering = ['-date_posted']
     def get_queryset(self):
+        """
+        Exclude all private events and excludes the ones written by the user requesting.
+        :return: The list with all events that's not private or written by the requesting user.
+        """
         events = Post.objects.filter(is_private=False).order_by('-date_posted')
-        for event in events:
-            if event.attendance_limit == event.attendees.all().count():
-                events.filter(pk=event.id).delete()
         try:
             events.exclude(author=self)
         except TypeError:
@@ -92,7 +118,18 @@ class EventDetailView(DetailView):
 
 class EventCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'location', 'content', 'price', 'attendance_limit', 'waiting_list_limit', 'start_date', 'end_date', 'image', 'is_private']
+    fields = [
+        'title',
+        'location',
+        'content',
+        'price',
+        'attendance_limit',
+        'waiting_list_limit',
+        'start_date',
+        'end_date',
+        'image',
+        'is_private'
+    ]
     template_name = 'event/event_form.html'
 
     def form_valid(self, form):
@@ -100,16 +137,40 @@ class EventCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    """
+    The view for updating an event with all the necessary fields.
+    """
     model = Post
-    fields = ['title', 'location', 'content', 'price', 'attendance_limit', 'waiting_list_limit', 'start_date', 'end_date', 'image', 'is_private']
+    fields = [
+        'title',
+        'location',
+        'content',
+        'price',
+        'attendance_limit',
+        'waiting_list_limit',
+        'start_date',
+        'end_date',
+        'image',
+        'is_private'
+    ]
     template_name = 'event/event_update.html'
     context_object_name = 'events'
 
     def form_valid(self, form):
+        """
+        Function for checking that the user input for the update is valid.
+        :param form: The form including all the user input for the updated event.
+        :return: A boolean value, true if the input is valid, false otherwise.
+        """
         form.instance.author = self.request.user
         return super().form_valid(form)
 
     def test_func(self):
+        """
+        Checks that the requesting user fulfills the requirements for updating the event. If so, all users attending
+        the event are notified and receives an email if they have activated notifications.
+        :return: True if all requirments for the update are fulfilled, false otherwise.
+        """
         event = self.get_object()
         if self.request.user == event.author or self.request.user in event.co_authors:
             email_list = []
@@ -119,8 +180,10 @@ class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                     notification = Notification.objects.create(
                         user=user,
                         event=event,
-                        text='{} {} has edited the event {}.'.format(str(self.request.user.first_name),
-                                                                     str(self.request.user.last_name), str(event.title)),
+                        text='{} {} has edited the event {}.'.format(
+                            str(self.request.user.first_name),
+                            str(self.request.user.last_name),
+                            str(event.title)),
                         type='event'
                     )
                     user.profile.notifications.add(notification)
@@ -129,7 +192,10 @@ class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                 from_email = settings.EMAIL_HOST_USER
                 to_email = [user.email]
                 message = event.title + " was updated. Please visit the event site to see the new updates."
-                send_mail(subject=subject, from_email=from_email, recipient_list=to_email, message=message,
+                send_mail(subject=subject,
+                          from_email=from_email,
+                          recipient_list=to_email,
+                          message=message,
                           fail_silently=False)
 
             return True
@@ -139,11 +205,19 @@ class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 #END
 
 class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    """
+    Class for deleting an event.
+    """
     model = Post
     template_name = 'event/event_confirm_delete.html'
     success_url = '/'
 
     def test_func(self):
+        """
+        Checks that all requirements for deleting an event are fulfilled (that the requesting user is the author of the
+        event). If the event is deleted all attendees with activated notifications are notified and receives an email.
+        :return: True if all requirements are fulfilled, false otherwise.
+        """
         event = self.get_object()
         if self.request.user == event.author:
             email_list = []
@@ -173,21 +247,22 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 class HtmlRender:
 
     def created_events(request):
+        """
+        :return: Returns a list of all the events created by the requesting user.
+        """
 
+        Utility.cleanEndedEvents(request.user);
         context = {
             'events': Post.objects.filter(author=request.user)
         }
         return render(request, 'event/created_events.html', context)
 
-    def home(request):
-
-        context = {
-            #'events': Post.objects.all()
-            'events': Post.objects.filter(is_private=False)
-        }
-        return render(request, 'event/event.html', context)
-
     def homePage(request):
+        """
+        :return: Returns two lists, one containing the four events starting closest from now and one with the rest
+        of the events, except the private ones, and sends them to the home template.
+        """
+        Utility.cleanEndedEvents(request.user);
         events = Post.objects.filter(is_private=False).order_by('start_date')
         slide_events = events[0:4]
         context = {
@@ -197,41 +272,14 @@ class HtmlRender:
 
         return render(request, 'event/home.html', context)
 
-    def about(request):
-        return render(request, 'event/about.html')
-
-    @staff_member_required
-    def createEventPage(request):
-        context = {
-            'page': 'createEvent',
-            'coverHeading': 'Create Event'
-        }
-        return render(request, 'event/createEvent.html', context)
-
-    def allEvents(request):
-        #events = Post.objects.all()
-        events = Post.objects.filter(is_private=False)
-
-        for event in events:
-            if event.attendance_limit <= event.attendees.all().count():
-                events.remove(event)
-
-        # Filter out users own events
-        try:
-            events = events.exclude(author=request.user)
-        except TypeError:
-            pass
-
-        context = {
-            'page': 'allEvents',
-            'coverHeading': 'All Events',
-            'events': events
-        }
-
-        return render(request, 'event/all_events.html', context)
-
     @login_required
     def myEvents(request):
+        """
+        Filters all events that has been joined or created by the requesting user and sends them to the template
+        for displaying them.
+        :return: A list of all events created or joined by the requesting user.
+        """
+        Utility.cleanEndedEvents(request.user);
         user = request.user
 
         # redirect if user not logged in
@@ -253,6 +301,10 @@ class HtmlRender:
 
     @login_required
     def invite_list(request, event_id):
+        """
+        :param event_id: The primary key of the event the invite list is being retrieved for.
+        :return: A list of all invited users to the event with pk=event_id.
+        """
         user = request.user
         contacts = user.profile.contacts.all()
 
@@ -260,7 +312,7 @@ class HtmlRender:
         event = Post.objects.get(pk=event_id)
 
         context = {
-            'contacts': _contacts,
+            'contacts': contacts,
             'event': event
         }
 
@@ -269,6 +321,10 @@ class HtmlRender:
 
     @login_required
     def attendee_list(request, event_id):
+        """
+        :param event_id: The primary key of the event the attendee list is being retrieved for.
+        :return: A list of all attendees to the event with pk=event_id.
+        """
         event = Post.objects.get(pk=event_id)
 
         attendees = event.attendees.all()
@@ -281,26 +337,16 @@ class HtmlRender:
         return render(request, 'event/edit_attendees.html', context)
 
 
-    @login_required
-    def editEvent(request, event_id):
-        event = get_object_or_404(Post, pk=event_id)
-
-        # See if user can edit event
-        if request.user == event.author:
-            context = {
-                'page': 'editEvent',
-                'coverHeading': 'Edit Event',
-                'event': event
-            }
-            return render(request, 'event/editEvent.html', context)
-        else:
-            return redirect(request, 'event/event.html')
-
-
 class EventViews:
 
     @login_required
     def eventJoin(request):
+        """
+        Function for joining an event. Retrieved the data necessary for getting the requested event. Checks that the
+        user actually can join the event (enough spots etc.) and adds the user to the event attendee list. Triggers
+        notification to the author of the event if the event is private.
+        :return: Redirects the user to the detailed event page.
+        """
         # get event
         event_id = int(request.POST.get('event-id', False))
         user = request.user
@@ -329,7 +375,10 @@ class EventViews:
                 from_email = settings.EMAIL_HOST_USER
                 to_email = [user.email]
                 message = "You successfully joined " + event.title + "! We look forward to seeing you there!"
-                send_mail(subject=subject, from_email=from_email, recipient_list=to_email, message=message,
+                send_mail(subject=subject,
+                          from_email=from_email,
+                          recipient_list=to_email,
+                          message=message,
                           fail_silently=False)
 
             # add user to event
@@ -355,6 +404,10 @@ class EventViews:
 
     @login_required
     def buy_ticket(request):
+        """
+        Logic for letting the user select which of its registered card to pay the ticket with.
+        :return: A list of all credit card related to the requesting user, sent to the template for displaying.
+        """
         event = Post.objects.get(pk=request.POST.get('event-id', False))
         cards = request.user.profile.credit_card.all()
 
@@ -367,6 +420,11 @@ class EventViews:
 
     @login_required
     def redirect_to_execution(request):
+        """
+        Lets the user confirm that he wants to use the selected card for the purchase.
+        :return: The selected card and the event the ticket is being purchased for and sends it to the template for
+        confirmation of the transaction.
+        """
         event_id = request.POST.get('event-id', False)
         credit_id = request.POST.get('card-id', False)
         event = Post.objects.get(pk=event_id)
@@ -381,6 +439,12 @@ class EventViews:
 
     @login_required
     def execute_transaction(request):
+        """
+        The actual execution of the purchase. Extracts all necessary information, buys the ticket, signs the user up
+        for the event, withdraws the amount from the balance of the card. If the buying user has enabled notifications
+        an email will be sent with a confirmation of the purchase.
+        :return: Redirects the user to the detailed event page.
+        """
         event_id = request.POST.get('event-id', False)
         event = Post.objects.get(pk=event_id)
         price = event.price
@@ -397,7 +461,10 @@ class EventViews:
                 to_email = [user.email]
                 message = "You successfully payed" + str(
                     price) + " for " + event.title + "! We look forward to seeing you there!"
-                send_mail(subject=subject, from_email=from_email, recipient_list=to_email, message=message,
+                send_mail(subject=subject,
+                          from_email=from_email,
+                          recipient_list=to_email,
+                          message=message,
                           fail_silently=False)
 
             user.profile.credit_card.filter(pk=credit_id).update(amount=F('amount') - price)
@@ -410,6 +477,10 @@ class EventViews:
 
     @login_required
     def event_decline_from_invitation(request):
+        """
+        Declines a received invitation and removes the declining user from the events' list of invited users.
+        :return: Redirects the user to the page with all event invites.
+        """
         event_id = int(request.POST.get('event-id', False))
         event = Post.objects.get(pk=event_id)
         user = request.user
@@ -423,6 +494,12 @@ class EventViews:
 
     @login_required
     def remove_attendee(request):
+        """
+        Function for removing an attending user from one of your event. Checks that the requesting user is
+        authorized to perform the removal (author or co-host) and removes the selected user from the event.
+        If the removed user has enabled notifications, he will receive an email and a notification.
+        :return: Redirects the requesting user to the page displaying all attendees.
+        """
         event_id = int(request.POST.get('event-id', False))
         event = Post.objects.get(pk=event_id)
 
@@ -438,22 +515,34 @@ class EventViews:
                     from_email = settings.EMAIL_HOST_USER
                     to_email = [user.email]
                     message = "A host removed you from the event " + event.title + "."
-                    send_mail(subject=subject, from_email=from_email, recipient_list=to_email, message=message,
+                    send_mail(subject=subject,
+                              from_email=from_email,
+                              recipient_list=to_email,
+                              message=message,
                               fail_silently=False)
 
                 notification = Notification.objects.create(
                     user=user,
                     event=event,
-                    text='{} {} har removed you from their event.'.format(str(request.user.first_name), str(request.user.last_name)),
+                    text='{} {} har removed you from their event.'.format(
+                        str(request.user.first_name),
+                        str(request.user.last_name)),
                     type="home"
                 )
                 user.profile.notifications.add(notification)
 
-        return redirect('event-detail', pk=event_id)
+        return redirect('attendee-list', pk=event_id)
 
 
     @login_required
     def leaveEvent(request):
+        """
+        Logic for leaving an event that the requesting user is attending. Checks that the user is actually attending the
+        event and removes it. If the event is private and the author has enabled notifications he will he notified. If
+        the event has a waiting list and there are users in the waiting list, the first of those users will be promoted
+        to the attendee list.
+        :return: Redirects the leaving user to the detailed event page.
+        """
         # get event
         event_id = int(request.POST.get('event-id', False))
         user = request.user
@@ -492,7 +581,45 @@ class EventViews:
         return redirect('event-detail', pk=event_id)
 
     @login_required
+    def leave_waiting_list(request):
+        """
+        Functionality for leaving the waiting list for an event. Checks that the user indeed is in the waiting list and
+        removes it. If the event is private and the author has enabled notifications, the author is notified by email.
+        :return:
+        """
+        # get event
+        event_id = int(request.POST.get('event-id', False))
+        user = request.user
+        event = Post.objects.get(pk=event_id)
+
+        if user in event.waiting_list.all():
+            event.waiting_list.remove(user)
+            messages.success(request, f'You are now signed off the event. ')
+
+            if event.is_private and event.author.profile.on_event_invite:
+                notification = Notification.objects.create(
+                    user=event.author,
+                    event=event,
+                    text='{} {} is no longer in the waiting list for your event.'.format(
+                        str(user.first_name),
+                        str(user.last_name)),
+                    type="event"
+                )
+                event.author.profile.notifications.add(notification)
+
+
+        else:
+            messages.error(request, f"You can't sign off the waiting list for an event you're not signed up for. ")
+
+        return redirect('event-detail', pk=event_id)
+
+    @login_required
     def redirect_notification(request, notification_id):
+        """
+        Logic for redirectin the user to a relevant page when a notification is being clicked.
+        :param notification_id: The primary key of the clicked notification.
+        :return: The page relevant for the particular type of notification.
+        """
         notification = Notification.objects.get(pk=notification_id)
 
         Notification.objects.filter(pk=notification_id).read = True
@@ -514,19 +641,25 @@ class EventViews:
 
 
     def search_events(request):
+        """
+        Searching algorithm for searching after specified events. Finds the events that contains the user input in its
+        title and/or location. If some events matches both, these are displayed, if there are just events with one
+        matchingm these are displayed, if there are none matches, no events are displayed.
+        :return: The list of all events fulfilling the search requirements.
+        """
 
         event_search = str(request.POST.get('event-search', False))
         location_search = str(request.POST.get('location-search', False))
-        date_start = str(request.POST.get('event-start', False))
 
-        if len(location_search) != 0 and len(event_search) != 0:
+
+        if len(location_search) == 0 or len(event_search) == 0:
             if len(location_search) == 0:
-                location_search = "asdfasfgdsgsafasdas"
+                if len(event_search) != 0:
+                    location_search = "asdfasfgdsgsafasdas"
 
             if len(event_search) == 0:
-                event_search = "asdfasfgdsgsafasdas"
-
-
+                if len(location_search) != 0:
+                    event_search = "asdfasfgdsgsafasdas"
 
         # filter for matching events and serialize for json
         title_search_results = list(Post.objects.filter(
@@ -536,12 +669,6 @@ class EventViews:
         location_search_results = list(Post.objects.filter(
             location__icontains=location_search
         ))
-
-        # date_search_result = list(Post.objects.filter(
-        #    name_icontains=date_start
-        # ).values(
-        #    'start_date'
-        # ))
 
         best_match = []
 
@@ -555,12 +682,8 @@ class EventViews:
         if local:
             event_search_results = best_match
         else:
-            event_search_results = title_search_results + location_search_results  # + date_search_result
+            event_search_results = title_search_results + location_search_results
 
-
-        # reformat start dates
-        #for i in event_search_results:
-        #    i['start_date'] = i['start_date'].date()
 
         if len(event_search_results) == 0:
             context = {
@@ -576,14 +699,16 @@ class EventViews:
                 'events': event_search_results
             }
 
-        # return JsonResponse(context)
-
-        # send response JSON
         return render(request, "event/search.html", context)
 
 
     @login_required
     def invite_user(request):
+        """
+        Logic for inviting an user to one of your private events. If the invited user has enabled its notifications, he
+        will be notified.
+        :return: Redirects the inviter to the list of all possible users that can be invited.
+        """
         event_id = int(request.POST.get('event-id', False))
         event = Post.objects.get(pk=event_id)
         user_id = int(request.POST.get('user-id', False))
@@ -606,6 +731,10 @@ class EventViews:
 
     @login_required
     def cancel_invite(request):
+        """
+        Logic for withdrawing an invite. Checks that the invite is sent and removes it.
+        :return: Redirects the inviter to the list of all possible users that can be invited.
+        """
         event_id = int(request.POST.get('event-id', False))
         event = Post.objects.get(pk=event_id)
         user_id = int(request.POST.get('user-id', False))
@@ -619,6 +748,10 @@ class EventViews:
 
     @login_required
     def add_host(request):
+        """
+        Promotes an attendee to co-host. This allows the user to edit the attendee list, but not to update the event.
+        :return: Redirects the inviter to the list of all possible users that can be invited.
+        """
         event_id = int(request.POST.get('event-id', False))
         event = Post.objects.get(pk=event_id)
         user_id = int(request.POST.get('user-id', False))
@@ -638,10 +771,14 @@ class EventViews:
 
             user.profile.notifications.add(notification)
 
-        return redirect('event-detail', pk=event_id)
+        return redirect('attendee-list', event_id)
 
     @login_required
     def remove_host(request):
+        """
+        Removes an attendee as co-host.
+        :return: Redirects the inviter to the list of all possible users that can be invited.
+        """
         event_id = int(request.POST.get('event-id', False))
         event = Post.objects.get(pk=event_id)
         user_id = int(request.POST.get('user-id', False))
@@ -662,7 +799,7 @@ class EventViews:
 
             user.profile.notifications.add(notification)
 
-        return redirect('event-detail', pk=event_id)
+        return redirect('attendee-list', pk=event_id)
 
 
 class Utility:
