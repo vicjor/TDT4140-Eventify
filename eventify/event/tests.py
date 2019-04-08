@@ -15,6 +15,7 @@ class FormsTestCase(TestCase):
         self.assertTrue(form.is_valid())
 
 
+""" Ikke verdt å teste
 class UrlsTestCase(TestCase):
     def test_reverse(self):
         url = reverse('user', args=['axel_kjonsberg'])
@@ -23,6 +24,39 @@ class UrlsTestCase(TestCase):
     def test_resolve(self):
         resolver = resolve('/events/')
         self.assertEqual(resolver.view_name, 'events')
+"""
+
+
+# Integration test of Event's functionality from the users "view"
+class TestEvent(TestCase):
+    def setUp(self):
+        self.user1 = User.objects.create_user(username='Ole', email='ole@mail.no', password='oletest123')
+        self.user2 = User.objects.create_user(username='Sjur', email='sjur@mail.no', password='sjurtest123')
+        self.c = Client(HTTP_USER_AGENT='Mozilla/5.0')
+
+    def test__view_denies_anonymous(self):
+        response = self.c.get('/event/join/', follow=True)
+        self.assertRedirects(response, '/login/')
+
+    def test_call_view_loads(self):
+        self.c.login(username='Ole', password='oletest123')
+        response = self.c.get('/event/join/')
+        self.assertEqual(response.status_code, 200)
+
+    """def test_call_view_fails_blank(self):
+        self.client.login(username='user', password='test')
+        response = self.client.post('/url/to/view', {}) # blank data dictionary
+        self.assertFormError(response, 'form', 'some_field', 'This field is required.')
+        # etc. ...
+    
+
+    def test_call_view_fails_invalid(self):
+        # as above, but with invalid rather than blank data in dictionary
+
+    def test_call_view_fails_invalid(self):
+        # same again, but with valid data, then
+        self.assertRedirects(response, '/contact/1/calls/')
+    """
 
 
 class PostTestCase(TestCase):
@@ -35,25 +69,22 @@ class PostTestCase(TestCase):
         self.event2 = Post.objects.create(title='Sykveld', author=self.user2, location='Oslo',
                                           content='Sykveld i hovedstaden')
 
-        self.c = Client(HTTP_USER_AGENT='Mozilla/5.0')
-        self.c.login(username='Ole', password='oletest123')
-        self.request = RequestFactory().get('/event/join/')
-        self.user1.eventJoin(self.request)
-        self.user2.eventJoin(self.request)
-
     def test_author(self):
         self.assertEqual(self.event1.author, 'Ole')
         self.assertEqual(self.event2.author, 'Sjur')
 
-    def test_join_event(self):
-        self.assertTrue(self.user1 in self.event2.attendees().all())
-        self.assertTrue(self.user2 in self.event1.attendees().all())
 
-    def test_leave_event(self):
-        self.user1.eventLeave(self.event2)
-        self.user2.eventLeave(self.event1)
-        self.assertTrue(self.user1 not in self.event2.attendees().all())
-        self.assertTrue(self.user2 not in self.event1.attendees().all())
+    """ Disse flyttes til TestEvent
+        def test_join_event(self):
+            self.assertTrue(self.user1 in self.event2.attendees().all())
+            self.assertTrue(self.user2 in self.event1.attendees().all())
+    
+        def test_leave_event(self):
+            self.user1.eventLeave(self.event2)
+            self.user2.eventLeave(self.event1)
+            self.assertTrue(self.user1 not in self.event2.attendees().all())
+            self.assertTrue(self.user2 not in self.event1.attendees().all())
+    """
 
     def test_pre_save_hook(self):
         self.event1.title = 'Heklekveld'
