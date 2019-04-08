@@ -177,7 +177,9 @@ def add_contact(request):
     if user.profile.on_event_invite:
         notification = Notification.objects.create(
             user=user,
-            text='{} {} sent you a contact request'.format(str(request.user.first_name), str(request.user.last_name)),
+            text='{} {} sent you a contact request'.format(
+                str(request.user.first_name),
+                str(request.user.last_name)),
             type="new_request"
         )
 
@@ -188,8 +190,12 @@ def add_contact(request):
             from_email = settings.EMAIL_HOST_USER
             to_email = [user.email]
             message = str(
-                request.user) + " sent you a friend request! Folowing this link to accept invitation: http://eventifypu.com/requests/"
-            send_mail(subject=subject, from_email=from_email, recipient_list=to_email, message=message,
+                request.user) + " sent you a friend request! Follow this link " \
+                                "to accept invitation: http://eventifypu.com/requests/"
+            send_mail(subject=subject,
+                      from_email=from_email,
+                      recipient_list=to_email,
+                      message=message,
                       fail_silently=False)
 
     messages.info(request, f'Request sent. ')
@@ -233,7 +239,9 @@ def accept_request(request):
     if user.profile.on_event_invite:
         notification = Notification.objects.create(
             user=user,
-            text='{} {} accepted your contact request.'.format(str(request.user.first_name), str(request.user.last_name)),
+            text='{} {} accepted your contact request.'.format(
+                str(request.user.first_name),
+                str(request.user.last_name)),
             type="profile"
         )
 
@@ -244,7 +252,10 @@ def accept_request(request):
             from_email = settings.EMAIL_HOST_USER
             to_email = [user.email]
             message = str(request.user) + " accepted your friend request! "
-            send_mail(subject=subject, from_email=from_email, recipient_list=to_email, message=message,
+            send_mail(subject=subject,
+                      from_email=from_email,
+                      recipient_list=to_email,
+                      message=message,
                       fail_silently=False)
 
     messages.success(request, f'Request has been accepted. ')
@@ -270,7 +281,9 @@ def decline_request(request):
 
     notification = Notification.objects.create(
         user=user,
-        text='{} {} declined your contact request.'.format(str(request.user.first_name), str(request.user.last_name)),
+        text='{} {} declined your contact request.'.format(
+            str(request.user.first_name),
+            str(request.user.last_name)),
         type="sent_requests"
     )
 
@@ -358,7 +371,6 @@ def search_user_event(request):
     """
     search = str(request.POST.get('search-field', False))
     event = Post.objects.get(pk=int(request.POST.get('event-id', False)))
-
 
     search_result = list(event.attendees.filter(
         Q(username__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search)
