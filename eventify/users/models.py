@@ -49,7 +49,7 @@ class Profile(models.Model):
         "To string"-method. Defines what that is to be returned when someone prints out an instance of this model.
         :return: The ID of the user it is called upon.
         """
-        return self.user.id
+        return str(self.user.id)
 
     def save(self, *args, **kwargs):
         """
