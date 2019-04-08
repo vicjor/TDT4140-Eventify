@@ -38,11 +38,11 @@ class TestEvent(TestCase):
                                           content='Sykveld i hovedstaden')
         self.c = Client(HTTP_USER_AGENT='Mozilla/5.0')
 
-    def test__view_denies_anonymous(self):
+    def test_joinevent_denies_anonymous(self):
         response = self.c.get('/event/join/', follow=True)
         self.assertRedirects(response, '/login/?next=/event/join/')
 
-    def test_call_view_loads(self):
+    def test_join_and_leave_event(self):
         self.c.post('/login/', {'username': 'ole', 'password': 'oletest123'})
         response = self.c.get('/event/join/', follow=True, title='Strikkekveld')
         self.assertEqual(response.status_code, 200)
