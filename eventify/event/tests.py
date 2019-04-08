@@ -46,7 +46,7 @@ class TestEvent(TestCase):
         self.c.post('/login/', {'username': 'ole', 'password': 'oletest123'})
         response = self.c.get('/event/join/', follow=True, title='Sykveld')
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(self.user1 in self.event2.attendees.all())
+        self.assertTrue(not self.user1 in self.event2.attendees.all())
 
     """def test_call_view_fails_blank(self):
         self.client.login(username='user', password='test')
