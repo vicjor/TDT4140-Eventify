@@ -25,13 +25,14 @@ stages:
  
 test:
   stage: test
-  image: python:latest
+  image: python:3.6
   script:
    - pip install -r requirements.txt
    - ls -l
    - cd eventify
    - rm db.sqlite3
    - rm eventify/db.sqlite3
+   - python manage.py makemigrations
    - python manage.py migrate
    - python manage.py test
  

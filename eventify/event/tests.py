@@ -32,16 +32,21 @@ class TestEvent(TestCase):
     def setUp(self):
         self.user1 = User.objects.create_user(username='Ole', email='ole@mail.no', password='oletest123')
         self.user2 = User.objects.create_user(username='Sjur', email='sjur@mail.no', password='sjurtest123')
+        self.event1 = Post.objects.create(title='Strikkekveld', author=self.user1, location='Trondheim',
+                                          content='Syk strikkekveld i Trondheim')
+        self.event2 = Post.objects.create(title='Sykveld', author=self.user2, location='Oslo',
+                                          content='Sykveld i hovedstaden')
         self.c = Client(HTTP_USER_AGENT='Mozilla/5.0')
 
-    def test__view_denies_anonymous(self):
+    def test_join_event_denies_anonymous(self):
         response = self.c.get('/event/join/', follow=True)
         self.assertRedirects(response, '/login/')
 
-    def test_call_view_loads(self):
-        self.c.login(username='Ole', password='oletest123')
-        response = self.c.get('/event/join/')
+    def test_join_and_leave_event(self):
+        self.c.post('/login/', {'username': 'Ole', 'password': 'oletest123'})
+        response = self.c.get('/event/join/', title='Sykveld')
         self.assertEqual(response.status_code, 200)
+        self.assertTrue(self.user1 in self.event2.attendees().all())
 
     """def test_call_view_fails_blank(self):
         self.client.login(username='user', password='test')
