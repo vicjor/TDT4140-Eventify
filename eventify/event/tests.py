@@ -40,7 +40,7 @@ class TestEvent(TestCase):
 
     def test_join_event_denies_anonymous(self):
         response = self.c.get('/event/join/', follow=True)
-        self.assertRedirects(response, '/login/')
+        self.assertRedirects(response, '/login/?next=/event/join/')
 
     def test_join_and_leave_event(self):
         self.c.post('/login/', {'username': 'Ole', 'password': 'oletest123'})
@@ -75,8 +75,8 @@ class PostTestCase(TestCase):
                                           content='Sykveld i hovedstaden')
 
     def test_author(self):
-        self.assertEqual(self.event1.author, 'Ole')
-        self.assertEqual(self.event2.author, 'Sjur')
+        self.assertEqual(str(self.event1.author), 'Ole')
+        self.assertEqual(str(self.event2.author), 'Sjur')
 
 
     """ Disse flyttes til TestEvent
