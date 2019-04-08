@@ -43,10 +43,10 @@ class TestEvent(TestCase):
         self.assertRedirects(response, '/login/?next=/event/join/')
 
     def test_join_and_leave_event(self):
-        self.c.post('/login/', {'username': 'Ole', 'password': 'oletest123'})
-        response = self.c.get('/event/join/', title='Sykveld')
+        self.c.post('/login/', {'username': 'ole', 'password': 'oletest123'})
+        response = self.c.get('/event/join/', follow=True, title='Sykveld')
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(self.user1 in self.event2.attendees().all())
+        self.assertTrue(self.user1 in self.event2.attendees.all())
 
     """def test_call_view_fails_blank(self):
         self.client.login(username='user', password='test')
