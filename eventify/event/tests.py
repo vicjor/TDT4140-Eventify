@@ -32,15 +32,19 @@ class TestEvent(TestCase):
     def setUp(self):
         self.user1 = User.objects.create_user(username='Ole', email='ole@mail.no', password='oletest123')
         self.user2 = User.objects.create_user(username='Sjur', email='sjur@mail.no', password='sjurtest123')
+        self.event1 = Post.objects.create(title='Strikkekveld', author=self.user1, location='Trondheim',
+                                          content='Syk strikkekveld i Trondheim')
+        self.event2 = Post.objects.create(title='Sykveld', author=self.user2, location='Oslo',
+                                          content='Sykveld i hovedstaden')
         self.c = Client(HTTP_USER_AGENT='Mozilla/5.0')
 
     def test__view_denies_anonymous(self):
         response = self.c.get('/event/join/', follow=True)
-        self.assertRedirects(response, '/login/')
+        self.assertRedirects(response, '/login/?next=/event/join/')
 
     def test_call_view_loads(self):
-        self.c.login(username='Ole', password='oletest123')
-        response = self.c.get('/event/join/')
+        self.c.post('/login/', {'username': 'ole', 'password': 'oletest123'})
+        response = self.c.get('/event/join/', follow=True, title='Strikkekveld')
         self.assertEqual(response.status_code, 200)
 
     """def test_call_view_fails_blank(self):
@@ -70,8 +74,8 @@ class PostTestCase(TestCase):
                                           content='Sykveld i hovedstaden')
 
     def test_author(self):
-        self.assertEqual(self.event1.author, 'Ole')
-        self.assertEqual(self.event2.author, 'Sjur')
+        self.assertEqual(str(self.event1.author), 'Ole')
+        self.assertEqual(str(self.event2.author), 'Sjur')
 
 
     """ Disse flyttes til TestEvent
