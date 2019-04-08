@@ -1,21 +1,8 @@
-from unittest.mock import *
-from django.core.files.base import ContentFile
-from django.test import TestCase
-from .models import User, Profile
-from PIL import Image
-from django.test import Client
+from django.test import SimpleTestCase
+from django.contrib.auth.models import User
+from users.models import Profile
 
-
-
-# Create your tests here.
-
-
-@classmethod
-def setUpClass(cls):
-    pass
-
-
-class ModelTestCase(TestCase):
+class ModelTestCase(SimpleTestCase):
     def setUp(self):
         print("Setting up: UserTestCase")
         self.user1 = User.objects.create_user(username='Ole', email='ole@mail.no', password='ole')
