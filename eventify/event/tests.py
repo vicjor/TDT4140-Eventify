@@ -1,5 +1,6 @@
 from django.test import TestCase, RequestFactory, Client
 from .models import Post
+from users.models import *
 from .forms import UploadFileForm
 from .urls import urlpatterns
 from django.contrib.auth.models import User
@@ -30,12 +31,25 @@ class UrlsTestCase(TestCase):
 # Integration test of Event's functionality from the users "view"
 class TestEvent(TestCase):
     def setUp(self):
-        self.user1 = User.objects.create_user(username='Ole', email='ole@mail.no', password='oletest123')
-        self.user2 = User.objects.create_user(username='Sjur', email='sjur@mail.no', password='sjurtest123')
+        self.user1 = User.objects.create_user(username='OleSuperDuper', email='ole@mail.no')
+        self.user1.set_password('oletest123')
+        self.user1.id = 116
+
+        self.profile1 = Profile.objects.create(user=self.user1)
+
+        self.user2 = User.objects.create_user(username='SjurSuperDuper', email='sjur@mail.no')
+        self.user2.set_password('sjurtest123')
+        self.user2.id = 117
+
+        self.profile2 = Profile.objects.create(user=self.user2)
+
         self.event1 = Post.objects.create(title='Strikkekveld', author=self.user1, location='Trondheim',
                                           content='Syk strikkekveld i Trondheim')
+        self.event1.save()
         self.event2 = Post.objects.create(title='Sykveld', author=self.user2, location='Oslo',
                                           content='Sykveld i hovedstaden')
+        self.event2.save()
+
         self.c = Client(HTTP_USER_AGENT='Mozilla/5.0')
 
     def test_join_event_denies_anonymous(self):
@@ -43,10 +57,9 @@ class TestEvent(TestCase):
         self.assertRedirects(response, '/login/?next=/event/join/')
 
     def test_join_and_leave_event(self):
-        self.c.post('/login/', {'username': 'Ole', 'password': 'oletest123'})
-        response = self.c.get('/event/join/', title='Sykveld')
+        self.c.post('/login/', {'username': self.user1.username, 'password': self.user1.password})
+        response = self.c.get('/event/join/', follow=True, title='Sykveld')
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(self.user1 in self.event2.attendees().all())
 
     """def test_call_view_fails_blank(self):
         self.client.login(username='user', password='test')
