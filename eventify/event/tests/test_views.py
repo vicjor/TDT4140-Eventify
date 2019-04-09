@@ -50,6 +50,13 @@ class TestEvent(TestCase):
         response = self.c.get('/')
         self.assertEqual(response.status_code, 200)
 
+    def test_add_and_remove_host(self):
+        self.c.login(username='ole', password='oletest123')
+        response = self.c.post('/add-host/', {'event-id': self.event1.id, 'user-id': self.user2.id}, follow=True)
+        self.assertEqual(response.status_code, 200)
+
+
+
     """def test_call_view_fails_blank(self):
         self.client.login(username='user', password='test')
         response = self.client.post('/url/to/view', {}) # blank data dictionary
