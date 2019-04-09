@@ -33,10 +33,8 @@ test:
    - cd eventify
    - rm db.sqlite3
    - rm eventify/db.sqlite3
-   #- yes | python manage.py makemigrations --merge
-   #- python manage.py migrate eventify
    - python manage.py makemigrations
    - python manage.py migrate
    - python manage.py test
-   #- coverage run --source='.' manage.py test -v3
-   #- coverage html
+   - coverage run --source='.' manage.py test -v3
+   - coverage report
