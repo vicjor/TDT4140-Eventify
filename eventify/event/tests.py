@@ -6,6 +6,7 @@ from .urls import urlpatterns
 from django.contrib.auth.models import User
 from django.urls import resolve
 from django.urls import reverse
+from users.models import Profile
 
 
 # Create your tests here.
@@ -16,65 +17,51 @@ class FormsTestCase(TestCase):
         self.assertTrue(form.is_valid())
 
 
-""" Ikke verdt å teste
-class UrlsTestCase(TestCase):
-    def test_reverse(self):
-        url = reverse('user', args=['axel_kjonsberg'])
-        self.assertEqual(url, '/user/axel_kjonsberg/')
-
-    def test_resolve(self):
-        resolver = resolve('/events/')
-        self.assertEqual(resolver.view_name, 'events')
-"""
-
-
 # Integration test of Event's functionality from the users "view"
 class TestEvent(TestCase):
     def setUp(self):
-        self.user1 = User.objects.create_user(username='OleSuperDuper', email='ole@mail.no')
-        self.user1.set_password('oletest123')
-        self.user1.id = 116
-
-        self.profile1 = Profile.objects.create(user=self.user1)
-
-        self.user2 = User.objects.create_user(username='SjurSuperDuper', email='sjur@mail.no')
-        self.user2.set_password('sjurtest123')
-        self.user2.id = 117
-
-        self.profile2 = Profile.objects.create(user=self.user2)
-
+        self.user1 = User.objects.create_user(username='ole', email='ole@mail.no', password='oletest123')
+        self.user2 = User.objects.create_user(username='sjur', email='sjur@mail.no', password='sjurtest123')
         self.event1 = Post.objects.create(title='Strikkekveld', author=self.user1, location='Trondheim',
-                                          content='Syk strikkekveld i Trondheim')
-        self.event1.save()
+                                          content='Syk strikkekveld i Trondheim', id=123)
         self.event2 = Post.objects.create(title='Sykveld', author=self.user2, location='Oslo',
-                                          content='Sykveld i hovedstaden')
-        self.event2.save()
-
+                                          content='Sykveld i hovedstaden', id=124)
         self.c = Client(HTTP_USER_AGENT='Mozilla/5.0')
 
     def test_join_event_denies_anonymous(self):
-        response = self.c.get('/event/join/', follow=True)
+        response = self.c.post('/event/join/', follow=True)
         self.assertRedirects(response, '/login/?next=/event/join/')
 
     def test_join_and_leave_event(self):
-        self.c.post('/login/', {'username': self.user1.username, 'password': self.user1.password})
-        response = self.c.get('/event/join/', follow=True, title='Sykveld')
+        self.c.login(username='ole', password='oletest123')
+        response = self.c.post('/event/join/', {'event-id': self.event2.id}, follow=True)
+        self.assertEqual(response.status_code, 200)
+        response = self.c.post('/event/leave/', {'event-id': self.event2.id}, follow=True)
         self.assertEqual(response.status_code, 200)
 
-    """def test_call_view_fails_blank(self):
-        self.client.login(username='user', password='test')
-        response = self.client.post('/url/to/view', {}) # blank data dictionary
-        self.assertFormError(response, 'form', 'some_field', 'This field is required.')
-        # etc. ...
-    
+    def test_invite_friend_and_cancel_invite(self):
+        self.c.login(username='ole', password='oletest123')
+        response = self.c.get('/invite-friends/123/', follow=True)
+        self.assertEqual(response.status_code, 200)
+        response = self.c.post('/send-invite/', {'event-id':self.event2.id, 'user-id':self.user2.id}, follow = True)
+        self.assertEqual(response.status_code, 200)
+        response = self.c.post('/cancel-invite/', {'event-id':self.event2.id, 'user-id':self.user2.id}, follow = True)
+        self.assertEqual(response.status_code,200)
 
-    def test_call_view_fails_invalid(self):
-        # as above, but with invalid rather than blank data in dictionary
+    def create_and_delete_event(self):
+        #Denne er jeg veldig usikker på om faktisk tester noe fornuftig, men den er nå her.
+        self.c.login(username='ole', password='oletest123')
+        response = self.c.post('/event/new/',{'id':3}, follow=True)
+        self.assertEqual(response.status_code,200)
+        response=self.c.get('/event/3')
+        self.assertEqual(response.status_code,200)
+        response=self.c.post('/event/3/delete/', follow=True)
+        self.assertEqual(response.status_code, 200)
 
-    def test_call_view_fails_invalid(self):
-        # same again, but with valid data, then
-        self.assertRedirects(response, '/contact/1/calls/')
-    """
+    def test_home_page(self):
+        response = self.c.get('/')
+        self.assertEqual(response.status_code, 200)
+
 
 
 class PostTestCase(TestCase):
@@ -92,17 +79,6 @@ class PostTestCase(TestCase):
         self.assertEqual(str(self.event2.author), 'Sjur')
 
 
-    """ Disse flyttes til TestEvent
-        def test_join_event(self):
-            self.assertTrue(self.user1 in self.event2.attendees().all())
-            self.assertTrue(self.user2 in self.event1.attendees().all())
-    
-        def test_leave_event(self):
-            self.user1.eventLeave(self.event2)
-            self.user2.eventLeave(self.event1)
-            self.assertTrue(self.user1 not in self.event2.attendees().all())
-            self.assertTrue(self.user2 not in self.event1.attendees().all())
-    """
 
     def test_pre_save_hook(self):
         self.event1.title = 'Heklekveld'
@@ -115,6 +91,3 @@ class PostTestCase(TestCase):
     def test_absolute_url(self):
         self.assertFalse(self.event1.get_absolute_url() == self.event2.get_absolute_url())
 
-    # def test_search(self):
-    # def test_remove_event(self):
-    # def test_update_event(self):
