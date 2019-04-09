@@ -32,7 +32,10 @@ test:
    - cd eventify
    - rm db.sqlite3
    - rm eventify/db.sqlite3
-   - python manage.py makemigrations
-   - python manage.py migrate
+   #- python manage.py makemigrations
+   #- python manage.py migrate
    - python manage.py test
+   - coverage: '/Code coverage: ^TOTAL\s+\d+\s+\d+\s+(\d+\%)$'
+   - coverage run --source='.' manage.py test -v3
+   - coverage html
  
