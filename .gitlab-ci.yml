@@ -34,7 +34,7 @@ test:
    - rm db.sqlite3
    - rm eventify/db.sqlite3
    #- yes | python manage.py makemigrations --merge
-   - python manage.py migrate eventify
+   #- python manage.py migrate eventify
    - python manage.py makemigrations
    - python manage.py migrate
    - python manage.py test
