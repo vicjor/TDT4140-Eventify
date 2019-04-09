@@ -8,34 +8,46 @@ from event.models import Post
 # Integration test of Event's functionality from the users "view"
 class TestEvent(SimpleTestCase):
     def setUp(self):
-        self.user1 = User.objects.create_user(username='OleSuperDuper', email='ole@mail.no')
-        self.user1.set_password('oletest123')
-        self.user1.id = 116
-
-        self.profile1 = Profile.objects.create(user=self.user1)
-
-        self.user2 = User.objects.create_user(username='SjurSuperDuper', email='sjur@mail.no')
-        self.user2.set_password('sjurtest123')
-        self.user2.id = 117
-
-        self.profile2 = Profile.objects.create(user=self.user2)
-
+        self.user1 = User.objects.create_user(username='ole', email='ole@mail.no', password='oletest123')
+        self.user2 = User.objects.create_user(username='sjur', email='sjur@mail.no', password='sjurtest123')
         self.event1 = Post.objects.create(title='Strikkekveld', author=self.user1, location='Trondheim',
-                                          content='Syk strikkekveld i Trondheim')
-        self.event1.save()
+                                          content='Syk strikkekveld i Trondheim', id=123)
         self.event2 = Post.objects.create(title='Sykveld', author=self.user2, location='Oslo',
-                                          content='Sykveld i hovedstaden')
-        self.event2.save()
-
+                                          content='Sykveld i hovedstaden', id=124)
         self.c = Client(HTTP_USER_AGENT='Mozilla/5.0')
 
     def test_join_event_denies_anonymous(self):
-        response = self.c.get('/event/join/', follow=True)
+        response = self.c.post('/event/join/', follow=True)
         self.assertRedirects(response, '/login/?next=/event/join/')
 
     def test_join_and_leave_event(self):
-        self.c.post('/login/', {'username': self.user1.username, 'password': self.user1.password})
-        response = self.c.get('/event/join/', follow=True, title='Sykveld')
+        self.c.login(username='ole', password='oletest123')
+        response = self.c.post('/event/join/', {'event-id': self.event2.id}, follow=True)
+        self.assertEqual(response.status_code, 200)
+        response = self.c.post('/event/leave/', {'event-id': self.event2.id}, follow=True)
+        self.assertEqual(response.status_code, 200)
+
+    def test_invite_friend_and_cancel_invite(self):
+        self.c.login(username='ole', password='oletest123')
+        response = self.c.get('/invite-friends/123/', follow=True)
+        self.assertEqual(response.status_code, 200)
+        response = self.c.post('/send-invite/', {'event-id': self.event2.id, 'user-id': self.user2.id}, follow=True)
+        self.assertEqual(response.status_code, 200)
+        response = self.c.post('/cancel-invite/', {'event-id': self.event2.id, 'user-id': self.user2.id}, follow=True)
+        self.assertEqual(response.status_code, 200)
+
+    def create_and_delete_event(self):
+        # Denne er jeg veldig usikker på om faktisk tester noe fornuftig, men den er nå her.
+        self.c.login(username='ole', password='oletest123')
+        response = self.c.post('/event/new/', {'id': 3}, follow=True)
+        self.assertEqual(response.status_code, 200)
+        response = self.c.get('/event/3')
+        self.assertEqual(response.status_code, 200)
+        response = self.c.post('/event/3/delete/', follow=True)
+        self.assertEqual(response.status_code, 200)
+
+    def test_home_page(self):
+        response = self.c.get('/')
         self.assertEqual(response.status_code, 200)
 
     """def test_call_view_fails_blank(self):
