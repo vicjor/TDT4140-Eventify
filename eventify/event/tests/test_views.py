@@ -1,4 +1,4 @@
-from django.test import SimpleTestCase, RequestFactory, Client
+from django.test import TestCase, RequestFactory, Client
 from django.contrib.auth.models import User
 
 from users.models import *
@@ -6,7 +6,7 @@ from event.models import Post
 
 
 # Integration test of Event's functionality from the users "view"
-class TestEvent(SimpleTestCase):
+class TestEvent(TestCase):
     def setUp(self):
         self.user1 = User.objects.create_user(username='ole', email='ole@mail.no', password='oletest123')
         self.user2 = User.objects.create_user(username='sjur', email='sjur@mail.no', password='sjurtest123')

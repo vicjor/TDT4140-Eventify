@@ -1,8 +1,8 @@
-from django.test import SimpleTestCase
+from django.test import TestCase
 from django.contrib.auth.models import User
 from users.models import Profile
 
-class ModelTestCase(SimpleTestCase):
+class ModelTestCase(TestCase):
     def setUp(self):
         print("Setting up: UserTestCase")
         self.user1 = User.objects.create_user(username='Ole', email='ole@mail.no', password='ole')

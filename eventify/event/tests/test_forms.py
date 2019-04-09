@@ -1,9 +1,9 @@
-from django.test import SimpleTestCase
+from django.test import TestCase
 
 from event.forms import UploadFileForm
 
 
-class TestForms(SimpleTestCase):
+class TestForms(TestCase):
     def test_upload_file_form_valid_data(self):
         form_data = {'something'}
         form = UploadFileForm(data=form_data)

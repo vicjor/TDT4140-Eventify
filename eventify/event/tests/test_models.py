@@ -1,9 +1,9 @@
-from django.test import SimpleTestCase
+from django.test import TestCase
 from django.contrib.auth.models import User
 from event.models import Post
 
 
-class PostTestCase(SimpleTestCase):
+class PostTestCase(TestCase):
     def setUp(self):
         print("Setting up: PostTestCase")
         self.user1 = User.objects.create_user(username='Ole', email='ole@mail.no', password='oletest123')
