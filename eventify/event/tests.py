@@ -6,6 +6,7 @@ from .urls import urlpatterns
 from django.contrib.auth.models import User
 from django.urls import resolve
 from django.urls import reverse
+from users.models import Profile
 
 
 # Create your tests here.
@@ -61,6 +62,9 @@ class TestEvent(TestCase):
         response = self.c.get('/event/join/', follow=True, title='Sykveld')
         self.assertEqual(response.status_code, 200)
 
+
+
+
     """def test_call_view_fails_blank(self):
         self.client.login(username='user', password='test')
         response = self.client.post('/url/to/view', {}) # blank data dictionary
@@ -80,11 +84,19 @@ class TestEvent(TestCase):
 class PostTestCase(TestCase):
     def setUp(self):
         print("Setting up: PostTestCase")
-        self.user1 = User.objects.create_user(username='Ole', email='ole@mail.no', password='oletest123')
-        self.user2 = User.objects.create_user(username='Sjur', email='sjur@mail.no', password='sjurtest123')
-        self.event1 = Post.objects.create(title='Strikkekveld', author=self.user1, location='Trondheim',
+        self.user1 = User.objects.create_user(username='Ole',
+                                              email='ole@mail.no',
+                                              password='oletest123')
+        self.user2 = User.objects.create_user(username='Sjur',
+                                              email='sjur@mail.no',
+                                              password='sjurtest123')
+        self.event1 = Post.objects.create(title='Strikkekveld',
+                                          author=self.user1,
+                                          location='Trondheim',
                                           content='Syk strikkekveld i Trondheim')
-        self.event2 = Post.objects.create(title='Sykveld', author=self.user2, location='Oslo',
+        self.event2 = Post.objects.create(title='Sykveld',
+                                          author=self.user2,
+                                          location='Oslo',
                                           content='Sykveld i hovedstaden')
 
     def test_author(self):
