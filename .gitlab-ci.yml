@@ -26,6 +26,7 @@ stages:
 test:
   stage: test
   image: python:3.6
+  coverage: '/TOTAL\s+\d+\s+\d+\s+(\d+%)/'
   script:
    - pip install -r requirements.txt
    - ls -l
@@ -37,4 +38,3 @@ test:
    - python manage.py test
    - coverage run --source='.' manage.py test -v3
    - coverage html
-   coverage:'\d+\%\s+$'
