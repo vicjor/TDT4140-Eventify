@@ -32,7 +32,7 @@ test:
    - cd eventify
    - rm db.sqlite3
    - rm eventify/db.sqlite3
-   - python manage.py makemigrations --merge
+   - python manage.py makemigrations
    - python manage.py migrate
    - python manage.py test
  
