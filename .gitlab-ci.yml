@@ -41,7 +41,7 @@ test:
    - coverage report --omit=*/tests/* --omit=*/wsgi.py --omit=manage.py
   artifacts:
     paths:
-      htmlcov/
+      - htmlcov/
       
 pages:
   stage: deploy
