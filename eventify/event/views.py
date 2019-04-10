@@ -781,7 +781,7 @@ class EventViews:
         event = Post.objects.get(pk=event_id)
         user_id = int(request.POST.get('user-id', False))
         user = User.objects.get(pk=user_id)
-
+        print(event_id)
         if user in event.co_authors.all():
             event.co_authors.remove(user)
             messages.info(request, f'User removed as admin')
