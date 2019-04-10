@@ -74,7 +74,13 @@ To do this, navigate to /gruppe-33 and run the following  command in Terminal:
 7. Go to 127.0.0.1:8000 or localhost:8000 to browse our site
     
 ### Tests
-@Axel!
+All written tests are currently written with respect to the Django framework.
+All test cases are therefore instances of `django.test.TestCase`, and most of them depend on the `django.test.Client` class.
+These tests can be run manually by running the following command: `python eventify/manage.py test`.
+If you would like to run only a subset of the tests or run them individually, add the dotted path like so: `python eventify/manage.py event.tests.test_views`.
+
+The GitLab project also utilizes gitlab runners to automatically run all tests after every push. 
+The test results and the projects test coverage is published afterwards.
 
 #### Contribute
 Want to contribute? Check out our [GitLab Page](https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-33/wikis/%23Vedlikeholdsplan/Rutiner-for-evolusjon-og-endring)
