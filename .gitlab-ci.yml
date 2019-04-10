@@ -37,4 +37,21 @@ test:
    - python manage.py migrate
    - python manage.py test
    - coverage run --source='.' manage.py test -v3
+   - coverage html
    - coverage report --omit=*/tests/* --omit=*/wsgi.py --omit=manage.py
+  artifacts:
+    paths:
+      htmlcov/
+      
+pages:
+  stage: deploy
+  dependencies:
+    - test
+  script:
+    - mv htmlcov/ public/
+  artifacts:
+    paths:
+      - public
+    expire_in: 30 days
+  only:
+    - master
