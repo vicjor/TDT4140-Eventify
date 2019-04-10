@@ -18,7 +18,7 @@ Denne forutsetter at CI er på plass. Skal være et slags "bilde" som viser om p
 ![Build status](https://camo.githubusercontent.com/fa00b92302c0b97620b5a33bded99e3c09436479/68747470733a2f2f7472617669732d63692e6f72672f616b6173686e696d6172652f666f636f2e7376673f6272616e63683d6d6173746572)
 
 ### Code style    
-All logic is written in Pyhton and we have followed PEP8-standard for all coding.
+All logic is written in Pyhton and we have followed PEP8-standard for all coding.  
 ![Code style](https://camo.githubusercontent.com/d0f65430681b67b7104f6130ada8c098ec5f66ba/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f636f64652532307374796c652d7374616e646172642d627269676874677265656e2e7376673f7374796c653d666c6174)
 
 When it comes to documentation we tried writing code that is self documenting, i.e. that it is enough to read the code to understand what it does. In addition to this, we have also documented all functions in views.py-files.
@@ -67,7 +67,8 @@ To do this, navigate to /gruppe-33 and run the following  command in Terminal:
 4. Create a virtual environment.  
     `$ virtualenv venv`
 5. Activate the virtual environment by typing   
-`$ . venv/bin/activate`. You should now see (venv) in your command line, indicating venv is active.
+`$ . venv/bin/activate`. 
+You should now see (venv) in your command line, indicating venv is active.
 6. Get the database up to date
      `python eventify/manage.py migrate`
 7. Run the following command  
@@ -80,16 +81,16 @@ By entering "localhost:8000" you will land in a page with a default database. If
 ### Tests
 We have written 38 unit test as of today. These are mainly testing the back end functionality. If you want to run the tests you can use the following command in the terminal:
 
-python eventify/manage.py test
+    `python eventify/manage.py test`
 
 If you want to test a specific module (or app) you just append the name of the module behind the above command. For a more detailed report concerning the test coverage, you should run:
-
-coverage run --source="." eventify/manage.py test
-coverage report
+    
+    `coverage run --source="." eventify/manage.py test`
+    `coverage report`
 
 For an even more detailed report, where you can see which lines are tested and which are not, you type:
-
-coverage html
+    
+    `coverage html`
 
 A folder full with HTML files will then be generated. If you open the one called "index.html" in your default browser, you can select all the .py files in the project and see how the test coverage spread over the lines.
 
