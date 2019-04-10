@@ -81,16 +81,16 @@ By entering "localhost:8000" you will land in a page with a default database. If
 ### Tests
 We have written 38 unit test as of today. These are mainly testing the back end functionality. If you want to run the tests you can use the following command in the terminal:
  
-    `$ python eventify/manage.py test`
+    `python eventify/manage.py test`
 
 If you want to test a specific module (or app) you just append the name of the module behind the above command. For a more detailed report concerning the test coverage, you should run:
     
-    `$ coverage run --source="." eventify/manage.py test`
-    `$ coverage report`
+    `coverage run --source="." eventify/manage.py test`
+    `coverage report`
 
 For an even more detailed report, where you can see which lines are tested and which are not, you type:
     
-    `$ coverage html`
+    `coverage html`
 
 A folder full with HTML files will then be generated. If you open the one called "index.html" in your default browser, you can select all the .py files in the project and see how the test coverage spread over the lines.
 
