@@ -79,7 +79,11 @@ By entering "localhost:8000" you will land in a page with a default database. If
 
     
 ### Tests
-We have written 38 unit test as of today. These are mainly testing the back end functionality. If you want to run the tests you can use the following command in the terminal:
+We have written 38 unit test as of today. These are mainly testing the back end functionality. The current total test coverage is:
+
+![coverage](https://gitlab.com/gitlab-org/gitlab-ce/badges/master/coverage.svg?job=coverage)
+
+If you want to run the tests you can use the following command in the terminal:
  
     `python eventify/manage.py test`
 
