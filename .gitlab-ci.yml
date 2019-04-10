@@ -37,4 +37,4 @@ test:
    - python manage.py migrate
    - python manage.py test
    - coverage run --source='.' manage.py test -v3
-   - coverage report
+   - coverage report --omit=*/tests/* --omit=*/wsgi.py --omit=manage.py
