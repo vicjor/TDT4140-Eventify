@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+import pytz
 from django.contrib.auth.models import User
 from django.urls import reverse
 from PIL import Image
@@ -16,8 +17,8 @@ class Post(models.Model):
     price = models.FloatField(default=0, blank=True, null=True)
     attendees = models.ManyToManyField(User, related_name='attendees')
     waiting_list = models.ManyToManyField(User, related_name='waiting_list')
-    start_date = models.DateTimeField(null=True, blank=True)
-    end_date = models.DateTimeField(null=True, blank=True)
+    start_date = models.DateTimeField(null=True, blank=True, default=timezone.now)
+    end_date = models.DateTimeField(null=True, blank=True, default=timezone.now)
     attendance_limit = models.PositiveIntegerField(null=True, default=10000, blank=True)
     waiting_list_limit = models.PositiveIntegerField(null=True, default=0, blank=True, )
     location = models.CharField(max_length=100, null=True)

@@ -65,7 +65,7 @@ urlpatterns = [
     path('change-on-event-update-delete/', user_views.change_on_event_update_delete, name='update-delete'),
     path('change-on-event-host/', user_views.change_on_event_host, name='event-host'),
     path('edit-notifications/', user_views.redirect_to_not, name='to-notifications'),
-    path('delete-notifications', user_views.delete_notifications, name='delete-notifications')
+    path('delete-notifications/', user_views.delete_notifications, name='delete-notifications')
 ]
 
 if settings.DEBUG:
