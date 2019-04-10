@@ -530,7 +530,7 @@ class EventViews:
                 )
                 user.profile.notifications.add(notification)
 
-        return redirect('attendee-list', pk=event_id)
+        return redirect('attendee-list', event_id)
 
     @login_required
     def leave_event(request):
@@ -799,7 +799,7 @@ class EventViews:
 
             user.profile.notifications.add(notification)
 
-        return redirect('attendee-list', pk=event_id)
+        return redirect('attendee-list', event_id)
 
 
 class Utility:
