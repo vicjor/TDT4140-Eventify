@@ -112,13 +112,13 @@ def check_valid_card(card, sec, month, year, amount):
     :param amount: The amount the user wants to deposit to its card. Must be an integer.
     :return: True if all input is valid, false otherwise.
     """
-    if len(card) != 16 or not card.isdigit():
+    if len(str(card)) != 16 or not card.isdigit():
         return False
-    if len(sec) != 3 or not sec.isdigit():
+    if len(str(sec)) != 3 or not sec.isdigit():
         return False
-    if len(month) != 2 or not month.isdigit() or int(month) > 12 or int(month) < 1:
+    if len(str(month)) != 2 or not month.isdigit() or int(month) > 12 or int(month) < 1:
         return False
-    if len(year) != 2 or not year.isdigit() or int(year) < 19:
+    if len(str(year)) != 2 or not year.isdigit() or int(year) < 19:
         return False
     if int(amount) < 0:
         return False
@@ -158,7 +158,6 @@ def get_users(request):
 
     return render(request, 'users/all_users.html', context)
 
-
 @login_required
 def add_contact(request):
     """
@@ -174,7 +173,7 @@ def add_contact(request):
     user.profile.requests.add(request.user)
     request.user.profile.sent_requests.add(user)
 
-    if user.profile.on_event_invite:
+    if user.profile.on_contact:
         notification = Notification.objects.create(
             user=user,
             text='{} {} sent you a contact request'.format(
