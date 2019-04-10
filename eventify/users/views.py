@@ -112,13 +112,13 @@ def check_valid_card(card, sec, month, year, amount):
     :param amount: The amount the user wants to deposit to its card. Must be an integer.
     :return: True if all input is valid, false otherwise.
     """
-    if len(card) != 16 or not card.isdigit():
+    if len(str(card)) != 16 or not card.isdigit():
         return False
-    if len(sec) != 3 or not sec.isdigit():
+    if len(str(sec)) != 3 or not sec.isdigit():
         return False
-    if len(month) != 2 or not month.isdigit() or int(month) > 12 or int(month) < 1:
+    if len(str(month)) != 2 or not month.isdigit() or int(month) > 12 or int(month) < 1:
         return False
-    if len(year) != 2 or not year.isdigit() or int(year) < 19:
+    if len(str(year)) != 2 or not year.isdigit() or int(year) < 19:
         return False
     if int(amount) < 0:
         return False
@@ -158,7 +158,6 @@ def get_users(request):
 
     return render(request, 'users/all_users.html', context)
 
-
 @login_required
 def add_contact(request):
     """
@@ -174,10 +173,12 @@ def add_contact(request):
     user.profile.requests.add(request.user)
     request.user.profile.sent_requests.add(user)
 
-    if user.profile.on_event_invite:
+    if user.profile.on_contact:
         notification = Notification.objects.create(
             user=user,
-            text='{} {} sent you a contact request'.format(str(request.user.first_name), str(request.user.last_name)),
+            text='{} {} sent you a contact request'.format(
+                str(request.user.first_name),
+                str(request.user.last_name)),
             type="new_request"
         )
 
@@ -188,8 +189,12 @@ def add_contact(request):
             from_email = settings.EMAIL_HOST_USER
             to_email = [user.email]
             message = str(
-                request.user) + " sent you a friend request! Folowing this link to accept invitation: http://eventifypu.com/requests/"
-            send_mail(subject=subject, from_email=from_email, recipient_list=to_email, message=message,
+                request.user) + " sent you a friend request! Follow this link " \
+                                "to accept invitation: http://eventifypu.com/requests/"
+            send_mail(subject=subject,
+                      from_email=from_email,
+                      recipient_list=to_email,
+                      message=message,
                       fail_silently=False)
 
     messages.info(request, f'Request sent. ')
@@ -233,7 +238,9 @@ def accept_request(request):
     if user.profile.on_event_invite:
         notification = Notification.objects.create(
             user=user,
-            text='{} {} accepted your contact request.'.format(str(request.user.first_name), str(request.user.last_name)),
+            text='{} {} accepted your contact request.'.format(
+                str(request.user.first_name),
+                str(request.user.last_name)),
             type="profile"
         )
 
@@ -244,7 +251,10 @@ def accept_request(request):
             from_email = settings.EMAIL_HOST_USER
             to_email = [user.email]
             message = str(request.user) + " accepted your friend request! "
-            send_mail(subject=subject, from_email=from_email, recipient_list=to_email, message=message,
+            send_mail(subject=subject,
+                      from_email=from_email,
+                      recipient_list=to_email,
+                      message=message,
                       fail_silently=False)
 
     messages.success(request, f'Request has been accepted. ')
@@ -270,7 +280,9 @@ def decline_request(request):
 
     notification = Notification.objects.create(
         user=user,
-        text='{} {} declined your contact request.'.format(str(request.user.first_name), str(request.user.last_name)),
+        text='{} {} declined your contact request.'.format(
+            str(request.user.first_name),
+            str(request.user.last_name)),
         type="sent_requests"
     )
 
@@ -358,7 +370,6 @@ def search_user_event(request):
     """
     search = str(request.POST.get('search-field', False))
     event = Post.objects.get(pk=int(request.POST.get('event-id', False)))
-
 
     search_result = list(event.attendees.filter(
         Q(username__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search)

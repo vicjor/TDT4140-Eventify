@@ -31,9 +31,9 @@ ALLOWED_HOSTS = ['188.166.34.41', 'localhost', 'eventifypu.com', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
-    'users.apps.UsersConfig',    #Legger til users.
-    'event.apps.EventConfig',   #Legger til en ny app fra event. Dette inkluderer alle nye HTML filer i templates/event
-    'crispy_forms',             #Bruker crispyforms
+    'users.apps.UsersConfig',    # Legger til users.
+    'event.apps.EventConfig',   # Legger til en ny app fra event. Dette inkluderer alle nye HTML filer i templates/event
+    'crispy_forms',             # Bruker crispyforms
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -135,5 +135,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'eventify.pu@gmail.com' #Dette er en vanlig gmail-konto, det er denne adressen du vil motta mail om reset fra
+EMAIL_HOST_USER = 'eventify.pu@gmail.com'       # Dette er en vanlig gmail-konto,
+                                                # det er denne adressen du vil motta mail om reset fra
 EMAIL_HOST_PASSWORD = 'Bruker123'   #Dette er passordet

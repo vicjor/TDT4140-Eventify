@@ -23,23 +23,29 @@ from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 
-# path(URL-pattern (ex. 'admin/' -> localhost:8000/admin/), method to whom you
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('get-cards/', user_views.get_credit_cards, name="get-cards"),
     path('register/', user_views.register, name="register"),
     path('profile/', user_views.profile, name="profile"),
     path('edit-profile/', user_views.editProfile, name="edit-profile"),
-    path('my-events/', event_views.HtmlRender.myEvents, name='my-events'),
+    path('my-events/', event_views.HtmlRender.my_events, name='my-events'),
     path('events/search/', event_views.EventViews.search_events, name='event-search'),
-    path('event/join/', event_views.EventViews.eventJoin, name='event-join'),
-    path('event/leave/', event_views.EventViews.leaveEvent, name='event-leave'),
+    path('event/join/', event_views.EventViews.event_join, name='event-join'),
+    path('event/leave/', event_views.EventViews.leave_event, name='event-leave'),
     path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name="login"),
     path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name="logout"),
-    path('password-reset/', auth_views.PasswordResetView.as_view(template_name='users/password_reset.html'), name="password_reset"),
-    path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='users/password_reset_done.html'), name="password_reset_done"),
-    path('password-reset-confirm/<uidb64>/<token>', auth_views.PasswordResetConfirmView.as_view(template_name='users/password_reset_confirm.html'), name="password_reset_confirm"),
-    path('password-reset-complete/', auth_views.PasswordResetCompleteView.as_view(template_name='users/password_reset_complete.html'), name="password_reset_complete"),
+    path('password-reset/', auth_views.PasswordResetView.as_view(template_name='users/password_reset.html'),
+         name="password_reset"),
+    path('password-reset/done/',
+        auth_views.PasswordResetDoneView.as_view(template_name='users/password_reset_done.html'),
+         name="password_reset_done"),
+    path('password-reset-confirm/<uidb64>/<token>',
+         auth_views.PasswordResetConfirmView.as_view(template_name='users/password_reset_confirm.html'),
+         name="password_reset_confirm"),
+    path('password-reset-complete/',
+         auth_views.PasswordResetCompleteView.as_view(template_name='users/password_reset_complete.html'),
+         name="password_reset_complete"),
     path('all-users/', user_views.get_users, name="all-users"),
     path('add-friend/', user_views.add_contact, name="add-contact"),
     path('accept-friend/', user_views.accept_request, name="accept-request"),
@@ -59,7 +65,7 @@ urlpatterns = [
     path('change-on-event-update-delete/', user_views.change_on_event_update_delete, name='update-delete'),
     path('change-on-event-host/', user_views.change_on_event_host, name='event-host'),
     path('edit-notifications/', user_views.redirect_to_not, name='to-notifications'),
-    path('delete-notifcations', user_views.delete_notifications, name='delete-notifications')
+    path('delete-notifications/', user_views.delete_notifications, name='delete-notifications')
 ]
 
 if settings.DEBUG:
