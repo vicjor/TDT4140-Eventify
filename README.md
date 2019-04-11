@@ -86,17 +86,17 @@ We are test-covering over 90% of our code as of today. These are mainly testing 
 
 ![coverage](https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-33/badges/master/coverage.svg)
 
-If you want to run the tests you can use the following command in the terminal:
+If you want to run the tests you can use the following command in the terminal:  
     `python eventify/manage.py test`
 
-If you want to test a specific module (or app) you just append the name of the module behind the above command. For a more detailed report concerning the test coverage, you should run:
+If you want to test a specific module (or app) you just append the name of the module behind the above command. For a more detailed report concerning the test coverage, you should run:  
     `coverage run --source="." eventify/manage.py test`
     `coverage report`
 
-For an even more detailed report, where you can see which lines are tested and which are not, you type:
+For an even more detailed report, where you can see which lines are tested and which are not, you type:  
     `coverage html`
 
-A folder full with HTML files will then be generated. If you open the one called "index.html" in your default browser, you can select all the .py files in the project and see how the test coverage spread over the lines.
+A folder full with HTML files will then be generated. If you open the one called "index.html" in your default browser, you can select all the .py files in the project and see how the test coverage spread over the lines.  
 
 #### Contribute
 Want to contribute? Check out our [GitLab Page for more information](https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-33/wikis/%23Vedlikeholdsplan/Rutiner-for-evolusjon-og-endring)
