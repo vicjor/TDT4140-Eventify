@@ -38,7 +38,7 @@ test:
    - python manage.py test
    - coverage run --source='.' manage.py test -v3
    - coverage html
-   - coverage report --omit=*tests*, *wsgi.py, manage.py
+   - coverage report --omit=*/tests, eventify/wsgi.py, manage.py
   artifacts:
     paths:
       - eventify/htmlcov/
