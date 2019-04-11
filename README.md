@@ -53,6 +53,19 @@ See our [gifs](https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-3
 #### Local version  
 Some users might want to run our website on localhost. To run the project you need Python version 3.6 or newer, git and pip installed. 
 
+##### Prerequisites 
+If you already have Git, pip and Python installed, you can skip directly to 'Installation'
+
+1. To install Python, type in your terminal
+    `sudo apt-get install python3`
+2. Install Git by typing the following command. If you don't have Git installed, this will prompt you to install it.
+    `git --version`
+3. Finally, install pip with this command
+    `sudo easy_install pip`
+
+That's it! Now you are all set for the installation of Eventify on your local machine.
+
+#### Installation
 To do so, follow these instructions:
 1. Clone our git repo in terminal  
    `$ git clone https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-33/`
