@@ -9,7 +9,7 @@ The group consists of six members, all 2nd year students at NTNU.
 
 
 ### Code style ![Code style](https://camo.githubusercontent.com/d0f65430681b67b7104f6130ada8c098ec5f66ba/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f636f64652532307374796c652d7374616e646172642d627269676874677265656e2e7376673f7374796c653d666c6174)
-All logic is written in Pyhton and we have followed PEP8-standard for all coding.
+All logic is written in Python and we have followed PEP8-standard for all coding.
 
 When it comes to documentation we tried writing code that is self documenting, i.e. that it is enough to read the code to understand what it does. In addition to this, we have also documented all functions in views.py-files.
 
