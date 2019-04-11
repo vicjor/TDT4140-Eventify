@@ -45,7 +45,7 @@ To make an account, press the "Register" button in the navbar.
 See our [gifs](https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-33/wikis/%23Vedlikeholdsplan/Brukermanual) for how to join and create events, register credit cards and make connections with your friends.
 
 ### Local version  
-Some users might want to run our website on localhost. To run the project you need Python version 3.6 or newer, Git and pip installed. 
+Some users might want to run our website on localhost. To run the project you need Python version 3.6 or newer, Git and pip installed. The following instructions assumes you are running Linux/MacOS. If you are a Windows user we recommend downloading (Git Bash)[https://gitforwindows.org/] to run the same commands.
 
 ##### Prerequisites 
 If you already have Git, pip and Python installed, you can skip directly to 'Installation'
@@ -100,8 +100,3 @@ A folder full with HTML files will then be generated. If you open the one called
 
 #### Contribute
 Want to contribute? Check out our [GitLab Page for more information](https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-33/wikis/%23Vedlikeholdsplan/Rutiner-for-evolusjon-og-endring)
-
-
-
-
-
