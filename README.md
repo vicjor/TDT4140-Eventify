@@ -1,5 +1,5 @@
 # Eventify  
-_By Victor Jørgensen, Sjur Wold, Eline Gotaas, Axel Kjønsberg, Katrine Nguyen and Ola Holte_
+_By Victor Jørgensen, Sjur Wold, Eline Gotaas, Axel Kjønsberg, Katrine Nguyen and Ola Holde_
 
 Eventify is a fictional service developed by Group 33 in the course TDT4140 Programvareutvikling at NTNU.
 The group consists of six members, all 2nd year students at NTNU.
