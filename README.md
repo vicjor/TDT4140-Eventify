@@ -5,17 +5,12 @@ Eventify is a fictional service developed by Group 33 in the course TDT4140 Prog
 The group consists of six members, all 2nd year students at NTNU.
 
 
-
 **You can find a short project description [here]()**  
 
   
 ### Motivation  
 Our motivation for this project is to fulfill all requirements specified in our project description and from our product owner. 
 
-### Build status
-(Droppes om vi ikke får inn CI)
-Denne forutsetter at CI er på plass. Skal være et slags "bilde" som viser om pipeline failer eller ikke. Droppes om vi ikke får på plass CI.  
-![Build status](https://camo.githubusercontent.com/fa00b92302c0b97620b5a33bded99e3c09436479/68747470733a2f2f7472617669732d63692e6f72672f616b6173686e696d6172652f666f636f2e7376673f6272616e63683d6d6173746572)
 
 ### Code style    
 All logic is written in Pyhton and we have followed PEP8-standard for all coding.  
@@ -30,9 +25,11 @@ Screenshot of the home page of [Eventify](https://eventufypu.com)
 For more visual documentation, visit [our user manual](https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-33/wikis/%23Vedlikeholdsplan/Brukermanual).
 
 ### Tech/framework used  
-- Django
-- Materialize
-- Bootstrap
+- Django - Python Web framework
+- Materialize - CSS framework
+- Bootstrap - CSS framework 
+- Digital Ocean - Virtual Private Server to host eventifypu.com
+- 
 
 ### Features  
 The following is a list of features implemented on our webpage:
@@ -51,10 +48,10 @@ The following is a list of features implemented on our webpage:
 #### Online version  
 Visit our website _https://eventifypu.com_
 To make an account, press the "Register" button in the navbar.
-See our gifs for how to join and create events, register credit cards and make connections with your friends.
+See our [gifs](https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-33/wikis/%23Vedlikeholdsplan/Brukermanual). for how to join and create events, register credit cards and make connections with your friends.
 
 #### Local version  
-Some users might want to run our website on localhost. To run the project you need Python version 3.6 or newer and git installed. 
+Some users might want to run our website on localhost. To run the project you need Python version 3.6 or newer, git and pip installed. 
 
 To do so, follow these instructions:
 1. Clone our git repo in terminal  
@@ -99,7 +96,7 @@ For an even more detailed report, where you can see which lines are tested and w
 A folder full with HTML files will then be generated. If you open the one called "index.html" in your default browser, you can select all the .py files in the project and see how the test coverage spread over the lines.
 
 #### Contribute
-Want to contribute? Check out our [GitLab Page](https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-33/wikis/%23Vedlikeholdsplan/Rutiner-for-evolusjon-og-endring)
+Want to contribute? Check out our [GitLab Page for more information](https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-33/wikis/%23Vedlikeholdsplan/Rutiner-for-evolusjon-og-endring)
 
 
 
