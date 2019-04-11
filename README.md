@@ -5,7 +5,7 @@ Eventify is a fictional service developed by Group 33 in the course TDT4140 Prog
 The group consists of six members, all 2nd year students at NTNU.
 
 
-**You can find a short project description [here]()**  
+**You can find a short project description [here](https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-33/wikis/Dokumentasjon/Prosjektbeskrivelse)**  
 
 
 ### Code style ![Code style](https://camo.githubusercontent.com/d0f65430681b67b7104f6130ada8c098ec5f66ba/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f636f64652532307374796c652d7374616e646172642d627269676874677265656e2e7376673f7374796c653d666c6174)
@@ -14,7 +14,7 @@ All logic is written in Python and we have followed PEP8-standard for all coding
 When it comes to documentation we tried writing code that is self documenting, i.e. that it is enough to read the code to understand what it does. In addition to this, we have also documented all functions in views.py-files.
 
 ### Screenshots and How to Use
-Screenshot of the home page of [Eventify](https://eventufypu.com)
+Screenshot of the home page of [Eventify](https://eventifypu.com)
 ![Imgur](https://i.imgur.com/5IF32S2.jpg)
 
 For more visual documentation, visit [our user manual](https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-33/wikis/%23Vedlikeholdsplan/Brukermanual).
@@ -62,16 +62,15 @@ That's it! Now you are all set for the installation of Eventify on your local ma
 #### Installation
 Follow these steps to run Eventify local machine:
 1. Clone our git repo in terminal  
-   `$ git clone https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-33/`
+   `git clone https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-33/`
 2. Go to the directory gruppe-33 by typing   
 `cd gruppe-33`
-3. After successfully cloning, you need to install all the required packages. 
-To do this, navigate to /gruppe-33 by typing `cd gruppe-33` and run the following command in Terminal:  
+3. After successfully cloning, you need to install all the required packages. Run the following command in Terminal:  
     `pip install -r requirements.txt`
 4. Create a virtual environment.  
     `virtualenv venv`
 5. Activate the virtual environment by typing   
-`. venv/bin/activate`. 
+    `. venv/bin/activate`  
 You should now see (venv) in your command line, indicating venv is active.
 6. Get the database up to date
      `python eventify/manage.py migrate`
@@ -88,16 +87,13 @@ We are test-covering over 90% of our code as of today. These are mainly testing 
 ![coverage](https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-33/badges/master/coverage.svg)
 
 If you want to run the tests you can use the following command in the terminal:
- 
     `python eventify/manage.py test`
 
 If you want to test a specific module (or app) you just append the name of the module behind the above command. For a more detailed report concerning the test coverage, you should run:
-    
     `coverage run --source="." eventify/manage.py test`
     `coverage report`
 
 For an even more detailed report, where you can see which lines are tested and which are not, you type:
-    
     `coverage html`
 
 A folder full with HTML files will then be generated. If you open the one called "index.html" in your default browser, you can select all the .py files in the project and see how the test coverage spread over the lines.
