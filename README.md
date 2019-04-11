@@ -40,7 +40,7 @@ The following is a list of features implemented on our webpage:
 * [x] Search for event-titles and events in your location
 
 ### Online version  
-Visit our website [eventifypu.com](https://eventifypu.com).
+Visit our website [eventifypu.com](https://eventifypu.com)
 To make an account, press the "Register" button in the navbar.
 See our [gifs](https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-33/wikis/%23Vedlikeholdsplan/Brukermanual) for how to join and create events, register credit cards and make connections with your friends.
 
@@ -72,7 +72,7 @@ Follow these steps to run Eventify local machine:
 5. Activate the virtual environment by typing   
     `. venv/bin/activate`  
 You should now see (venv) in your command line, indicating venv is active.
-6. Get the database up to date
+6. Get the database up to date  
      `python eventify/manage.py migrate`
 7. Run the following command  
     `python eventify/manage.py runserver`. 
@@ -90,7 +90,7 @@ If you want to run the tests you can use the following command in the terminal:
     `python eventify/manage.py test`
 
 If you want to test a specific module (or app) you just append the name of the module behind the above command. For a more detailed report concerning the test coverage, you should run:  
-    `coverage run --source="." eventify/manage.py test`
+    `coverage run --source="." eventify/manage.py test`  
     `coverage report`
 
 For an even more detailed report, where you can see which lines are tested and which are not, you type:  
