@@ -24,12 +24,11 @@ Screenshot of the home page of [Eventify](https://eventufypu.com)
 
 For more visual documentation, visit [our user manual](https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-33/wikis/%23Vedlikeholdsplan/Brukermanual).
 
-### Tech/framework used  
+### Technology and framework used  
 - Django - Python Web framework
 - Materialize - CSS framework
 - Bootstrap - CSS framework 
-- Digital Ocean - Virtual Private Server to host eventifypu.com
-- 
+
 
 ### Features  
 The following is a list of features implemented on our webpage:
@@ -45,13 +44,13 @@ The following is a list of features implemented on our webpage:
 * [x] See and clear your notifications in the navbar
 * [x] Search for event-titles and events in your location
 
-#### Online version  
-Visit our website _https://eventifypu.com_
+### Online version  
+Visit our website [eventifypu.com](https://eventifypu.com)
 To make an account, press the "Register" button in the navbar.
-See our [gifs](https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-33/wikis/%23Vedlikeholdsplan/Brukermanual). for how to join and create events, register credit cards and make connections with your friends.
+See our [gifs](https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-33/wikis/%23Vedlikeholdsplan/Brukermanual) for how to join and create events, register credit cards and make connections with your friends.
 
-#### Local version  
-Some users might want to run our website on localhost. To run the project you need Python version 3.6 or newer, git and pip installed. 
+### Local version  
+Some users might want to run our website on localhost. To run the project you need Python version 3.6 or newer, Git and pip installed. 
 
 ##### Prerequisites 
 If you already have Git, pip and Python installed, you can skip directly to 'Installation'
@@ -66,18 +65,18 @@ If you already have Git, pip and Python installed, you can skip directly to 'Ins
 That's it! Now you are all set for the installation of Eventify on your local machine.
 
 #### Installation
-To do so, follow these instructions:
+Follow these steps to run Eventify local machine:
 1. Clone our git repo in terminal  
    `$ git clone https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-33/`
 2. Go to the directory gruppe-33 by typing   
 `cd gruppe-33`
-3. After successfully cloning, you need to install to install al the required packages.
-To do this, navigate to /gruppe-33 and run the following  command in Terminal:  
-    `$ pip install -r requirements.txt`
+3. After successfully cloning, you need to install all the required packages. 
+To do this, navigate to /gruppe-33 by typing `cd gruppe-33` and run the following command in Terminal:  
+    `pip install -r requirements.txt`
 4. Create a virtual environment.  
-    `$ virtualenv venv`
+    `virtualenv venv`
 5. Activate the virtual environment by typing   
-`$ . venv/bin/activate`. 
+`. venv/bin/activate`. 
 You should now see (venv) in your command line, indicating venv is active.
 6. Get the database up to date
      `python eventify/manage.py migrate`
