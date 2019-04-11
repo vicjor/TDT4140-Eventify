@@ -40,7 +40,7 @@ The following is a list of features implemented on our webpage:
 * [x] Search for event-titles and events in your location
 
 ### Online version  
-Visit our website [eventifypu.com](https://eventifypu.com)
+Visit our website [eventifypu.com](https://eventifypu.com).
 To make an account, press the "Register" button in the navbar.
 See our [gifs](https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-33/wikis/%23Vedlikeholdsplan/Brukermanual) for how to join and create events, register credit cards and make connections with your friends.
 
