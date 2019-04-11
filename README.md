@@ -7,10 +7,6 @@ The group consists of six members, all 2nd year students at NTNU.
 
 **You can find a short project description [here]()**  
 
-  
-### Motivation  
-Our motivation for this project is to fulfill all requirements specified in our project description and from our product owner. 
-
 
 ### Code style    
 All logic is written in Pyhton and we have followed PEP8-standard for all coding.  
@@ -88,7 +84,7 @@ By entering "localhost:8000" you will land in a page with a default database. If
 
     
 ### Tests
-We have written 38 unit test as of today. These are mainly testing the back end functionality. The current total test coverage is:
+We are test-covering over 90% of our code as of today. These are mainly testing the back end functionality. The current total test coverage is:
 
 ![coverage](https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-33/badges/master/coverage.svg)
 
