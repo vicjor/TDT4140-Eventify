@@ -114,7 +114,7 @@ To host our application we are using [Digital Ocean](https://digitalocean.com), 
 - [Nginx](https://www.nginx.com/) is used as a web server
 - [Supervisord](http://supervisord.org/) is a process control system being run to restart the application if it crashes
 
-After countless hours, we have not succeeded implementing Continous Delivery/Deployment, therefore deploymeny has to be done manually.
+After countless hours, we have not succeeded implementing Continous Delivery/Deployment, therefore deployment has to be done manually.
 To deploy the latest version of the master branch we simply SSH into the server and pull the latest updates from Gitlab. This way we can deploy the latest version of Eventify to the end user within few minutes.
 
 #### Contribute
