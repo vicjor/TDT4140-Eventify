@@ -52,8 +52,12 @@ If you already have Git, pip and Python installed, you can skip directly to 'Ins
 
 1. To install Python, type in your terminal
     `sudo apt-get install python3`
-2. Install Git by typing the following command. If you don't have Git installed, this will prompt you to install it.
-    `git --version`
+2. If you are on a macOS install Git by typing the following command. If you don't have Git installed, this will prompt you to install it.  
+    `git --version`  
+If your are on a Linux and on Fedora you can use the following command:  
+ `$ sudo dnf install git-all`  
+And if you are on a Linux and on Debian-based distribution use:  
+ `$ sudo apt install git-all`  
 3. Finally, install pip with this command
     `sudo easy_install pip`
 
@@ -62,7 +66,9 @@ That's it! Now you are all set for the installation of Eventify on your local ma
 #### Installation
 Follow these steps to run Eventify local machine:
 1. Clone our git repo in terminal  
-   `git clone https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-33/`
+```
+git clone https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-33/
+```
 2. Go to the directory gruppe-33 by typing   
 `cd gruppe-33`
 3. After successfully cloning, you need to install all the required packages. Run the following command in Terminal:  
