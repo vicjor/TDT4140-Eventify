@@ -114,6 +114,7 @@ To host our application we are using [Digital Ocean](https://digitalocean.com), 
 - [Nginx](https://www.nginx.com/) is used as a web server
 - [Supervisord](http://supervisord.org/) is a process control system being run to restart the application if it crashes
 
+To deploy the latest version of the master branch we simply SSH into the server and pull the latest updates from Gitlab. 
 For those interested, the server IP-adress is 188.166.34.41.
 
 #### Contribute
