@@ -23,7 +23,7 @@ For more visual documentation, visit [our user manual](https://gitlab.stud.idi.n
 - Django - Python Web framework
 - Materialize - CSS framework
 - Bootstrap - CSS framework 
-
+- Digital Ocean - A Virtual Private Server (VPS) used to host our application on https://eventifypu.com
 
 ### Features  
 The following is a list of features implemented on our webpage:
@@ -103,6 +103,18 @@ For an even more detailed report, where you can see which lines are tested and w
     `coverage html`
 
 A folder full with HTML files will then be generated. If you open the one called "index.html" in your default browser, you can select all the .py files in the project and see how the test coverage spread over the lines.  
+
+### Hosting
+To host our application we are using [Digital Ocean](https://digitalocean.com), a Virtual Private Server (VPS). All traffic goes through HTTPS using a free SSL certificate, [Let's Encrypt](https://letsencrypt.org).
+
+
+**How the VPS runs our application**
+- Server is running Ubuntu 18.04.2
+- [Gunicorn](https://gunicorn.org/) (Python Web Server Gateway Interface (WSGI) HTTP server) is used to run the application
+- [Nginx](https://www.nginx.com/) is used as a web server
+- [Supervisord](http://supervisord.org/) is a process control system being run to restart the application if it crashes
+
+For those interested, the server IP-adress is 188.166.34.41.
 
 #### Contribute
 Want to contribute? Check out our [GitLab Page for more information](https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-33/wikis/%23Vedlikeholdsplan/Rutiner-for-evolusjon-og-endring)
