@@ -86,7 +86,7 @@ We are test-covering over 90% of our code as of today. These are mainly testing 
 
 ![coverage](https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-33/badges/master/coverage.svg)
 
-If you want to run the tests you can use the following command in the terminal:  
+If you want to run the tests you can use the following command in the terminal. Make sure you are inside the folder gruppe-33:  
     `python eventify/manage.py test`
 
 If you want to test a specific module (or app) you just append the name of the module behind the above command. For a more detailed report concerning the test coverage, you should run:  
