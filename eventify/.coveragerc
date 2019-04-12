@@ -1,0 +1,29 @@
+[run]
+omit =
+    # omit generated files, test files themselves
+    **/settings.py
+    **/__init__.py
+    **/wsgi.py
+    **/apps.py
+    */manage.py
+    */venv/
+    **/migrations/**
+    **/tests/**
+
+[report]
+# Regexes for lines to exclude from consideration
+exclude_lines =
+
+    # Don't complain about missing debug-only code:
+    def str
+
+omit =
+    # omit generated files, test files themselves
+    **/settings.py
+    **/__init__.py
+    **/wsgi.py
+    **/apps.py
+    */manage.py
+    */venv/
+    **/migrations/**
+    **/tests/**
