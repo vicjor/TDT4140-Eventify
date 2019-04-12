@@ -55,9 +55,9 @@ If you already have Git, pip and Python installed, you can skip directly to 'Ins
 2. If you are on a macOS install Git by typing the following command. If you don't have Git installed, this will prompt you to install it.  
     `git --version`  
 If your are on a Linux and on Fedora you can use the following command:  
- `$ sudo dnf install git-all`  
+ `sudo dnf install git-all`  
 And if you are on a Linux and on Debian-based distribution use:  
- `$ sudo apt install git-all`  
+ `sudo apt install git-all`  
 3. Finally, install pip with this command
     `sudo easy_install pip`
 
