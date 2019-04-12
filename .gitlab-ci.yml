@@ -21,7 +21,7 @@ services:
  
 stages:
  - test
- - deploy
+# - deploy
  
 test:
   stage: test
@@ -37,4 +37,21 @@ test:
    - python manage.py migrate
    - python manage.py test
    - coverage run --source='.' manage.py test -v3
-   - coverage report --omit=*/tests/* --omit=*/wsgi.py --omit=manage.py
+   - coverage report --omit="*/tests/*" --omit="eventify/wsgi.py" --omit="manage.py"
+#  - coverage html
+#  artifacts:
+#    paths:
+#      - eventify/htmlcov/
+      
+#pages:
+#  stage: deploy
+#  dependencies:
+#    - test
+#  script:
+#    - mv eventify/htmlcov/ public/
+#  artifacts:
+#    paths:
+#      - public
+#    expire_in: 30 days
+#  only:
+#    - master
